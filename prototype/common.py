@@ -16,7 +16,7 @@ AUDIT = ROOT / 'runs/english-full-gh/en'
 WIKITEXT = AUDIT / 'cache/wikitext/en'
 PACKETS = ROOT / 'runs/editathon-review/packets.json'
 RUN = ROOT / 'runs/edit-prototype-en'
-UA = 'FLoRA-Wikipedia-Edit-Prototype/0.1 (private research prototype; https://github.com/LukasWallrich/flora-wikipedia)'
+UA = 'FLoRA-Wikipedia-Edit-Prototype/0.1 (private research prototype; https://github.com/forrtproject/flora-wikipedia)'
 
 LIST_SECTIONS = {'further reading', 'references', 'selected publications', 'bibliography',
                  'publications', 'sources', 'articles', 'external links', 'works', 'selected works',

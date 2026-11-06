@@ -5,7 +5,7 @@ p = argparse.ArgumentParser(); p.add_argument('--output', required=True); a=p.pa
 out = pathlib.Path(a.output); out.parent.mkdir(parents=True, exist_ok=True)
 if out.exists(): raise SystemExit('Refusing to overwrite a pinned input; use a new path')
 def get(url):
-    req=urllib.request.Request(url, headers={'User-Agent':'FLoRA-Wikipedia-Audit/0.2 (https://github.com/LukasWallrich/flora-wikipedia)'})
+    req=urllib.request.Request(url, headers={'User-Agent':'FLoRA-Wikipedia-Audit/0.2 (https://github.com/forrtproject/flora-wikipedia)'})
     with urllib.request.urlopen(req, timeout=60) as r: return r.read()
 api='https://api.github.com/repos/forrtproject/FReD-data/commits?path=output/flora.csv&per_page=1'
 commit=json.loads(get(api))[0]

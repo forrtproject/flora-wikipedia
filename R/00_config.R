@@ -25,7 +25,7 @@ CACHE_DIR  <- file.path(RUN_DIR, "cache")
 OUTPUT_DIR <- file.path(RUN_DIR, "output")
 WIKITEXT_DIR <- file.path(CACHE_DIR, "wikitext")
 
-USER_AGENT <- "FLoRA-Wikipedia-Audit/0.2 (https://github.com/LukasWallrich/flora-wikipedia)"
+USER_AGENT <- "FLoRA-Wikipedia-Audit/0.2 (https://github.com/forrtproject/flora-wikipedia)"
 OFFLINE <- identical(Sys.getenv("FLORA_OFFLINE"), "1")
 dir_create(c(DATA_DIR, CACHE_DIR, OUTPUT_DIR))
 read_parquet <- function(path) {

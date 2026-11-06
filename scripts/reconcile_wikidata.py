@@ -3,7 +3,7 @@
 Cached GET requests only; unresolved service errors never become no-match claims.
 """
 import argparse,csv,datetime,hashlib,json,pathlib,time,urllib.parse,urllib.request,urllib.error
-UA='FLoRA-Wikipedia-Audit/0.3 (https://github.com/LukasWallrich/flora-wikipedia)'
+UA='FLoRA-Wikipedia-Audit/0.3 (https://github.com/forrtproject/flora-wikipedia)'
 def get_json(url,cache,offline=False):
     path=cache/(hashlib.sha256(url.encode()).hexdigest()+'.json')
     if path.exists(): return json.loads(path.read_text())
