@@ -207,6 +207,30 @@ class Grounding(unittest.TestCase):
                     self.assertTrue((RUN / src['fulltext_path']).exists())
 
 
+class CardText(unittest.TestCase):
+    def test_author_year_labels(self):
+        from build_site import author_year
+        self.assertEqual(author_year(dict(authors=['Eric J. Johnson', 'Daniel Goldstein'], year=2003)), 'Johnson & Goldstein (2003)')
+        self.assertEqual(author_year(dict(authors=['A B', 'C D', 'E F'], year=1996)), 'B et al. (1996)')
+        self.assertEqual(author_year(dict(authors=['Jan C. van Ours'], year=2026)), 'van Ours (2026)')
+
+    def test_gist_keeps_abbreviations_and_adds_a_short_opening(self):
+        from build_site import split_gist
+        first, rest = split_gist('Bargh et al. (1996) is cited in the lead for a claim about walking speed that it does not make, and the later replication failed. '
+                                 'A second sentence. A third.')
+        self.assertTrue(first.endswith('replication failed.'))
+        self.assertEqual(rest, 'A second sentence. A third.')
+        self.assertEqual(split_gist('The article is accurate. The replication agrees. More.'),
+                         ('The article is accurate. The replication agrees.', 'More.'))
+
+    def test_every_shown_source_has_a_label(self):
+        from build_site import build_items, item_dois, source_labels
+        items, _ = build_items()
+        labels, missing = source_labels(items)
+        self.assertEqual([d for c in items for d in item_dois(c) if d not in labels], [])
+        self.assertEqual(len(set(v['label'] for v in labels.values())), len(labels))
+
+
 class NoWritePaths(unittest.TestCase):
     def test_no_wikimedia_write_calls(self):
         forbidden = ['action=edit', "'action': 'edit'", 'action=wbeditentity', 'quickstatements', 'csrf']

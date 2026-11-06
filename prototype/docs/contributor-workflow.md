@@ -79,7 +79,10 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    on replication.
 8. **Record your decision** for each study on the card (edit, talk page, no
    change, needs more checking, or skip; give a reason when you disagree with
-   the suggestion) and export it. The record notes which article version you
+   the suggestion). What you enter is kept in your browser as a draft as you
+   go; the card counts as reviewed once you click "Save review", and cards with
+   an unsaved draft are marked "Draft" in the list. Export your records from
+   "Your reviews" below the list. The record notes which article version you
    reviewed.
 
 ## Reading a replication

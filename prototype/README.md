@@ -39,8 +39,11 @@ or the article, and FLoRA/FORRT may not appear as a source in draft wording.
 ```sh
 # Offline rebuild of selection, packets, validation and site
 bash prototype/build.sh
-# Also re-query current revision IDs (one batched Wikipedia read request)
+# Also re-query current revision IDs (one batched Wikipedia read request) and fetch
+# Crossref/DataCite details for any newly cited source that has no cached author and year
 bash prototype/build.sh --refresh-live
+# Copy the built site for the shared review deployment ("private" wording rewritten)
+python3 prototype/stage_public.py ../flora-wikipedia-edit-prototype-20261006 STAGING_DIR
 # Tests
 python3 tests/test_edit_prototype.py
 # Re-draft missing cards through a CLI route (restartable; skips parsed outputs)

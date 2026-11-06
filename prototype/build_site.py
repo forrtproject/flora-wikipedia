@@ -41,12 +41,29 @@ def cite(s):
     return f"{names or 'Unknown authors'} ({c.get('year') or 'n.d.'}). {c.get('title') or s.get('doi')}. {c.get('container') or ''}".strip()
 
 
+PARTICLES = {'van', 'von', 'de', 'der', 'den', 'da', 'di', 'du', 'le', 'la', 'del', 'dos', 'ten', 'ter'}
+
+
+def family(name):
+    """Family name from 'Given Family', keeping lower-case particles: 'Jan C. van Ours' -> 'van Ours'."""
+    t = name.split()
+    i = len(t) - 1
+    while i > 0 and t[i - 1] in PARTICLES:
+        i -= 1
+    return ' '.join(t[i:])
+
+
+def author_year(c):
+    """'Smith (2010)', 'Smith & Jones (2010)' or 'Smith et al. (2010)' from Crossref-style metadata."""
+    fam = [family(a) for a in (c.get('authors') or []) if a.strip()]
+    who = (fam[0] if len(fam) == 1 else f'{fam[0]} & {fam[1]}' if len(fam) == 2
+           else f'{fam[0]} et al.' if fam else 'Unknown authors')
+    return f"{who} ({c.get('year') or 'n.d.'})"
+
+
 def short(s):
     c = dict(s.get('crossref') or {})
-    c['title'] = _clean(c.get('title'))
-    a = c.get('authors') or ['?']
-    fam = a[0].split()[-1] if a[0] else '?'
-    return f"{fam}{' et al.' if len(a) > 2 else ''} ({c.get('year') or 'n.d.'}): {(c.get('title') or '')[:80]}"
+    return f"{author_year(c)}: {_clean(c.get('title'))[:80]}"
 
 
 def src_view(s):
@@ -282,6 +299,89 @@ def zip_dir(target, sources):
                     z.write(p, p.relative_to(RUN))
 
 
+LABEL_CACHE = RUN / 'cache' / 'crossref_labels'
+
+
+def item_dois(it):
+    """Every DOI a card shows as a source, in display order."""
+    s = it['suggestion']
+    found = [it['original']['doi'], *(r['doi'] for r in it['replications']),
+             *(v['source'] for v in s.get('verifications', [])), *(c['source'] for c in s['content_points']),
+             *s['draft'].get('citations', []), *(e['doi'] for e in s['evidence_used']),
+             *(r['doi'] for r in it.get('reviews_checked', []))]
+    return [re.sub(r'^doi:', '', d.strip(), flags=re.I).lower() for d in found if d and not re.match(r'needs', d, re.I)]
+
+
+def source_labels(cards, fetch=False):
+    """Map each DOI to a short author-year label and a full citation, from cached Crossref metadata.
+
+    Sources already in the evidence cache are used first; others come from cache/crossref_labels,
+    which only --fetch-labels fills (one paced Crossref request per missing DOI)."""
+    from common import http_get
+    meta = {}
+    for f in (RUN / 'cache' / 'sources').glob('*.json'):
+        d = load_json(f)
+        if d.get('crossref'):
+            meta[d['doi'].lower()] = d['crossref']
+    LABEL_CACHE.mkdir(exist_ok=True)
+    out, missing = {}, []
+    for doi in dict.fromkeys(d for c in cards for d in item_dois(c)):
+        path = LABEL_CACHE / (re.sub(r'[^a-z0-9]+', '_', doi) + '.json')
+        cached = load_json(path) if path.exists() else None
+        if doi not in meta and fetch and (not cached or 'error' in cached['crossref']):
+            try:
+                m = json.loads(http_get(f'https://api.crossref.org/works/{doi}'))['message']
+                rec = dict(authors=[' '.join(filter(None, [a.get('given'), a.get('family')])) or a.get('name', '')
+                                    for a in m.get('author', [])],
+                           year=(m.get('issued', {}).get('date-parts') or [[None]])[0][0],
+                           title=(m.get('title') or [''])[0], container=(m.get('container-title') or [''])[0])
+            except Exception as e:  # not a Crossref DOI (e.g. OSF): try DataCite, else keep the bare DOI
+                try:
+                    a = json.loads(http_get(f'https://api.datacite.org/dois/{doi}'))['data']['attributes']
+                    rec = dict(authors=[' '.join(filter(None, [x.get('givenName'), x.get('familyName')])) or x.get('name', '')
+                                        for x in a.get('creators', [])], year=a.get('publicationYear'),
+                               title=(a.get('titles') or [{}])[0].get('title', ''), container=a.get('publisher', ''),
+                               registry='datacite')
+                except Exception as e2:
+                    rec = dict(error=f'{e}; DataCite: {e2}')
+            dump_json(path, dict(doi=doi, retrieved_at=datetime.datetime.now(datetime.timezone.utc).isoformat(
+                timespec='seconds'), crossref=rec))
+        c = meta.get(doi) or (load_json(path) or {}).get('crossref') or {}
+        if not c.get('authors') and not c.get('year'):
+            missing.append(doi)
+            out[doi] = dict(label=f'doi:{doi}', citation=f'doi:{doi}')
+            continue
+        out[doi] = dict(label=author_year(c), citation=cite(dict(crossref=c, doi=doi)))
+    # Same author-year for different papers: add a, b, … in DOI order so labels stay unique.
+    by_label = {}
+    for doi, v in out.items():
+        by_label.setdefault(v['label'], []).append(doi)
+    for label, dois in by_label.items():
+        if len(dois) > 1 and label.endswith(')'):
+            for i, doi in enumerate(sorted(dois)):
+                out[doi]['label'] = label[:-1] + 'abcdefghij'[i] + ')'
+    return out, missing
+
+
+SENTENCE_END = re.compile(r'(?<=[.!?])\s+(?=[A-Z“"(])')
+NOT_AN_END = re.compile(r'(?:\bet al|\be\.g|\bi\.e|\bvs|\bcf|\bNo|\bpp?|\bDr|\bSt|\b[A-Z])\.$')
+
+
+def split_gist(text):
+    """First sentence of a rationale (the one-line reason on a card) and the rest."""
+    parts = SENTENCE_END.split(text.strip())
+    sentences, cur = [], ''
+    for part in parts:  # re-join splits after abbreviations such as "et al."
+        cur = f'{cur} {part}'.strip()
+        if not NOT_AN_END.search(cur):
+            sentences.append(cur)
+            cur = ''
+    sentences += [cur] if cur else []
+    # A short first sentence often only sets the scene ("The article is accurate."): add the next one.
+    n = 2 if len(sentences) > 1 and len(sentences[0]) < 120 else 1
+    return ' '.join(sentences[:n]), ' '.join(sentences[n:])
+
+
 def pandoc(md, html_out, title):
     subprocess.run(['pandoc', str(md), '-s', '--metadata', f'title={title}', '-c', 'style.css',
                     '--template', str(HERE / 'site' / 'page.template.html'), '-o', str(html_out)], check=True)
@@ -290,6 +390,8 @@ def pandoc(md, html_out, title):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output-dir', required=True, type=pathlib.Path)
+    ap.add_argument('--fetch-labels', action='store_true',
+                    help='fetch Crossref details for sources that have no cached author and year')
     a = ap.parse_args()
     out = a.output_dir.resolve()
     if out == ROOT or ROOT in out.parents:
@@ -302,10 +404,14 @@ def main():
     dump_json(archive / 'suggestions-with-draft-wording.json', cards)
     for c in cards:
         c['suggestion']['draft'].pop('wording', None)
+        c['gist'], c['rationale_rest'] = split_gist(c['suggestion']['rationale'])
+    sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
+    if unlabelled:
+        print(f'{len(unlabelled)} sources have no cached author and year (run with --fetch-labels): {unlabelled}')
     built = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')
     data = dict(build_id=hashlib.sha256(json.dumps(cards, sort_keys=True).encode()).hexdigest()[:12], built_at=built,
                 status='Private research material, not for publication. Prepared with AI; nobody has checked it yet.',
-                counts=counts(cards, pages), missing_drafts=missing, pages=pages)
+                counts=counts(cards, pages), missing_drafts=missing, sources=sources, pages=pages)
     (out / 'data').mkdir(parents=True, exist_ok=True)
     (out / 'downloads').mkdir(exist_ok=True)
     for f in ['index.html', 'app.js', 'style.css']:

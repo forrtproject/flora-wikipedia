@@ -36,11 +36,18 @@ const STRENGTH = {fix: 'Fix: the article says something the source does not supp
   recommended_addition: 'Add missing evidence: a replication that bears on this claim is not mentioned',
   optional_addition: 'Optional: the article is accurate; this would only add to it', none: 'Nothing to change'};
 
-let DATA = null, PAGES = [], ACTIVE = null, SEGMENT = 'repl';
+let DATA = null, PAGES = [], ACTIVE = null, SEGMENT = 'repl', SOURCES = {};
 const filters = {};
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const doiLink = d => d && !/^needs/i.test(d) ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener">doi:${esc(d)}</a>` : '';
+// A source as a short author-year link; the full reference is in the tooltip and the DOI is the target.
+function srcLink(d) {
+  if (!d || /^needs/i.test(d)) return '';
+  d = d.replace(/^doi:/i, '').trim();
+  const s = SOURCES[d.toLowerCase()];
+  return s ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener" title="${esc(s.citation)}">${esc(s.label)}</a>` : doiLink(d);
+}
 // What the model read. In lists, full text is the default and stays unmarked; anything less is named.
 const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="lvl ${l === 'full_text' ? '' : l === 'abstract' ? 'abs' : 'thin'}">${esc(LEVEL[l] || l)}</span>`;
 
@@ -58,18 +65,25 @@ function pageKind(p) {
 const pageRepl = p => p.items.some(it => it.adds_replication);
 const flags = p => ({blp: p.items.some(i => i.suggestion.flags.blp), medrs: p.items.some(i => i.suggestion.flags.medrs)});
 
-function ledgerGet(id) { try { return JSON.parse(localStorage.getItem(LS + id)) || null; } catch { return null; } }
-function ledgerPut(id, rec) { localStorage.setItem(LS + id, JSON.stringify(rec)); }
+// Browser storage can be missing or blocked (private windows, previews): never let that break the page.
+function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* not stored */ } }
+function ledgerGet(id) { try { return JSON.parse(lsGet(LS + id)) || null; } catch { return null; } }
+function ledgerPut(id, rec) { lsSet(LS + id, JSON.stringify(rec)); }
+// Drafts: the form as last typed, kept until "Save review". A card counts as reviewed only once saved.
+function draftGet(id) { try { return JSON.parse(lsGet(LS + id + ':draft')) || null; } catch { return null; } }
+function draftPut(id, d) { lsSet(LS + id + ':draft', d ? JSON.stringify(d) : null); }
 const reviewed = p => { const r = ledgerGet(p.page_id); return !!r && p.items.every(it => r.items?.[it.card_id]); };
+const hasDraft = p => !!draftGet(p.page_id);
 
 // ---------- list and filters ----------
 const SEGMENTS = [
   ['repl', 'Adds a replication', p => !!pageRepl(p)],
   ['worth', 'Worth a look', p => ['edit', 'judgement'].includes(pageKind(p))], ['edit', 'Edit suggested', p => pageKind(p) === 'edit'],
-  ['judgement', 'Judgement call', p => pageKind(p) === 'judgement'], ['optional', 'Optional', p => pageKind(p) === 'optional'],
-  ['none', 'No change', p => ['other', 'none'].includes(pageKind(p))], ['all', 'All', () => true]];
+  ['judgement', 'Judgement call', p => pageKind(p) === 'judgement'], ['optional', 'Optional addition', p => pageKind(p) === 'optional'],
+  ['none', 'No change needed', p => ['other', 'none'].includes(pageKind(p))], ['all', 'All articles', () => true]];
 const FACETS = [
-  ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : 'Not reviewed yet', true],
+  ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : hasDraft(p) ? 'Draft, not saved' : 'Not reviewed yet', true],
   ['scope', 'Kind of article', p => SCOPE[p.items[0].suggestion.article_scope] || p.items[0].suggestion.article_scope, true],
   ['many', 'Studies on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
   ['care', 'Extra care', p => [flags(p).blp && 'Living person (BLP)', flags(p).medrs && 'Health / medical (MEDRS)',
@@ -93,9 +107,25 @@ function buildFilters() {
     renderList();
   }));
 }
+// "My progress" changes as you review: rebuild the filters when its values change, keeping ticks.
+let PROGRESS_SIG = '';
+function refreshProgressFacet() {
+  const sig = PAGES.map(p => facetVals(p, FACETS[0])[0]).join('|');
+  if (sig !== PROGRESS_SIG) { PROGRESS_SIG = sig; buildFilters(); }
+}
+const activeFilters = () => Object.values(filters).reduce((n, s) => n + s.size, 0);
+function clearFilters() { Object.keys(filters).forEach(k => delete filters[k]); buildFilters(); renderList(); }
+// The main aim stands apart; "Worth a look" visibly contains the two kinds it combines.
 function buildSegments() {
-  document.getElementById('segments').innerHTML = SEGMENTS.map(([k, label, f]) =>
-    `<button type="button" data-seg="${k}" aria-pressed="${SEGMENT === k}">${esc(label)} <span class="n">${PAGES.filter(f).length}</span></button>`).join('');
+  const btn = (k, cls = '') => {
+    const [, label, f] = SEGMENTS.find(s => s[0] === k), dot = KIND[k] ? `<span class="dot ${KIND[k][1]}" aria-hidden="true"></span>` : '';
+    return `<button type="button" class="${cls}" data-seg="${k}" aria-pressed="${SEGMENT === k}">${dot}${esc(label)} <span class="n">${PAGES.filter(f).length}</span></button>`;
+  };
+  document.getElementById('segments').innerHTML = `
+    <div class="seg-row" role="group" aria-labelledby="seg-main-l"><span class="seg-l" id="seg-main-l">Main aim</span>${btn('repl', 'seg-main')}</div>
+    <div class="seg-row" role="group" aria-labelledby="seg-kind-l"><span class="seg-l" id="seg-kind-l">By kind of suggestion</span>
+      <span class="seg-group" role="group" aria-label="Worth a look: edit suggested and judgement call together">${btn('worth', 'seg-head')}${btn('edit', 'seg-sub')}${btn('judgement', 'seg-sub')}</span>
+      ${btn('optional')}${btn('none')}${btn('all')}</div>`;
   document.querySelectorAll('#segments button').forEach(b => b.onclick = () => { SEGMENT = b.dataset.seg; buildSegments(); renderList(); });
 }
 function visible() {
@@ -105,8 +135,15 @@ function visible() {
     && (!q || p.search.includes(q)));
 }
 function renderList() {
-  const list = visible();
-  document.getElementById('summary').textContent = `${list.length} of ${PAGES.length} articles shown`;
+  refreshProgressFacet();
+  const list = visible(), nf = activeFilters();
+  const tf = document.getElementById('toggle-filters');
+  tf.innerHTML = nf ? `Filters <span class="count">${nf} on</span>` : 'Filters';
+  tf.classList.toggle('on', nf > 0);
+  document.getElementById('clear-filters').hidden = !nf;
+  document.getElementById('summary').innerHTML = `${list.length} of ${PAGES.length} articles shown` +
+    (nf ? ` · ${nf} filter${nf > 1 ? 's' : ''} on <button type="button" class="linklike" id="summary-clear">clear</button>` : '');
+  document.getElementById('summary-clear')?.addEventListener('click', clearFilters);
   document.getElementById('cards').innerHTML = list.map(p => {
     const [label, cls] = KIND[pageKind(p)], fl = flags(p);
     const studies = p.items.length > 1 ? `${p.items.length} studies: ${p.items.map(i => i.original.short.split(':')[0]).join('; ')}` : p.items[0].original.short;
@@ -117,8 +154,8 @@ function renderList() {
       ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${pageKind(p) === 'other' ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
       ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}
-      ${reviewed(p) ? '<span class="badge done">✓ reviewed</span>' : ''}</span></button></li>`;
-  }).join('') || '<li class="small">No articles match. Try "All" or clear some filters.</li>';
+      ${reviewed(p) ? '<span class="badge done">✓ reviewed</span>' : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}</span></button></li>`;
+  }).join('') || '<li class="small">No articles match. Try "All articles" or clear some filters.</li>';
   document.querySelectorAll('.card-btn').forEach(b => b.addEventListener('click', () => show(b.dataset.id, true)));
   updateLedgerCount();
 }
@@ -185,21 +222,34 @@ function issueBlock(it) {
     ${others.length ? `<p class="small">Also cited for: ${others.map(q => `“${esc(q.length > 160 ? q.slice(0, 157) + '…' : q)}”`).join(' · ')}</p>` : ''}`;
 }
 
-const RESULT = {confirmed: ['', ''], contradicted: ['✗ Contradicted', 'bad'], not_in_source: ['✗ Not in the source', 'bad'],
+const RESULT = {confirmed: ['✓ Confirmed', 'ok'], contradicted: ['✗ Contradicted', 'bad'], not_in_source: ['✗ Not in the source', 'bad'],
   source_unavailable: ['? Source not obtained', 'warn']};
-function checksBlock(it, rec) {
-  const v = it.suggestion.verifications || [], s = it.suggestion;
-  const judge = s.required_checks || [];
+const RESULT_WORD = {confirmed: 'confirmed', contradicted: 'contradicted', not_in_source: 'not in the source', source_unavailable: 'source not obtained'};
+
+// "Your call": the editorial questions the AI could not settle. Ticks are saved as you go.
+function yourCallBlock(it, rec) {
+  const s = it.suggestion, judge = s.required_checks || [];
   const done = new Set(rec.checks_done?.[it.card_id] || []);
-  const off = v.filter(x => x.result !== 'confirmed').length;
-  return `${v.length ? `<h4>What we checked</h4>
-    <p class="small">${off ? `The source supports each point unless it is marked (${off} marked).` : 'The source supports each point.'}
-      Read in full unless marked “abstract only”. Each quote appears word for word in the paper, but the AI may have misread it: check anything your edit will rely on.</p>
-    <ul class="verifs">${v.map(x => `<li>${RESULT[x.result][0] ? `<span class="badge ${RESULT[x.result][1]}">${RESULT[x.result][0]}</span> ` : ''}${esc(x.claim)}
-      <span class="small">· ${doiLink(x.source.replace(/^doi:/i, ''))} ${lvlBadge(x.evidence_level, true)}</span>
-      ${x.quote ? `<blockquote class="excerpt">“${esc(x.quote)}”</blockquote>` : ''}</li>`).join('')}</ul>` : ''}
-    ${judge.length ? `<h4>Your call</h4><ul class="checklist">${judge.map((x, i) => `<li><label><input type="checkbox" data-item="${it.card_id}" data-check="${i}" ${done.has(i) ? 'checked' : ''}> ${esc(x)}</label></li>`).join('')}</ul>` : ''}
+  return `${judge.length ? `<h4 id="call-${it.card_id}">Your call</h4><ul class="checklist">${judge.map((x, i) => `<li><label><input type="checkbox" data-item="${it.card_id}" data-check="${i}" ${done.has(i) ? 'checked' : ''}> ${esc(x)}</label></li>`).join('')}</ul>` : ''}
     ${s.uncertainties.length ? `<details><summary>What remains uncertain (${s.uncertainties.length})</summary><ul class="tight">${s.uncertainties.map(u => `<li>${esc(u)}</li>`).join('')}</ul></details>` : ''}`;
+}
+
+// "What we checked": a count up front; points that need attention are shown, confirmed ones fold away.
+function checksBlock(it) {
+  const v = it.suggestion.verifications || [];
+  if (!v.length) return '';
+  const tally = {};
+  v.forEach(x => tally[x.result] = (tally[x.result] || 0) + 1);
+  const parts = Object.keys(RESULT).filter(k => tally[k]).map(k => `${tally[k]} ${RESULT_WORD[k]}`);
+  const point = x => `<li>${x.result !== 'confirmed' ? `<span class="badge ${RESULT[x.result][1]}">${RESULT[x.result][0]}</span> ` : ''}${esc(x.claim)}
+      <span class="small">· ${srcLink(x.source)} ${lvlBadge(x.evidence_level, true)}</span>
+      ${x.quote ? `<blockquote class="excerpt">“${esc(x.quote)}”</blockquote>` : ''}</li>`;
+  const off = v.filter(x => x.result !== 'confirmed'), ok = v.filter(x => x.result === 'confirmed');
+  return `<h5>What we checked</h5>
+    <p class="check-sum"><strong>${v.length} check${v.length > 1 ? 's' : ''}: ${parts.join(', ')}.</strong>
+      <span class="small">Each quote appears word for word in the paper, but the AI may have misread it: check anything your edit will rely on.</span></p>
+    ${off.length ? `<ul class="verifs">${off.map(point).join('')}</ul>` : ''}
+    ${ok.length ? `<details><summary>${off.length ? 'Show' : 'Show all'} ${ok.length} confirmed point${ok.length > 1 ? 's' : ''}</summary><ul class="verifs">${ok.map(point).join('')}</ul></details>` : ''}`;
 }
 
 function evidenceBlock(it) {
@@ -215,13 +265,13 @@ function evidenceBlock(it) {
   const extra = used.filter(e => !known.includes(e.doi.toLowerCase()));
   const revs = it.reviews_checked || [];
   const found = revs.filter(r => r.mentions);
-  return `<h4>The studies</h4>
+  return `<h5>The studies</h5>
     <table class="evidence"><thead><tr><th>Role</th><th>Study</th><th>What we could read</th></tr></thead><tbody>
     ${row('This study', it.original)}
     ${it.replications.map(r => row('Replication', r, `<br><span class="small">Database label: ${esc(r.flora_outcome)} (screening label, not citable)${r.doi_detected_on_page ? ' · already cited in the article' : ''}</span>`)).join('')}
     </tbody></table>
-    ${extra.length ? `<details><summary>Other sources used for this card (${extra.length})</summary><ul class="tight">${extra.map(e => `<li>${doiLink(e.doi)} ${lvlBadge(e.evidence_level, true)} ${esc(e.what_it_supports)}${e.excerpt ? `<blockquote class="excerpt">“${esc(e.excerpt)}”</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}
-    ${revs.length ? `<details><summary>Review articles we checked for the replication: ${found.length} of ${revs.length} cite or mention it</summary><ul class="tight">${revs.map(r => `<li>${esc(r.title)} (${esc(r.year)}) ${doiLink(r.doi)} ${lvlBadge(r.evidence_level, true)} · ${r.mentions ? '<strong>mentions it</strong>' : 'no mention found'}${r.snippets?.[0] ? `<blockquote class="excerpt">…${esc(r.snippets[0].slice(0, 400))}…</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}`;
+    ${extra.length ? `<details><summary>Other sources used for this card (${extra.length})</summary><ul class="tight">${extra.map(e => `<li>${srcLink(e.doi)} ${lvlBadge(e.evidence_level, true)} ${esc(e.what_it_supports)}${e.excerpt ? `<blockquote class="excerpt">“${esc(e.excerpt)}”</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}
+    ${revs.length ? `<details><summary>Review articles we checked for the replication: ${found.length} of ${revs.length} cite or mention it</summary><ul class="tight">${revs.map(r => `<li>${esc(r.title)} · ${srcLink(r.doi)} ${lvlBadge(r.evidence_level, true)} · ${r.mentions ? '<strong>mentions it</strong>' : 'no mention found'}${r.snippets?.[0] ? `<blockquote class="excerpt">…${esc(r.snippets[0].slice(0, 400))}…</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}`;
 }
 
 // The suggested edit as a pointer (where, what kind of change, which sources), never as article prose:
@@ -231,23 +281,22 @@ const OPERATION = {insert_after: 'Add a sentence after the sentence quoted above
 function pointerBlock(it) {
   const d = it.suggestion.draft;
   if (!['provided', 'conditional'].includes(d.status)) return '';
-  const names = Object.fromEntries([it.original, ...it.replications].map(x => [x.doi.toLowerCase(), x.short.split(':')[0]]));
   const cites = (d.citations || []).filter(x => x && !/^needs/i.test(x));
   const op = d.target_text && OPERATION[d.operation];
-  return `<h4>Suggested edit</h4>
+  return `<h4 id="edit-${it.card_id}">Suggested edit</h4>
     <p>${op ? esc(op) + '. ' : ''}<span class="small">Where: ${esc(d.location)}</span></p>
-    ${cites.length ? `<p>Sources it could cite: ${cites.map(x => `${names[x.toLowerCase()] ? esc(names[x.toLowerCase()]) + ', ' : ''}${doiLink(x)}`).join('; ')}</p>` : ''}
+    ${cites.length ? `<p>Sources it could cite: ${cites.map(srcLink).join('; ')}</p>` : ''}
     ${d.status === 'conditional' ? '<p class="small">This depends on one of the questions under “Your call”.</p>' : ''}`;
 }
 
 function writingBlock(it) {
-  const s = it.suggestion, d = s.draft;
+  const s = it.suggestion;
   const points = s.content_points.filter(x => !/^needs/i.test(x.source));
   if (!points.length && !s.alternatives.length) return pointerBlock(it);
   const unread = points.some(x => x.evidence_level !== 'full_text');
   return `${pointerBlock(it)}<h4>${EDIT_ACTIONS.has(s.proposed_action) ? 'Suggested points to cover' : 'Points worth knowing'}</h4>
     ${unread ? '<p class="small">Points marked “Abstract only” or “Title and details only” were prepared without the full paper: check them against it.</p>' : ''}
-    ${points.length ? `<ul class="tight">${points.map(x => `<li>${esc(x.point)} · ${doiLink(x.source)} ${lvlBadge(x.evidence_level, true)}</li>`).join('')}</ul>` : ''}
+    ${points.length ? `<ul class="tight">${points.map(x => `<li>${esc(x.point)} <span class="small">· ${srcLink(x.source)} ${lvlBadge(x.evidence_level, true)}</span></li>`).join('')}</ul>` : ''}
     ${s.alternatives.length ? `<details ${itemKind(it) === 'none' ? 'open' : ''}><summary>Other problems found and alternative fixes (${s.alternatives.length})</summary><ul class="tight">${s.alternatives.map(a => `<li>${esc(a.action)} <span class="small">${esc(a.when)}</span></li>`).join('')}</ul></details>` : ''}`;
 }
 
@@ -255,7 +304,7 @@ function contextBlock(it) {
   const quotes = it.suggestion.claim_sites.map(x => x.visible_claim_quote);
   return `<details><summary>Where this study appears in the article (${it.occurrences.length})</summary>
     <p class="small"><mark class="focal">[this study]</mark> marks its citation, <mark class="paired">[replication]</mark> a replication's; <mark class="claim">underlined</mark> text is what the citation supports. Rendering is approximate; check the live page.</p>
-    ${it.occurrences.map(o => `<h5>Section “${esc(o.section)}”${o.in_comment ? ' (hidden comment, not visible to readers)' : ''}</h5>
+    ${it.occurrences.map(o => `<h6>Section “${esc(o.section)}”${o.in_comment ? ' (hidden comment, not visible to readers)' : ''}</h6>
       <div class="passage">${highlight(o.paragraph_plain, quotes)}</div>
       <details><summary>Whole section</summary><div class="passage">${highlight(o.section_plain, quotes)}</div></details>`).join('')}</details>`;
 }
@@ -272,18 +321,25 @@ function provenanceBlock(it) {
     <dt>Status</dt><dd>Prepared with AI${p.finished_at ? ' on ' + esc(p.finished_at.slice(0, 10)) : ''}; not yet checked by people.</dd></dl></details>`;
 }
 
+const studyName = it => SOURCES[it.original.doi.toLowerCase()]?.label || it.original.short.split(':')[0];
+
+// One study: the decision material first (gist, sentence, suggestion, edit, your call), then the
+// material for checking the AI's work, set apart and quieter.
 function itemSection(it, i, n, rec) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
   const head = `${n > 1 ? `Study ${i + 1} of ${n}: ` : ''}${it.original.short}`;
-  const body = `${issueBlock(it)}
-    <div class="proposal ${cls}"><p class="verdict"><strong>${esc(ACTION[s.proposed_action])}</strong></p>
-      ${s.edit_strength ? `<p class="small">${esc(STRENGTH[s.edit_strength])}</p>` : ''}
-      ${it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this article does not cite yet.</p>' : ''}
-      <p>${esc(s.rationale)}</p>
-      ${it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : ''}<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}</p></div>
-    ${writingBlock(it)}${checksBlock(it, rec)}${evidenceBlock(it)}${contextBlock(it)}${provenanceBlock(it)}`;
-  return `<section class="item" id="item-${it.card_id}">
-    <details ${k !== 'none' || n === 1 || s.alternatives.length ? 'open' : ''}><summary class="item-head"><span class="badge ${cls}">${label}</span> ${esc(head)}</summary>${body}</details></section>`;
+  const more = [it.rationale_rest ? `<p>${esc(it.rationale_rest)}</p>` : '',
+    it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this article does not cite yet.</p>' : '',
+    it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
+    `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
+  const body = `<p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> <span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> ${esc(it.gist || s.rationale)}</p>
+    ${issueBlock(it)}
+    <div class="proposal ${cls}">${more}</div>
+    ${writingBlock(it)}${yourCallBlock(it, rec)}
+    <div class="checking"><h4>Checking the AI's work</h4>
+      ${checksBlock(it)}${evidenceBlock(it)}${contextBlock(it)}${provenanceBlock(it)}</div>`;
+  return `<section class="item" id="item-${it.card_id}" aria-labelledby="h-${it.card_id}">
+    <details ${k !== 'none' || n === 1 || s.alternatives.length ? 'open' : ''}><summary><h3 class="item-head" id="h-${it.card_id}">${esc(head)}</h3></summary>${body}</details></section>`;
 }
 
 function overview(p) {
@@ -294,35 +350,64 @@ function overview(p) {
 
 function otherFixesBlock(p) {
   if (!p.adjacent.length) return '';
-  return `<section class="other-fixes"><h3>Other problems spotted on this page</h3>
+  return `<section class="other-fixes" id="other-fixes"><h3>Other problems spotted on this page</h3>
     <p class="small">Unrelated to the replication question. The AI checked each against the article text; check it yourself before acting.</p>
     <ul class="tight">${p.adjacent.map(x => `<li><blockquote class="target small-q">${esc(x.sentence)}</blockquote>${esc(x.issue)} <strong>Suggested:</strong> ${esc(x.suggested_action)}</li>`).join('')}</ul></section>`;
 }
 
-function decisionBlock(p, rec) {
-  return `<section class="ledger"><h3>Record your review <span class="small">(stays in this browser)</span></h3>
-    <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.</p>
-    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Study ${i + 1}: ` : 'Your decision: '}${esc(it.original.short.split(':')[0])} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
-      ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${rec.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
-    ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${rec.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
+// Form values: an unsaved draft wins over the saved record.
+function decisionBlock(p, rec, draft) {
+  const f = draft || rec;
+  return `<section class="ledger" id="record" aria-labelledby="record-h"><h3 id="record-h">Record your review <span class="small">(stays in this browser)</span></h3>
+    <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
+      What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
+    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Study ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
+      ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
+    ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
     <label for="l-useful">Was this card useful?</label>
-    <select id="l-useful"><option value="">–</option>${['useful', 'partly useful', 'not useful', 'misleading'].map(v => `<option ${rec.draft_usefulness === v ? 'selected' : ''}>${v}</option>`).join('')}</select>
+    <select id="l-useful"><option value="">–</option>${['useful', 'partly useful', 'not useful', 'misleading'].map(v => `<option ${f.draft_usefulness === v ? 'selected' : ''}>${v}</option>`).join('')}</select>
     <label for="l-notes">Notes (reasons, sources you checked, what you plan to write)</label>
-    <textarea id="l-notes">${esc(rec.notes || '')}</textarea>
+    <textarea id="l-notes">${esc(f.notes || '')}</textarea>
     <p id="l-hint" class="small warntext" hidden>You disagreed with a suggestion: please add a short reason in the notes.</p>
     <div class="row"><button type="button" id="l-save" class="primary">Save review</button>
-    <span id="l-status" class="small" role="status">${rec.updated_at ? `Saved ${esc(rec.updated_at.slice(0, 16).replace('T', ' '))}` : 'Not saved yet'}</span></div></section>`;
+    <span id="l-status" class="small" role="status">${statusText(rec, draft)}</span></div></section>`;
+}
+const stamp = t => esc((t || '').slice(0, 16).replace('T', ' '));
+function statusText(rec, draft) {
+  if (draft) return `Draft kept ${stamp(draft.saved_at)}: not counted as reviewed until you click “Save review”.`;
+  return rec.updated_at ? `Saved ${stamp(rec.updated_at)}` : 'Not saved yet';
 }
 
 const baseRec = p => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid, items: {}, checks_done: {}});
+
+// Sticky bar: the card title (once the heading has scrolled away) and jump links to the parts of the card.
+function cardBar(p) {
+  const links = p.items.length > 1
+    ? p.items.map(it => [`item-${it.card_id}`, studyName(it)])
+    : [[`edit-${p.items[0].card_id}`, 'Suggested edit'], [`call-${p.items[0].card_id}`, 'Your call']];
+  if (p.adjacent.length) links.push(['other-fixes', 'Other problems']);
+  return `<div class="card-bar" id="card-bar"><button type="button" class="back" id="back">← List</button><span class="card-bar-title" aria-hidden="true">${esc(p.page.title)}</span>
+    <nav aria-label="On this card">${links.map(([id, l]) => `<a href="#${id}" data-to="${id}">${esc(l)}</a>`).join('')}
+      <a href="#record" data-to="record" class="to-record">Record your review ↓</a></nav></div>`;
+}
+
+function formState(p) {
+  return {items: Object.fromEntries(p.items.map(it => [it.card_id, document.querySelector(`input[name="dec-${it.card_id}"]:checked`)?.value || ''])
+      .filter(([, v]) => v)),
+    other_fix_done: document.getElementById('l-other')?.checked || false,
+    draft_usefulness: document.getElementById('l-useful').value, notes: document.getElementById('l-notes').value};
+}
+const sameForm = (a, b) => JSON.stringify(a.items || {}) === JSON.stringify(b.items || {}) && !!a.other_fix_done === !!b.other_fix_done
+  && (a.draft_usefulness || '') === (b.draft_usefulness || '') && (a.notes || '') === (b.notes || '');
 
 function show(id, focus) {
   ACTIVE = id;
   const p = PAGES.find(x => x.page_id === id), pg = p.page, lc = p.live_check, rec = ledgerGet(id) || baseRec(p), fl = flags(p);
   history.replaceState(null, '', '#' + id);
   document.getElementById('layout').classList.add('has-card');
-  document.getElementById('detail').innerHTML = `
-    <button type="button" class="back" id="back">← Back to list</button>
+  const detail = document.getElementById('detail');
+  detail.innerHTML = `
+    ${cardBar(p)}
     <h2 id="card-title" tabindex="-1">${esc(pg.title)}</h2>
     <div class="links"><a href="${esc(pg.live_url)}" target="_blank" rel="noopener">Open article</a>
       <a href="${esc(pg.talk_url)}" target="_blank" rel="noopener">Talk page</a>
@@ -334,40 +419,63 @@ function show(id, focus) {
       <button type="button" id="l-check">Check now</button></div>
     ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow WP:BLP and do not imply misconduct.</p>' : ''}
     ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (WP:MEDRS).</p>' : ''}
-    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length, rec)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec)}`;
+    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length, rec)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec, draftGet(id))}`;
+  // Scroll within the card pane on desktop, the page on mobile; open a folded study before jumping into it.
+  detail.scrollTop = 0;
+  const jump = target => {
+    const el = document.getElementById(target);
+    if (!el) return;
+    el.closest('details')?.setAttribute('open', '');
+    el.querySelector?.('details')?.setAttribute('open', '');
+    el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  };
+  detail.querySelectorAll('[data-to]').forEach(a => a.onclick = e => { e.preventDefault(); jump(a.dataset.to); });
+  detail.querySelectorAll('[data-jump]').forEach(a => a.onclick = e => { e.preventDefault(); jump('item-' + a.dataset.jump); });
+  const bar = document.getElementById('card-bar');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => bar.classList.toggle('stuck', !e.isIntersecting), {root: matchMedia('(max-width: 1100px)').matches ? null : detail})
+      .observe(document.getElementById('card-title'));
+  }
 
   document.getElementById('back').onclick = () => { document.getElementById('layout').classList.remove('has-card'); document.querySelector(`.card-btn[data-id="${id}"]`)?.focus(); };
-  document.querySelectorAll('[data-jump]').forEach(a => a.onclick = e => {
-    e.preventDefault();
-    const sec = document.getElementById('item-' + a.dataset.jump);
-    sec.querySelector('details').open = true;
-    sec.scrollIntoView({behavior: 'smooth', block: 'start'});
-  });
   document.querySelectorAll('[data-check]').forEach(cb => cb.onchange = () => {
     const r = ledgerGet(id) || baseRec(p);
     r.checks_done = r.checks_done || {};
     r.checks_done[cb.dataset.item] = [...document.querySelectorAll(`[data-item="${cb.dataset.item}"]:checked`)].map(x => +x.dataset.check);
     ledgerPut(id, r);
   });
+  // Autosave: every change to the form is kept as a draft; a draft equal to the saved record is dropped.
+  let timer = null;
+  const keepDraft = () => {
+    const f = formState(p), saved = ledgerGet(id) || baseRec(p);
+    const same = sameForm(f, saved);
+    draftPut(id, same ? null : {...f, saved_at: new Date().toISOString()});
+    document.getElementById('l-status').textContent = statusText(saved, draftGet(id)).replace(/&amp;/g, '&');
+    renderList();
+  };
+  const form = document.getElementById('record');
+  form.addEventListener('change', e => { if (e.target.id !== 'l-save') keepDraft(); });
+  document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(keepDraft, 600); });
   document.getElementById('l-save').onclick = () => {
-    const notes = document.getElementById('l-notes').value;
-    const decisions = Object.fromEntries(p.items.map(it => [it.card_id, document.querySelector(`input[name="dec-${it.card_id}"]:checked`)?.value || '']));
+    clearTimeout(timer);
+    const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
     const disagrees = p.items.some(it => {
-      const d = decisions[it.card_id], k = itemKind(it);
+      const d = f.items[it.card_id], k = itemKind(it);
       if (k === 'judgement' || k === 'optional') return false;  // either answer is fine without a reason
       const expected = k === 'edit' ? ['edit', 'talk'] : ['no_change'];
       return d && d !== 'skip' && !expected.includes(d);
     });
     const hint = document.getElementById('l-hint');
     hint.hidden = !(disagrees && !notes.trim());
-    if (!hint.hidden) { document.getElementById('l-notes').focus(); return; }
-    const r = {...(ledgerGet(id) || baseRec(p)), items: Object.fromEntries(Object.entries(decisions).filter(([, v]) => v)),
-      other_fix_done: document.getElementById('l-other')?.checked || false,
-      draft_usefulness: document.getElementById('l-useful').value, notes,
-      reviewer: document.getElementById('reviewer').value, updated_at: new Date().toISOString()};
+    if (!hint.hidden) { keepDraft(); document.getElementById('l-notes').focus(); return; }
+    const r = {...(ledgerGet(id) || baseRec(p)), ...f, reviewer: document.getElementById('reviewer').value, updated_at: new Date().toISOString()};
     ledgerPut(id, r);
-    document.getElementById('l-status').textContent = 'Saved';
+    draftPut(id, null);
+    const missingItems = p.items.filter(it => !f.items[it.card_id]).length;
+    document.getElementById('l-status').textContent = missingItems
+      ? `Saved. Choose a decision for ${missingItems === 1 ? 'the remaining study' : `all ${missingItems} remaining studies`} to mark the card as reviewed.`
+      : 'Saved: the card counts as reviewed.';
     renderList();
   };
   document.getElementById('l-check').onclick = async () => {
@@ -384,13 +492,23 @@ function show(id, focus) {
     } catch (e) { msg.textContent = 'Could not reach Wikipedia: ' + e; }
   };
   renderList();
-  if (focus) document.getElementById('card-title').focus();
+  if (focus) document.getElementById('card-title').focus({preventScroll: true});
 }
 
 // ---------- ledger export ----------
+const EXPORT_KEY = 'flora-en-edit-proto:last-export';
 function updateLedgerCount() {
-  document.getElementById('ledger-count').textContent = `${PAGES.filter(reviewed).length}/${PAGES.length} reviewed`;
+  const drafts = PAGES.filter(hasDraft).length;
+  document.getElementById('ledger-count').innerHTML = `<strong>${PAGES.filter(reviewed).length} of ${PAGES.length}</strong> articles reviewed` +
+    (drafts ? ` · <span class="badge draft">${drafts} with a draft</span>` : '');
+  // Remind people to export once they have saved work that no export contains yet.
+  const last = lsGet(EXPORT_KEY) || '';
+  const fresh = PAGES.map(p => ledgerGet(p.page_id)).filter(r => r?.updated_at && r.updated_at > last).length;
+  const el = document.getElementById('export-reminder');
+  el.hidden = !fresh;
+  el.textContent = `${fresh} saved review${fresh > 1 ? 's are' : ' is'} not in an export yet. Reviews stay only in this browser: export them to keep a copy or share them.`;
 }
+function markExported() { lsSet(EXPORT_KEY, new Date().toISOString()); updateLedgerCount(); }
 function download(name, text, type) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], {type}));
@@ -428,46 +546,117 @@ function showStep(i) {
   document.getElementById('welcome-close').hidden = STEP === last;
   document.querySelector('#welcome .modal-box').scrollTop = 0;
 }
-function openHelp() {
+function openWelcome() {
   const m = document.getElementById('welcome');
-  document.getElementById('welcome-hide').checked = localStorage.getItem(WELCOME_KEY) === '1';
+  document.getElementById('welcome-hide').checked = lsGet(WELCOME_KEY) === '1';
   m.hidden = false;
   showStep(0);
   document.getElementById('step-next').focus({preventScroll: true});
 }
-function closeHelp() {
-  localStorage.setItem(WELCOME_KEY, document.getElementById('welcome-hide').checked ? '1' : '0');
+function closeWelcome() {
+  lsSet(WELCOME_KEY, document.getElementById('welcome-hide').checked ? '1' : '0');
   document.getElementById('welcome').hidden = true;
+  document.getElementById('open-help').focus();
+}
+
+// ---------- help panel: stays open beside the card while you review ----------
+let GUIDE_LOADED = false;
+function buildHelp() {
+  // "How this works" reuses the walkthrough's steps, one after another, with headings a level down.
+  document.getElementById('help-how').innerHTML = [...document.querySelectorAll('#welcome .step')].map(st => {
+    const c = st.cloneNode(true);
+    c.hidden = false;
+    c.removeAttribute('class');
+    c.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
+    c.querySelectorAll('h3').forEach(h => h.outerHTML = `<h4>${h.innerHTML}</h4>`);
+    c.querySelectorAll('h2').forEach(h => h.outerHTML = `<h3>${h.innerHTML}</h3>`);
+    return c.outerHTML;
+  }).join('');
+}
+async function loadGuide() {
+  if (GUIDE_LOADED) return;
+  const box = document.getElementById('help-guide');
+  try {
+    const doc = new DOMParser().parseFromString(await (await fetch('guide.html')).text(), 'text/html');
+    const prose = doc.querySelector('.prose');
+    prose.querySelectorAll('h4').forEach(h => h.outerHTML = `<h5>${h.innerHTML}</h5>`);
+    prose.querySelectorAll('h3').forEach(h => h.outerHTML = `<h4>${h.innerHTML}</h4>`);
+    prose.querySelectorAll('h2').forEach(h => h.outerHTML = `<h3>${h.innerHTML}</h3>`);
+    prose.querySelectorAll('a[href]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+    box.innerHTML = prose.innerHTML + '<p class="small"><a href="guide.html" target="_blank" rel="noopener">Open the workflow in its own tab ↗</a></p>';
+    GUIDE_LOADED = true;
+  } catch (e) {
+    box.innerHTML = '<p><a href="guide.html" target="_blank" rel="noopener">Open the contributor workflow in a new tab ↗</a></p>';
+  }
+}
+function helpTab(which) {
+  ['how', 'guide'].forEach(k => {
+    const on = k === which, tab = document.getElementById('tab-' + k);
+    tab.setAttribute('aria-selected', on);
+    tab.tabIndex = on ? 0 : -1;
+    document.getElementById('help-' + k).hidden = !on;
+  });
+  if (which === 'guide') loadGuide();
+}
+function openHelp(which = 'how') {
+  document.getElementById('help-panel').hidden = false;
+  document.body.classList.add('help-open');
+  document.getElementById('open-help').setAttribute('aria-expanded', 'true');
+  helpTab(which);
+  document.getElementById('tab-' + which).focus();
+}
+function closeHelp() {
+  document.getElementById('help-panel').hidden = true;
+  document.body.classList.remove('help-open');
+  document.getElementById('open-help').setAttribute('aria-expanded', 'false');
   document.getElementById('open-help').focus();
 }
 
 async function init() {
   DATA = await (await fetch('data/suggestions.json')).json();
   PAGES = DATA.pages;
+  SOURCES = DATA.sources || {};
   PAGES.sort((a, b) => (pageRepl(a) && KORDER[pageKind(a)] < 2 ? 0 : 1) - (pageRepl(b) && KORDER[pageKind(b)] < 2 ? 0 : 1) || KORDER[pageKind(a)] - KORDER[pageKind(b)] || a.page.title.localeCompare(b.page.title));
   PAGES.forEach(p => p.search = [p.page.title, ...p.items.flatMap(it => [it.original.short, it.original.citation,
     it.suggestion.rationale, ...it.occurrences.map(o => o.paragraph_plain)])].join(' ').toLowerCase());
   const rv = document.getElementById('reviewer');
-  rv.value = localStorage.getItem('flora-en-edit-proto:reviewer') || '';
-  rv.onchange = e => localStorage.setItem('flora-en-edit-proto:reviewer', e.target.value);
+  rv.value = lsGet('flora-en-edit-proto:reviewer') || '';
+  rv.onchange = e => lsSet('flora-en-edit-proto:reviewer', e.target.value);
   document.getElementById('q').addEventListener('input', renderList);
+  // Filters start folded away on every screen size; the button says how many are on.
   document.getElementById('toggle-filters').onclick = e => {
     const on = document.getElementById('layout').classList.toggle('show-filters');
-    e.target.setAttribute('aria-expanded', on);
+    document.getElementById('filters').hidden = !on;
+    e.currentTarget.setAttribute('aria-expanded', on);
   };
-  document.getElementById('open-help').onclick = openHelp;
-  document.querySelectorAll('[data-open-help]').forEach(b => b.onclick = openHelp);
-  document.getElementById('welcome-close').onclick = closeHelp;
+  document.getElementById('clear-filters').onclick = clearFilters;
+  buildHelp();
+  document.getElementById('open-help').onclick = () => document.getElementById('help-panel').hidden ? openHelp() : closeHelp();
+  document.getElementById('help-close').onclick = closeHelp;
+  document.getElementById('tab-how').onclick = () => helpTab('how');
+  document.getElementById('tab-guide').onclick = () => helpTab('guide');
+  document.querySelector('.help-tabs').addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+    const next = document.getElementById('tab-how').getAttribute('aria-selected') === 'true' ? 'guide' : 'how';
+    helpTab(next); document.getElementById('tab-' + next).focus();
+  });
+  document.getElementById('help-panel').addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
+  document.querySelectorAll('[data-open-help]').forEach(b => b.onclick = () => openHelp());
+  const menu = document.getElementById('about-menu');
+  document.addEventListener('click', e => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+  menu.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
+  document.getElementById('welcome-close').onclick = closeWelcome;
   document.getElementById('step-back').onclick = () => showStep(STEP - 1);
-  document.getElementById('step-next').onclick = () => STEP === document.querySelectorAll('#welcome .step').length - 1 ? closeHelp() : showStep(STEP + 1);
-  document.getElementById('welcome').addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
-  document.getElementById('export-json').onclick = () => download('flora-en-ledger.json', JSON.stringify({exported_at: new Date().toISOString(), build: DATA.build_id,
-    pages: PAGES.map(p => ledgerGet(p.page_id)).filter(Boolean)}, null, 2), 'application/json');
+  document.getElementById('step-next').onclick = () => STEP === document.querySelectorAll('#welcome .step').length - 1 ? closeWelcome() : showStep(STEP + 1);
+  document.getElementById('welcome').addEventListener('keydown', e => { if (e.key === 'Escape') closeWelcome(); });
+  document.getElementById('export-json').onclick = () => { download('flora-en-ledger.json', JSON.stringify({exported_at: new Date().toISOString(), build: DATA.build_id,
+    pages: PAGES.map(p => ledgerGet(p.page_id)).filter(Boolean)}, null, 2), 'application/json'); markExported(); };
   document.getElementById('export-csv').onclick = () => {
     const rows = ledgerRows();
     const cols = ['page_id', 'page_title', 'card_id', 'study', 'reviewed_revision_id', 'live_revision_checked', 'stale_revision', 'decision', 'decision_label', 'queue_decision', 'checks_done', 'other_fix_done', 'card_usefulness', 'reviewer', 'updated_at', 'ai_suggested_action', 'notes'];
     const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
     download('flora-en-ledger.csv', [cols.join(',')].concat(rows.map(r => cols.map(k => q(r[k])).join(','))).join('\n'), 'text/csv');
+    markExported();
   };
   document.getElementById('import-json').onchange = async e => {
     const obj = JSON.parse(await e.target.files[0].text());
@@ -484,6 +673,6 @@ async function init() {
   const h = location.hash.slice(1);
   if (h && PAGES.some(p => p.page_id === h)) { SEGMENT = 'all'; buildSegments(); show(h, false); }
   // ?welcome=0 suppresses the first-visit screen (used for automated screenshots).
-  if (localStorage.getItem(WELCOME_KEY) !== '1' && new URLSearchParams(location.search).get('welcome') !== '0') openHelp();
+  if (lsGet(WELCOME_KEY) !== '1' && new URLSearchParams(location.search).get('welcome') !== '0') openWelcome();
 }
 init();

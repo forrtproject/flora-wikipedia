@@ -12,4 +12,4 @@ cd "$here"
 env -u OPENROUTER_API_KEY -u OPENAI_API_KEY -u ANTHROPIC_API_KEY python3 select_pages.py
 env -u OPENROUTER_API_KEY -u OPENAI_API_KEY -u ANTHROPIC_API_KEY python3 evidence.py $refresh
 python3 validate_all.py
-python3 build_site.py --output-dir "$out"
+python3 build_site.py --output-dir "$out" ${refresh:+--fetch-labels}
