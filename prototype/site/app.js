@@ -332,7 +332,7 @@ function itemSection(it, i, n, rec) {
     it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this article does not cite yet.</p>' : '',
     it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
     `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
-  const body = `<p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> <span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> ${esc(it.gist || s.rationale)}</p>
+  const body = `<p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
     ${issueBlock(it)}
     <div class="proposal ${cls}">${more}</div>
     ${writingBlock(it)}${yourCallBlock(it, rec)}
