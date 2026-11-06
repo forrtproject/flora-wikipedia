@@ -28,6 +28,10 @@ Nothing here edits Wikipedia or Wikidata.
 | Live spot-check | `inspect_sample.py` | `manual-inspection.json` | Wikipedia read API |
 | Build site | `build_site.py` (+ `write_about.py`) | static site in a dedicated directory outside the repo | none |
 
+The one-line summary at the top of each study comes from `gist_overrides.json`: reviewed
+rewrites, each tied to a hash of the rationale it summarises, so the build fails if a draft
+changes underneath it. Without an entry, the rationale's opening sentence is used.
+
 Grounding checks are mechanical: claim quotes must occur in the reviewed
 revision, source excerpts must occur verbatim in the cached abstract or full
 text, evidence levels cannot exceed what was cached, cited DOIs must come from
@@ -44,6 +48,9 @@ bash prototype/build.sh
 bash prototype/build.sh --refresh-live
 # Copy the built site for the shared review deployment ("private" wording rewritten)
 python3 prototype/stage_public.py ../flora-wikipedia-edit-prototype-20261006 STAGING_DIR
+# The FORRT GitHub Pages copy (https://forrt.org/flora-wikipedia/) adds a work-in-progress
+# banner and is published as the gh-pages branch (one commit per publish)
+python3 prototype/stage_public.py ../flora-wikipedia-edit-prototype-20261006 STAGING_DIR --wip
 # Tests
 python3 tests/test_edit_prototype.py
 # Re-draft missing cards through a CLI route (restartable; skips parsed outputs)

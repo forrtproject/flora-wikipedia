@@ -40,7 +40,7 @@ with zipfile.ZipFile(out / 'code-and-docs.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     for sub in ['R', 'tests', 'scripts']:
         for f in (root / sub).rglob('*'):
             if f.is_file() and '__pycache__' not in f.parts: z.write(f, f.relative_to(root))
-    for f in ['README.md', '.gitignore', 'output/REPORT.md', 'web/doi-screen/REPORT.md', 'web/doi-screen/index.html']:
+    for f in ['README.md', '.gitignore', 'output/REPORT.md']:
         z.write(root / f, f)
 examples = rows(esdir / 'adjudication_pairs.csv')
 contexts = rows(esdir / 'citation_contexts.csv')

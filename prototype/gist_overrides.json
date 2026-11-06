@@ -1,0 +1,294 @@
+{
+ "9a80ed0ec88ae488697b": {
+  "gist": "The article reports Doyen et al.'s (2012) failed replication of the walking-speed result in another section, not where it describes the experiment; the other assessment judged adding it there optional.",
+  "rationale_sha": "1607afe87e14"
+ },
+ "be3dfef25a6156f0b608": {
+  "gist": "The cited study had no interview (participants rated a person described on paper), and a 128-person replication of that experiment by Chabris et al. (2018) found no effect of drink temperature.",
+  "rationale_sha": "ad9df2913615"
+ },
+ "3cd12104e070f0823407": {
+  "gist": "The paper is about unconsciously activated goals and describes no dispute over how quickly priming occurs, so it does not support the sentence it is cited for.",
+  "rationale_sha": "663ab8203b4d"
+ },
+ "e83fa0ec47fae9baa987": {
+  "gist": "In the original study the same people rated both good and bad outcomes, not separate groups as the article says; the finding itself held in a preregistered 2023 replication with 692 participants.",
+  "rationale_sha": "91b3f5b28ec0"
+ },
+ "d6bc57905df5db6c86f5": {
+  "gist": "The quotation is accurate, and Meier et al. (2023) found the same pattern for NBA coaches and in other leagues, so reporting this would enrich the article rather than correct it.",
+  "rationale_sha": "bb1fb3b2d3db"
+ },
+ "b71eb676ccdfbbc8317c": {
+  "gist": "The article presents the 2006 writing exercise as promising, but later tests of the exercise, including a direct replication by Protzko & Aronson (2016), found little or no effect on grades.",
+  "rationale_sha": "f7b348003fe4"
+ },
+ "1e54eed477a64825da2b": {
+  "gist": "The paper found the diversity statement raised trust only when the brochure showed few minority staff; the replication tested a different experiment and does not bear on the sentence.",
+  "rationale_sha": "d251ccef48fa"
+ },
+ "38fe22971fd9b5daaf61": {
+  "gist": "The article cites the paper only for background statements it supports, and the later check simply re-ran the paper's own analyses successfully.",
+  "rationale_sha": "a24d17307d32"
+ },
+ "dcaebad614cf590f87ce": {
+  "gist": "The article is accurate, and a pre-registered 2021 replication with 604 participants found effects in line with the original survey results, so mentioning it is optional.",
+  "rationale_sha": "96ab2eda155a"
+ },
+ "aeb4b03da60346639d65": {
+  "gist": "The study measured visual attention, not hand–eye coordination, and found players more affected by distractors, not less; a 2011 replication did not reproduce that distractor result.",
+  "rationale_sha": "4cea6bf2ba28"
+ },
+ "e8d1b8b878730ca7ea01": {
+  "gist": "The article reports Plott and Zeiler's claim that the buying–selling price gap comes from flawed procedures, but not that Fehr et al. (2015), using their procedures, still found the gap.",
+  "rationale_sha": "cd8dddf41eac"
+ },
+ "18b1cb4274004eeec969": {
+  "gist": "The article says Driscoll's study has not been replicated, but Sinclair et al. (2014) repeated it with 396 participants and found no evidence for the effect.",
+  "rationale_sha": "b342121a0adc"
+ },
+ "0932007df66a09db2e5e": {
+  "gist": "The sentence citing the paper is accurate; the 2017 reanalysis questions a different part of it, the finding that institutions explain the paradox, which the article does not report.",
+  "rationale_sha": "5067ed4296ee"
+ },
+ "59c565aa69b0392e3137": {
+  "gist": "The article says only that the game has been studied; a 2023 replication found that playing it lowered belief in true tweets about as much as in false ones.",
+  "rationale_sha": "ebddfbecaff3"
+ },
+ "293d0730bf5ed1444af8": {
+  "gist": "The sentence is accurate and already cites the confirming replication; one assessment suggests saying what the 2019 study found and that it lacked a control group, the other sees no need.",
+  "rationale_sha": "73dd68050fe4"
+ },
+ "d0f5428c75c410473ca5": {
+  "gist": "The 2018 paper tested an earlier card-based classroom game, not Bad News, so it does not support the sentence about research on Bad News.",
+  "rationale_sha": "d7d75ec5d9fd"
+ },
+ "f16a8bdee0e4a17f85eb": {
+  "gist": "The article attributes claims to the paper that it does not make (waiting to see the kick, diving to please teammates), and a 2026 replication found no significant advantage to staying in the centre.",
+  "rationale_sha": "09a3175ff341"
+ },
+ "d49ea93d5996e77246ad": {
+  "gist": "The replication is already reported, but the article misstates the zoo trip's length, what group 3 was asked, and which statistical comparisons the paper made.",
+  "rationale_sha": "8c54964c031f"
+ },
+ "2654544787ead829adc4": {
+  "gist": "The article's use of the study is accurate; a 2023 replication of its online experiment with 1,920 participants found the same direction of effect, but smaller.",
+  "rationale_sha": "01e1d12e937f"
+ },
+ "40fd0f609decd698e343": {
+  "gist": "The article cites this study as an example of defaults shaping consent, but a 2023 direct replication with 1,920 participants found no default effect, only an effect of question wording.",
+  "rationale_sha": "b60bf1c43221"
+ },
+ "a9833b865f1809fd2aba": {
+  "gist": "The replications are already reported, but the article says the lips position produced a frown, whereas the 1988 paper says it only inhibited smiling.",
+  "rationale_sha": "31c63967a6cd"
+ },
+ "5f9410b0cdaec5e420f6": {
+  "gist": "Davis (2013) reproduced the 1997 update of this study and broadly found the same result, so the article is accurate and a mention would only enrich the History section.",
+  "rationale_sha": "c9036de93f81"
+ },
+ "d8579e4f64dcd9b4011c": {
+  "gist": "The failed replications are already covered, but one sentence credits the original authors with claims about lasting hormonal changes and wage negotiations that their paper does not make.",
+  "rationale_sha": "df27ae81ffef"
+ },
+ "a0da68b33531177ed5ea": {
+  "gist": "The article says the study compared cultures in Europe, but its behavioural measures came from cities in 31 countries worldwide, including Canada, Japan and the United States.",
+  "rationale_sha": "5821c33257f2"
+ },
+ "066a57de8b7ccf083efe": {
+  "gist": "The study found a one-quarter drop in absences in one Kenyan programme, not a general 25 percent rise in attendance, and a 2015 re-analysis weakened part of that result.",
+  "rationale_sha": "7bae11db4abe"
+ },
+ "a93fbb99037403c24f7b": {
+  "gist": "The article cites the paper only as an example of growth research using national accounts data, which it is; the later re-estimation concerns regression results the article never mentions.",
+  "rationale_sha": "f31b68da5add"
+ },
+ "06dbebb53dc41a379e31": {
+  "gist": "The sources report p-hacking and publication bias that vary by method, not a threat to the reliability of economics as a whole; the other assessment found the sentence accurate in substance.",
+  "rationale_sha": "159528bc0ed1"
+ },
+ "96c886be06651c90b842": {
+  "gist": "Replications, including seven experiments with 3,289 participants, did not find the effect; the other assessment saw no need to say so because the article uses the paper only as a historical example.",
+  "rationale_sha": "02bc58e695ba"
+ },
+ "2a949802761b7880a2cf": {
+  "gist": "The article cites the paper only as an example of the theory being applied to workplace security behaviour; the replication's mixed results concern model details the article does not mention.",
+  "rationale_sha": "7894820b159a"
+ },
+ "c73d5f150dd98277ea38": {
+  "gist": "A 2021 replication with about 800 participants per study found the same overestimation; one assessment would mention it, the other saw no need in a short list of examples.",
+  "rationale_sha": "b6f6b54a8ebb"
+ },
+ "9a0301d3414fcc395a3d": {
+  "gist": "A reproduction with the authors' data and code got the same estimate, so the content stands, but the sentence misspells the second author as 'Urbatch'; the other assessment rated that fix as no change.",
+  "rationale_sha": "6094f204fdb0"
+ },
+ "90d2f257a47624146a5d": {
+  "gist": "The article's figures match Asch's paper, and replications in 2019 and 2023 found similar error rates (35.4% and 33%), so a mention would only show the result still holds.",
+  "rationale_sha": "cf03efb12c3c"
+ },
+ "357f5c75368a5fee02cb": {
+  "gist": "The section's evidence that daydreaming boosts creativity rests on one 2012 experiment, and a larger preregistered replication with 443 participants found no creativity benefit.",
+  "rationale_sha": "a7f17a63c4f1"
+ },
+ "fae441d23024e3bce1bd": {
+  "gist": "The paper defines moral patients by their capacity to be harmed or helped, not by a child's inability to tell right from wrong; the other assessment found the definitions supported.",
+  "rationale_sha": "020583a54c77"
+ },
+ "16e9fb65f7a10cc5949b": {
+  "gist": "The article's figures match the paper; a 2023 replication of its online experiment found a smaller default effect, which could support attributing the country gap to defaults.",
+  "rationale_sha": "e54c7341bfee"
+ },
+ "1ace7af762cf0b18e059": {
+  "gist": "The paper supports the article's point that anger signals someone's limits; the replications tested a narrower finding about anger backfiring, which the article never mentions.",
+  "rationale_sha": "9f23cf413b1b"
+ },
+ "9148bd2437f3f0e96106": {
+  "gist": "A 2025 replication with 603 participants found the bias in most scenarios but with weaker effects, and not in the stock-price questions, so it is less uniform than the article says.",
+  "rationale_sha": "650c667b7f5b"
+ },
+ "6a61b434691693f085f2": {
+  "gist": "A much larger replication found that defaults still mattered, but the gap was 73.5% versus 62.5%, clearly smaller than the 'twice as high' the article quotes.",
+  "rationale_sha": "4f1e6da1b749"
+ },
+ "fa577f6a3f6f89102501": {
+  "gist": "The biography only records that she published on phonemic restoration, which is accurate; Jaekel et al. (2022), who did not find the effect, bear on the effect rather than her biography.",
+  "rationale_sha": "a3a4574df796"
+ },
+ "e191cc332d65f2332efe": {
+  "gist": "Two references on the sentence about work with Pástor and Taylor point to unrelated papers by other authors; the intended Pástor–Stambaugh–Taylor papers are already in the article's bibliography.",
+  "rationale_sha": "522f6ceee9ee"
+ },
+ "37eb6463d0159d45c33f": {
+  "gist": "The article's description of the study's topic matches the paper, and the replication source is a pooled report on 176 student projects that does not discuss this study individually.",
+  "rationale_sha": "ddab8679cf01"
+ },
+ "f3b297557e3370f7fed2": {
+  "gist": "The biography summarises the 2004 paper correctly; Levy (2009) reports that the largest cities follow a power law, but that debate belongs in the articles on Gibrat's and Zipf's laws.",
+  "rationale_sha": "cca12eddc4a2"
+ },
+ "a4a8e22e3920a0af98bb": {
+  "gist": "The article cites the paper only as one of the retracted papers, which the retraction notice confirms; Kristal et al. (2020) tested a finding the biography never asserts.",
+  "rationale_sha": "7a18137bdb7e"
+ },
+ "6cc6610710cf38644f14": {
+  "gist": "The biography cites Rothman's paper only as the source of the Typological Primacy Model, which is accurate; Parrish (2024) replicated the paper's experiment, which the article does not report.",
+  "rationale_sha": "1b003f2f12a1"
+ },
+ "bc9100486893dafefd86": {
+  "gist": "The biography's two-sentence description is supported by the paper, and Carlsson et al. (2020) found the same gender gap in choosing competition among Chinese adults.",
+  "rationale_sha": "2c12b677dd7a"
+ },
+ "29df02866269d3c6799f": {
+  "gist": "The cited paper supports crediting Grant et al. with tracing the diabetes signal to TCF7L2, and a small Iranian study that found the association again adds nothing the article needs.",
+  "rationale_sha": "b2ba895d5994"
+ },
+ "05a03b11dfc887d85ddc": {
+  "gist": "Delmore et al. (2011) is a laboratory and mouse study with no clinical trials, so the 'currently in clinical trials' clause is unsourced; Aird et al. (2017) can support it with a date.",
+  "rationale_sha": "6668d8ec9f90"
+ },
+ "41110e7d6b180e1147c2": {
+  "gist": "The article matches the cited paper, and the replication attempt, which partly reproduced the finding and was otherwise inconclusive, is a rejected preprint unsuitable as a source here.",
+  "rationale_sha": "ed538cbf6b3c"
+ },
+ "649f3d690423026070e6": {
+  "gist": "The article reports the study's finding correctly and Le et al. (2020) found the same increase in empathy; for a health claim, one more single study would not improve the article.",
+  "rationale_sha": "9c747af25cfa"
+ },
+ "558a76e9dd6407a8e450": {
+  "gist": "The entry describes the 1993 study accurately and already notes mixed later results; the linked 24-person study that reported finding the effect fits within that.",
+  "rationale_sha": "b40d83005ea8"
+ },
+ "48c1f5d796ac93a89d7c": {
+  "gist": "Baron & Hershey (1988) support the definition, and a preregistered replication of Experiment 1 with 692 participants found the same effect.",
+  "rationale_sha": "2474e3e870ec"
+ },
+ "cf499d86909151fbd33a": {
+  "gist": "Milgram (1963) shows people obeying an authority's orders but has no measure of how accurate they judged its opinion, so it supports only half of the definition.",
+  "rationale_sha": "6d4d980fbc5e"
+ },
+ "9847f5c8beefaaf3533c": {
+  "gist": "The simplified definition matches the cited paper; Anvari et al. (2021) replicated one of its two studies, which matters for the Distinction bias article rather than a one-line list entry.",
+  "rationale_sha": "7bcf48201cd2"
+ },
+ "e7a5d2648c80813c8b7e": {
+  "gist": "The definition matches the cited paper; two replications of one experiment that found no significant effect matter for the Cheerleader effect article, not for this one-line entry.",
+  "rationale_sha": "a42350ded310"
+ },
+ "d002c0648f67a08a1429": {
+  "gist": "The definition matches Kruger (1999), and a preregistered replication of Study 1 with 756 participants found the same below-average effect for difficult tasks.",
+  "rationale_sha": "5e89c0efc00d"
+ },
+ "94da14c2b142265f2ab3": {
+  "gist": "Adams et al. (2021) support the definition, and a preregistered replication with 477 French adults found the same tendency to overlook subtractive changes.",
+  "rationale_sha": "5e89c0efc00d"
+ },
+ "cb004d84131f41223d62": {
+  "gist": "The definition matches Tversky & Kahneman (1981), and the replications found the framing effect again (in Many Labs, smaller than in the original).",
+  "rationale_sha": "881bf027c354"
+ },
+ "e7eabdec11d5a08b42d5": {
+  "gist": "The entry correctly dates Stroop's colour-word task to 1935, Many Labs 3 found the basic effect again in over 3,000 participants, and a timeline line needs no replication details.",
+  "rationale_sha": "f317ed5ca25f"
+ },
+ "7b3d33cc48f39207c3b6": {
+  "gist": "The row only names the 2007 prize and the soup-bowl paper, which it cites correctly; a 2024 replication found the effect again at about half the size, which belongs elsewhere.",
+  "rationale_sha": "0ac99c49b9f1"
+ },
+ "2fd9886968cf6c26751b": {
+  "gist": "The row accurately names the prize and paper and says nothing about whether the finding holds; the failed replications tested other studies in the paper, not the candy experiment.",
+  "rationale_sha": "e10aa8c6ba30"
+ },
+ "f84ff1fe303855ec730c": {
+  "gist": "The prize citation itself already says the pen-in-mouth finding was later not found, and the row cites both the 1988 paper and an account of the 17-laboratory replication.",
+  "rationale_sha": "61dde6d67e39"
+ },
+ "7d53a3ae7f8f425cfab6": {
+  "gist": "The row only names the prize-winning paper, with correct details, and makes no claim about its findings for the later replication and extension to bear on.",
+  "rationale_sha": "cbd844267643"
+ },
+ "840f50a2cb83406ee6e9": {
+  "gist": "The 2008 paper appears only in Aknin's publication list, and her own 2020 registered replication broadly supported its finding, so there is nothing to correct.",
+  "rationale_sha": "c184abb86940"
+ },
+ "4031a6c18f78687c2ec3": {
+  "gist": "The article's odds ratio and p-value for the CASS4 variant match the meta-analysis, and the linked replications tested three other genes, so they do not bear on it.",
+  "rationale_sha": "9e7065c80dab"
+ },
+ "56cb2612b28eac4d7fb7": {
+  "gist": "A preregistered replication of Kruger's Study 1 (691 participants after exclusions) found the same above-average and below-average pattern with smaller effects, which the article could mention.",
+  "rationale_sha": "5f57ac49e093"
+ },
+ "8ae7ecd1c42737d7869c": {
+  "gist": "Nuttin (1987) appears only in the reference list and supports no statement in the article; a 2020 replication reproduced the name-letter effect in any case.",
+  "rationale_sha": "6c00774f9561"
+ },
+ "098f4d519687b4aed607": {
+  "gist": "A preregistered replication with 1,573 participants found Alicke's desirability effect again, and one attributed sentence could show readers that the finding has held up.",
+  "rationale_sha": "a7050169c230"
+ },
+ "7b6947af9be62e1ff93e": {
+  "gist": "The lead cites the 1997 study correctly, and Moody's (2001) re-estimation, which found its conclusions 'generally robust', is already listed among the supporting studies.",
+  "rationale_sha": "1fe848204764"
+ },
+ "881b2a79429fb4252d47": {
+  "gist": "The cited study tracked seventh graders' maths grades for two years, not a general advantage over several years, and a larger near-replication found no link between mindset and grades.",
+  "rationale_sha": "d7167192f305"
+ },
+ "4d5939b8a0df7ceb1d5f": {
+  "gist": "The article already cites the 2015 reanalysis but only says it 'challenged' past research, without saying it re-ran Putnam's own data and traced the link to who lives in diverse areas.",
+  "rationale_sha": "a31f0df7a5cb"
+ },
+ "946a7e1d692b84632cce": {
+  "gist": "The article already reports that replications of the red-background experiment found no effect, and describes both correctly; only the journal name in the reference is wrong.",
+  "rationale_sha": "79ba601f5fd2"
+ },
+ "ec200c471454ce5d4f62": {
+  "gist": "The original authors withdrew confidence only in the Thinker experiment that both replications tested, not in all their 2012 findings as the article says; 'Noernzayan' is also misspelt.",
+  "rationale_sha": "ad9170546118"
+ },
+ "78ae066f960b98817e78": {
+  "gist": "The article correctly cites this project as a failed replication of the 2012 Thinker experiment, and the later study linked to it concerns scarcity research, not this claim.",
+  "rationale_sha": "280febbd942b"
+ }
+}

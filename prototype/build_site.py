@@ -44,9 +44,20 @@ def cite(s):
 PARTICLES = {'van', 'von', 'de', 'der', 'den', 'da', 'di', 'du', 'le', 'la', 'del', 'dos', 'ten', 'ter'}
 
 
+SUFFIXES = {'jr', 'jr.', 'sr', 'sr.', 'ii', 'iii', 'iv'}
+
+
 def family(name):
-    """Family name from 'Given Family', keeping lower-case particles: 'Jan C. van Ours' -> 'van Ours'."""
-    t = name.split()
+    """Family name from 'Given Family', keeping lower-case particles: 'Jan C. van Ours' -> 'van Ours'.
+
+    Drops suffixes ('John R. Lott, Jr.' -> 'Lott'), uses a group's abbreviation ('… Initiative (EADI)' -> 'EADI')
+    and handles initials written last ('Suresha B.' -> 'Suresha')."""
+    m = re.search(r'\(([^()]+)\)\s*$', name)
+    if m:
+        return m.group(1)
+    t = [x.strip(',') for x in name.split() if x.strip(',').lower() not in SUFFIXES]
+    while len(t) > 1 and re.fullmatch(r'[A-Z]\.?', t[-1]):
+        t.pop()
     i = len(t) - 1
     while i > 0 and t[i - 1] in PARTICLES:
         i -= 1
@@ -382,6 +393,27 @@ def split_gist(text):
     return ' '.join(sentences[:n]), ' '.join(sentences[n:])
 
 
+GIST_OVERRIDES = HERE / 'gist_overrides.json'
+
+
+def rationale_sha(text):
+    return hashlib.sha256(text.encode()).hexdigest()[:12]
+
+
+def card_gist(card):
+    """One-line reason for a study: the reviewed rewrite in gist_overrides.json, else the rationale's opening.
+
+    A rewrite is tied to the rationale it summarises; if the drafts change, the build fails rather than
+    showing a summary of an older rationale. With a rewrite, the card shows the full rationale below it."""
+    rationale = card['suggestion']['rationale']
+    o = (load_json(GIST_OVERRIDES, {}) or {}).get(card['card_id'])
+    if not o:
+        return split_gist(rationale)
+    if o['rationale_sha'] != rationale_sha(rationale):
+        raise ValueError(f"gist_overrides.json is stale for {card['card_id']}: its rationale has changed")
+    return o['gist'], rationale
+
+
 def pandoc(md, html_out, title):
     subprocess.run(['pandoc', str(md), '-s', '--metadata', f'title={title}', '-c', 'style.css',
                     '--template', str(HERE / 'site' / 'page.template.html'), '-o', str(html_out)], check=True)
@@ -404,8 +436,13 @@ def main():
     dump_json(archive / 'suggestions-with-draft-wording.json', cards)
     for c in cards:
         c['suggestion']['draft'].pop('wording', None)
-        c['gist'], c['rationale_rest'] = split_gist(c['suggestion']['rationale'])
+        c['gist'], c['rationale_rest'] = card_gist(c)
     sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
+    for c in cards:  # sources the evidence cache has no authors for: use the label cache's details
+        for src in [c['original'], *c['replications']]:
+            lab = sources.get(src['doi'].lower())
+            if src['citation'].startswith('Unknown authors') and lab and not lab['label'].startswith('doi:'):
+                src['citation'], src['short'] = lab['citation'], lab['label'] + src['short'][src['short'].index(':'):]
     if unlabelled:
         print(f'{len(unlabelled)} sources have no cached author and year (run with --fetch-labels): {unlabelled}')
     built = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')

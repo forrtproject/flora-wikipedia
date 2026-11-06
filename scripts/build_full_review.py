@@ -28,7 +28,7 @@ with zipfile.ZipFile(out/'code-and-docs.zip','w',zipfile.ZIP_DEFLATED) as z:
  for sub in ['R','tests','scripts']:
   for f in (root/sub).rglob('*'):
    if f.is_file() and '__pycache__' not in f.parts: z.write(f,f.relative_to(root))
- for f in ['README.md','.gitignore','output/REPORT.md','web/doi-screen/REPORT.md','web/doi-screen/index.html']: z.write(root/f,f)
+ for f in ['README.md','.gitignore','output/REPORT.md']: z.write(root/f,f)
 examples=rows(d/'adjudication_pairs.csv');contexts=rows(d/'citation_contexts.csv')
 notes={'7511921':'Both paired DOI strings occur here. Inspect whether the wording represents the replication, rather than inferring acknowledgement from co-presence.',
  '11468441':'The article draws on several sources. Check the paired replication, its scope, and the other references before considering a change.',

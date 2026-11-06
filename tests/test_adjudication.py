@@ -36,5 +36,4 @@ class QueueTests(unittest.TestCase):
   import subprocess
   result=subprocess.run(['Rscript',str(root/'R/09_recommendations.R')],capture_output=True,text=True)
   self.assertNotEqual(result.returncode,0);self.assertIn('retired',result.stderr)
-  app=(root/'web/doi-screen/app.js').read_text();self.assertNotIn('r.edit_url',app);self.assertNotIn('r.sentence_suggestion',app)
 if __name__=='__main__': unittest.main()

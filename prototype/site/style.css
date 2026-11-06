@@ -369,3 +369,6 @@ dl.legend { margin: .4rem 0; } dl.legend dt { font-weight: 700; margin-top: .6re
 .seg-group { flex-wrap: wrap; }
 .seg-group button { padding: .15rem .45rem; font-size: .78rem; white-space: nowrap; }
 .seg-group .seg-sub { font-size: .74rem; }
+.wip-banner { background: #8a5300; color: #fff; text-align: center; padding: .45rem 1rem; font-size: .88rem; line-height: 1.4; }
+.wip-banner strong { letter-spacing: .02em; }
+@media (min-width: 1101px) { .has-wip .layout { height: calc(100vh - 128px - 3.4rem); } }

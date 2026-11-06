@@ -8,6 +8,11 @@ is not evidence that the article fails to acknowledge replication evidence.**
 DOI-free references, secondary sources, historical context, and the substantive
 relationship between studies require human adjudication.
 
+The review-card prototype built on this audit (`prototype/`) is published as a
+work in progress at https://forrt.org/flora-wikipedia/. The earlier static demo
+pages now live in
+[LukasWallrich/flora-wikipedia-demo](https://github.com/LukasWallrich/flora-wikipedia-demo).
+
 ## Setup and one-command runs
 
 Requires R (verified with R 4.6.1 on Linux) and internet access for live stages.
@@ -59,7 +64,7 @@ metadata fields; the loader retains those as NA without imputing labels.
 
 New products live under `runs/<run>/<en|es>/{data,cache,output}`. Language
 namespaces isolate overlapping page IDs and files. Existing `data/`, `cache/`,
-`output/`, and `web/doi-screen/data.json` are archived pilot products; the new runner never
+and `output/` are archived pilot products; the new runner never
 writes to them. `--legacy` explicitly copies the English archive into a new
 namespace and retains its narrower discovery coverage. Legacy individual
 stage scripts remain available from the repository root, but can overwrite

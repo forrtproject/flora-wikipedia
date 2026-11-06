@@ -211,7 +211,10 @@ class CardText(unittest.TestCase):
     def test_author_year_labels(self):
         from build_site import author_year
         self.assertEqual(author_year(dict(authors=['Eric J. Johnson', 'Daniel Goldstein'], year=2003)), 'Johnson & Goldstein (2003)')
-        self.assertEqual(author_year(dict(authors=['A B', 'C D', 'E F'], year=1996)), 'B et al. (1996)')
+        self.assertEqual(author_year(dict(authors=['John Bargh', 'Mark Chen', 'Lara Burrows'], year=1996)), 'Bargh et al. (1996)')
+        self.assertEqual(author_year(dict(authors=['John\xa0R. Lott, Jr.', 'David B. Mustard'], year=1997)), 'Lott & Mustard (1997)')
+        self.assertEqual(author_year(dict(authors=["European Alzheimer's Disease Initiative (EADI)", 'J Lambert', 'X Y'],
+                                          year=2013)), 'EADI et al. (2013)')
         self.assertEqual(author_year(dict(authors=['Jan C. van Ours'], year=2026)), 'van Ours (2026)')
 
     def test_gist_keeps_abbreviations_and_adds_a_short_opening(self):
