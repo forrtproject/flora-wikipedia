@@ -1,7 +1,7 @@
 ## What these cards are
 
 Each card describes one English Wikipedia article and every study on it that is
-listed in FLoRA (the FORRT Library of Replication Attempts). We used AI to read
+listed in FLoRA (the FORRT Library of Reproduction and Replication Attempts). We used AI to read
 the article passage and the sources we could retrieve, and to suggest what,
 if anything, a careful editor might change. The cards are private research
 material and nobody has checked them yet: whether to edit is your decision.
