@@ -6,7 +6,7 @@ p = argparse.ArgumentParser()
 p.add_argument('--output-dir', required=True)
 args = p.parse_args()
 out = pathlib.Path(args.output_dir).resolve()
-if out == root or (out / '.git').exists():
+if out in (root, root.parent) or (out / '.git').exists():
     raise SystemExit('Choose a dedicated output directory, not a repository')
 out.mkdir(parents=True, exist_ok=True)
 def esc(x): return html.escape(str(x if x is not None else ''))
@@ -40,8 +40,9 @@ with zipfile.ZipFile(out / 'code-and-docs.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     for sub in ['R', 'tests', 'scripts']:
         for f in (root / sub).rglob('*'):
             if f.is_file() and '__pycache__' not in f.parts: z.write(f, f.relative_to(root))
-    for f in ['README.md', '.gitignore', 'output/REPORT.md']:
+    for f in ['README.md', 'output/REPORT.md']:
         z.write(root / f, f)
+    z.write(root.parent / '.gitignore', '.gitignore')
 examples = rows(esdir / 'adjudication_pairs.csv')
 contexts = rows(esdir / 'citation_contexts.csv')
 notes = {

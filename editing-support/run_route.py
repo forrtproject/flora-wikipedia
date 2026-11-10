@@ -58,7 +58,7 @@ def run_card(route, card, model, effort):
     elif route == 'agy':
         cmd = ['agy', '-p', ptext + '\nPut your whole result in your reply; do not create files or run commands.',
                '--model', model, '--print-timeout', '20m', '--sandbox',
-               '--add-dir', str(RUN), '--add-dir', str(RUN.parent.parent / 'prototype')]
+               '--add-dir', str(RUN), '--add-dir', str(RUN.parent.parent)]
         with open(raw, 'w') as rf, open(log, 'w') as lf:
             proc = subprocess.run(cmd, stdout=rf, stderr=lf, env=child_env(), timeout=1800)
     else:

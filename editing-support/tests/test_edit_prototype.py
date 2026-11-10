@@ -6,8 +6,8 @@ import pathlib
 import sys
 import unittest
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / 'prototype'))
+ROOT = pathlib.Path(__file__).resolve().parent.parent  # editing-support/
+sys.path.insert(0, str(ROOT))
 
 import wikitext_render as wr  # noqa: E402
 from common import RUN  # noqa: E402
@@ -237,15 +237,15 @@ class CardText(unittest.TestCase):
 class NoWritePaths(unittest.TestCase):
     def test_no_wikimedia_write_calls(self):
         forbidden = ['action=edit', "'action': 'edit'", 'action=wbeditentity', 'quickstatements', 'csrf']
-        for p in list((ROOT / 'prototype').rglob('*.py')) + list((ROOT / 'prototype' / 'site').glob('*.js')):
+        for p in list(ROOT.glob('*.py')) + list((ROOT / 'site').glob('*.js')):
             text = p.read_text().lower()
             for f in forbidden:
                 self.assertNotIn(f, text, f'{p} contains {f}')
 
     def test_no_outcome_to_sentence_mapping(self):
-        text = (ROOT / 'prototype' / 'select_pages.py').read_text()
+        text = (ROOT / 'select_pages.py').read_text()
         self.assertNotIn("sorted(rows, key=lambda r: r['outcomes']", text)
-        for p in (ROOT / 'prototype').rglob('*.py'):
+        for p in ROOT.glob('*.py'):
             self.assertNotIn('failed to replicate', p.read_text().lower(), f'{p} hard-codes outcome wording')
 
 

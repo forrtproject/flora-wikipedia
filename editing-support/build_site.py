@@ -426,7 +426,7 @@ def main():
                     help='fetch Crossref details for sources that have no cached author and year')
     a = ap.parse_args()
     out = a.output_dir.resolve()
-    if out == ROOT or ROOT in out.parents:
+    if out == ROOT.parent or ROOT.parent in out.parents:
         ap.error('Output directory must be outside the repository checkout')
     cards, missing = build_items()
     pages = build_pages(cards)

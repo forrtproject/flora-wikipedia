@@ -11,10 +11,11 @@ import time
 import urllib.parse
 import urllib.request
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-AUDIT = ROOT / 'runs/english-full-gh/en'
+ROOT = pathlib.Path(__file__).resolve().parent  # editing-support/
+SEARCH = ROOT.parent / 'search'
+AUDIT = SEARCH / 'runs/english-full-gh/en'
 WIKITEXT = AUDIT / 'cache/wikitext/en'
-PACKETS = ROOT / 'runs/editathon-review/packets.json'
+PACKETS = SEARCH / 'runs/editathon-review/packets.json'
 RUN = ROOT / 'runs/edit-prototype-en'
 UA = 'FLoRA-Wikipedia-Edit-Prototype/0.1 (private research prototype; https://github.com/forrtproject/flora-wikipedia)'
 

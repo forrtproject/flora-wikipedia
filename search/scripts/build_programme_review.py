@@ -26,12 +26,12 @@ def bundle_run(out,name,base):
         for p in (ROOT/'runs/inputs').glob('flora-latest-2026100*.csv*'):z.write(p,p.relative_to(ROOT))
 def main(out,plan_only=False):
     out=out.resolve()
-    if out==ROOT or out.is_relative_to(ROOT) or (out/'.git').exists():raise ValueError('Serve only a dedicated directory outside the checkout')
+    if out==ROOT.parent or out.is_relative_to(ROOT.parent) or (out/'.git').exists():raise ValueError('Serve only a dedicated directory outside the checkout')
     out.mkdir(parents=True,exist_ok=True)
     for name in ['opus-review','wikidata-sample','editathon-review','verification']:
         copy_tree_files(ROOT/'runs'/name,out/name)
     shutil.copy2(ROOT/'runs/inputs/flora-latest-20261005.csv.provenance.json',out/'github-input-check-20261005.json')
-    plan=(ROOT/'docs/editathon-plan.md').read_text()
+    plan=(ROOT.parent/'docs/editathon-plan.md').read_text()
     wd=load(ROOT/'runs/wikidata-sample/summary.json')
     wdrows=list(csv.DictReader((ROOT/'runs/wikidata-sample/reconciliation.csv').open()))
     table='<table><tr><th>Article</th><th>Topic item</th><th>Role / DOI</th><th>Paper item</th></tr>'+''.join(f'<tr><td>{e(r["article"])}</td><td>{e(r["article_qid"])}</td><td>{e(r["role"])}<br>{e(r["doi"])}</td><td>{e(r["paper_qid"] or r["match_status"])}</td></tr>' for r in wdrows)+'</table>'
@@ -57,10 +57,11 @@ def main(out,plan_only=False):
     patch=subprocess.check_output(['git','diff','--binary'],cwd=ROOT)
     (out/'tracked-changes.patch').write_bytes(patch)
     with zipfile.ZipFile(out/'code-and-docs.zip','w',zipfile.ZIP_DEFLATED) as z:
-        for folder in ['R','tests','scripts','docs','web']:
+        for folder in ['R','tests','scripts','docs']:
             for f in (ROOT/folder).rglob('*'):
                 if f.is_file() and '__pycache__' not in f.parts:z.write(f,f.relative_to(ROOT))
-        for f in ['README.md','.gitignore','output/REPORT.md']:z.write(ROOT/f,f)
+        for f in ['README.md','output/REPORT.md']:z.write(ROOT/f,f)
+        z.write(ROOT.parent/'.gitignore','.gitignore')
         z.write(out/'tracked-changes.patch','tracked-changes.patch')
     fields=[('scope_pairs','Usable original–replication pairs'),('scope_originals','Distinct originals in scope'),('discovery_dois','Distinct DOI keys'),('candidate_pages','Candidate pages, either role'),('original_citing_pages','Pages with a detected original DOI'),('originals_detected','Detected original studies'),('originals_with_any_co_citing_page','Originals with any co-citing page'),('article_original_combinations','Distinct article–original combinations'),('article_original_combinations_with_any_replication_doi','Combinations with any paired replication DOI')]
     metrics='<table><tr><th>Measure</th><th>English</th><th>Spanish</th></tr>'+''.join('<tr><th>'+e(label)+'</th>'+''.join('<td>'+e(summaries[l][key])+'</td>' for l in ['en','es'])+'</tr>' for key,label in fields)+'</table>'

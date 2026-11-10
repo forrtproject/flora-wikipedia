@@ -4,7 +4,7 @@ import argparse,csv,html,json,pathlib,shutil,zipfile
 root=pathlib.Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser();p.add_argument('--output-dir',required=True);p.add_argument('--run',default='spanish-full-latest');a=p.parse_args()
 out=pathlib.Path(a.output_dir).resolve()
-if out==root or (out/'.git').exists(): raise SystemExit('Use a dedicated output directory')
+if out in (root, root.parent) or (out/'.git').exists(): raise SystemExit('Use a dedicated output directory')
 out.mkdir(parents=True,exist_ok=True)
 base=root/'runs'/a.run/'es'; d=base/'output'
 def read(p): return json.loads(p.read_text())
@@ -28,7 +28,8 @@ with zipfile.ZipFile(out/'code-and-docs.zip','w',zipfile.ZIP_DEFLATED) as z:
  for sub in ['R','tests','scripts']:
   for f in (root/sub).rglob('*'):
    if f.is_file() and '__pycache__' not in f.parts: z.write(f,f.relative_to(root))
- for f in ['README.md','.gitignore','output/REPORT.md']: z.write(root/f,f)
+ for f in ['README.md','output/REPORT.md']: z.write(root/f,f)
+ z.write(root.parent/'.gitignore','.gitignore')
 examples=rows(d/'adjudication_pairs.csv');contexts=rows(d/'citation_contexts.csv')
 notes={'7511921':'Both paired DOI strings occur here. Inspect whether the wording represents the replication, rather than inferring acknowledgement from co-presence.',
  '11468441':'The article draws on several sources. Check the paired replication, its scope, and the other references before considering a change.',

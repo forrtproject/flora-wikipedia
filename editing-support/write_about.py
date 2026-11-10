@@ -92,13 +92,13 @@ def about_md(data):
                [({'retain': 'Keep for review', 'drop': 'Leave out of review', 'defer': 'Wait'}.get(k, k), v)
                 for k, v in sorted(c['queue_recommendation'].items())]), '']
     L += ['## Inputs and freshness',
-          'The cards build on the complete English citation audit `runs/english-full-gh/en` (FLoRA file commit '
+          'The cards build on the complete English citation audit `search/runs/english-full-gh/en` (FLoRA file commit '
           '`717fbaf0a35dc662e276d5860dba7faaf7142f93`, SHA-256 `28748e8c…`) and the citation contexts it recorded. '
           'In that audit, 586 of the 2,567 original FLoRA studies in scope had their DOI on at least one English '
           'article (979 articles and 1,193 article–study pairs in all). These are counts of DOI strings: they do not '
           'show that an article discusses a study or mentions its replication.', '',
           'On 6 October 2026 we saved the current upstream FLoRA file as '
-          '`runs/inputs/flora-latest-20261006.csv` (commit `19012dfaabd54432955d2b1d39cd43da6c76f7c3`). '
+          '`search/runs/inputs/flora-latest-20261006.csv` (commit `19012dfaabd54432955d2b1d39cd43da6c76f7c3`). '
           'It differs from the audited copy in a single field (one journal name changed from “OSF” to blank). '
           'Study pairs, DOIs and outcomes are identical, so we did not repeat the citation inventory.', '',
           f"Article text comes from the revisions saved in the audit. On {cards[0]['live_check']['checked_at'][:10]} "
@@ -210,12 +210,12 @@ def about_md(data):
               'fees are not included. The cost record is in the downloads.', '']
     L += ['## Reproduce',
           'For organisers rebuilding the dashboard:', '',
-          '```sh', 'bash prototype/build.sh                 # offline rebuild from saved evidence and assessments',
-          'bash prototype/build.sh --refresh-live  # also check current Wikipedia revision IDs',
-          'python3 tests/test_edit_prototype.py', '```', '',
-          '`prototype/run_route.py` reruns the AI assessments. It can resume, and skips saved results that already '
+          '```sh', 'bash editing-support/build.sh                 # offline rebuild from saved evidence and assessments',
+          'bash editing-support/build.sh --refresh-live  # also check current Wikipedia revision IDs',
+          'python3 editing-support/tests/test_edit_prototype.py', '```', '',
+          '`editing-support/run_route.py` reruns the AI assessments. It can resume, and skips saved results that already '
           'parse. The instructions, settings and full AI outputs, including the earlier draft wording, are archived '
-          'in `runs/edit-prototype-en` (instruction files in `drafts/claude/*.prompt.txt`, everything else in '
+          'in `editing-support/runs/edit-prototype-en` (instruction files in `drafts/claude/*.prompt.txt`, everything else in '
           '`archive/`) and are not part of the downloads.', '',
           '## What still needs people',
           '- Read the article, its talk page and the full sources before acting, and check every fact your edit relies on.',

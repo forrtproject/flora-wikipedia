@@ -2,7 +2,7 @@
 # One-command rebuild of the English edit-suggestion prototype.
 # Offline by default: selection, evidence packets and the site are rebuilt from
 # cached audit products, cached sources and existing drafts. Drafting itself is
-# a separate, restartable step (see prototype/README.md).
+# a separate, restartable step (see editing-support/README.md).
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 out="${PROTOTYPE_OUTPUT_DIR:-$here/../../flora-wikipedia-edit-prototype-20261006}"

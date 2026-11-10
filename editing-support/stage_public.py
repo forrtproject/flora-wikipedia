@@ -5,7 +5,7 @@ Rewrites "private" wording to "shared for review" and checks that no draft
 wording or local archive is included. Fails if any expected text has moved,
 so the staged copy never silently keeps the private wording.
 
-    python3 prototype/stage_public.py ../flora-wikipedia-edit-prototype-20261006 STAGING_DIR [--wip]
+    python3 editing-support/stage_public.py ../flora-wikipedia-edit-prototype-20261006 STAGING_DIR [--wip]
 
 --wip adds a work-in-progress banner across the top of every page (used for the FORRT GitHub Pages copy).
 """
