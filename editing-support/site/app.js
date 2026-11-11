@@ -285,8 +285,9 @@ function pointerBlock(it) {
   if (!['provided', 'conditional'].includes(d.status)) return '';
   const cites = (d.citations || []).filter(x => x && !/^needs/i.test(x));
   const op = d.target_text && OPERATION[d.operation];
-  return `<p>${op ? `<strong>${esc(op)}.</strong> ` : ''}<span class="small">Where: ${esc(d.location)}</span></p>
-    ${cites.length ? `<p>Sources it could cite: ${cites.map(srcLink).join('; ')}</p>` : ''}
+  return `<dl class="edit-kv">${op ? `<dt>What</dt><dd>${esc(op)}</dd>` : ''}<dt>Where</dt><dd>${esc(d.location)}</dd>
+    ${cites.length ? `<dt>Cite</dt><dd>${cites.map(srcLink).join('; ')}</dd>` : ''}</dl>`
+    + `
     ${d.status === 'conditional' ? '<p class="small">This depends on one of the questions under “Your call on this edit”.</p>' : ''}`;
 }
 
@@ -294,8 +295,7 @@ function writingBlock(it) {
   const s = it.suggestion;
   const points = s.content_points.filter(x => !/^needs/i.test(x.source));
   const pointer = pointerBlock(it), isEdit = EDIT_ACTIONS.has(s.proposed_action);
-  const head = pointer ? `<h4 id="edit-${it.card_id}">Suggested edit</h4>
-    <p class="small">No ready-made wording: where the change could go, sources to cite and points to cover, for you to write up.</p>${pointer}` : '';
+  const head = pointer ? `<h4 id="edit-${it.card_id}">Suggested edit</h4>${pointer}` : '';
   if (!points.length && !s.alternatives.length) return head;
   const unread = points.some(x => x.evidence_level !== 'full_text');
   return `${head}${points.length ? `<h5 class="sub-h">${pointer ? 'Points to cover' : isEdit ? 'Suggested points to cover' : 'Points worth knowing'}</h5>` : ''}
@@ -364,7 +364,8 @@ function otherFixesBlock(p) {
 // Form values: an unsaved draft wins over the saved record.
 function decisionBlock(p, rec, draft) {
   const f = draft || rec;
-  return `<section class="ledger" id="record" aria-labelledby="record-h"><h3 id="record-h">Record your review <span class="small">(stays in this browser)</span></h3>
+  return `<section class="ledger" id="record" aria-labelledby="record-h"><h3 id="record-h">Record your review</h3>
+    <p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
     ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Study ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
@@ -425,8 +426,8 @@ function show(id, focus) {
       <span id="rev-msg">${lc.changed_since_frozen ? `⚠ The article has been edited since this snapshot (${esc(pg.frozen_timestamp.slice(0, 10))}). Check the changes before acting.`
         : `Snapshot from ${esc(pg.frozen_timestamp.slice(0, 10))}; unchanged when last checked (${esc((lc.checked_at || '').slice(0, 10))}).`}</span>
       <button type="button" id="l-check">Check now</button></div>
-    ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow WP:BLP and do not imply misconduct.</p>' : ''}
-    ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (WP:MEDRS).</p>' : ''}
+    ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow <a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a> and do not imply misconduct.</p>' : ''}
+    ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</p>' : ''}
     ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec, draftGet(id))}`;
   // Scroll within the card pane on desktop, the page on mobile; open a folded study before jumping into it.
   detail.scrollTop = 0;

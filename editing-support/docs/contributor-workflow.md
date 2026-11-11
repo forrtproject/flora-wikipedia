@@ -113,11 +113,11 @@ tells you depends on how it was done.
 
 ## Extra care
 
-- **Living people (WP:BLP).** Replication outcomes concern findings, not people.
+- **Living people ([WP:BLP](https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons)).** Replication outcomes concern findings, not people.
   Do not imply misconduct or incompetence unless high-quality sources say so
   directly, and do not add replication material to a biography unless it is
   about that person's work and has secondary coverage.
-- **Health and biomedical content (WP:MEDRS).** Use recent systematic reviews,
+- **Health and biomedical content ([WP:MEDRS](https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine))).** Use recent systematic reviews,
   meta-analyses and major textbooks. Primary studies and single replications,
   including Reproducibility Project: Cancer Biology papers, are generally not
   adequate sources for biomedical claims.

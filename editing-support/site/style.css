@@ -395,3 +395,6 @@ p.overview.one { padding: .45rem 1rem; font-size: .92rem; margin: .6rem 0 0; }
 .flash { animation: flash 1.8s ease-out; }
 @keyframes flash { from { background: var(--marker); } to { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .flash { animation: none; background: var(--accent-soft); } }
+dl.edit-kv { display: grid; grid-template-columns: 4.2rem 1fr; gap: .15rem .6rem; margin: .3rem 0; font-size: .93rem; }
+dl.edit-kv dt { color: var(--muted); font-weight: 600; font-size: .85rem; padding-top: .05rem; } dl.edit-kv dd { margin: 0; }
+.proto-note { background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: .3rem .6rem; }
