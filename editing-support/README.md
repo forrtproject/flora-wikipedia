@@ -62,7 +62,7 @@ the full English audit (`../search/runs/english-full-gh/en`) and the review queu
 | Validate | `validate.py`, `validate_all.py` | `validation-report.json` | none |
 | Orchestrator review | `review/<card>.json` | verdicts and overrides | none |
 | Live spot-check | `inspect_sample.py` | `manual-inspection.json` | Wikipedia read API |
-| Build site | `build_site.py` (+ `write_about.py`) | static site outside the repository | none |
+| Build site | `build_site.py` (+ `write_about.py`; `review_snippets.py` re-extracts review passages in reading order for display) | static site outside the repository | none |
 
 Grounding checks are mechanical: claim quotes must occur in the reviewed revision,
 source quotes must occur verbatim in the cached abstract or full text, evidence levels

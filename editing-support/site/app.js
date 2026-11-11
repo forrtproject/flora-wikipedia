@@ -226,11 +226,12 @@ const RESULT = {confirmed: ['✓ Confirmed', 'ok'], contradicted: ['✗ Contradi
   source_unavailable: ['? Source not obtained', 'warn']};
 const RESULT_WORD = {confirmed: 'confirmed', contradicted: 'contradicted', not_in_source: 'not in the source', source_unavailable: 'source not obtained'};
 
-// "Your call": the editorial questions the AI could not settle. Ticks are saved as you go.
-function yourCallBlock(it, rec) {
+// "Your call": the editorial questions the AI could not settle about the suggestion above.
+function yourCallBlock(it) {
   const s = it.suggestion, judge = s.required_checks || [];
-  const done = new Set(rec.checks_done?.[it.card_id] || []);
-  return `${judge.length ? `<h4 id="call-${it.card_id}">Your call</h4><ul class="checklist">${judge.map((x, i) => `<li><label><input type="checkbox" data-item="${it.card_id}" data-check="${i}" ${done.has(i) ? 'checked' : ''}> ${esc(x)}</label></li>`).join('')}</ul>` : ''}
+  return `${judge.length ? `<h4 id="call-${it.card_id}">Your call on this edit</h4>
+    <p class="small">Questions about the suggestion above that the AI could not settle. They are part of the same edit, not separate problems.</p>
+    <ul class="tight">${judge.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
     ${s.uncertainties.length ? `<details><summary>What remains uncertain (${s.uncertainties.length})</summary><ul class="tight">${s.uncertainties.map(u => `<li>${esc(u)}</li>`).join('')}</ul></details>` : ''}`;
 }
 
@@ -241,13 +242,13 @@ function checksBlock(it) {
   const tally = {};
   v.forEach(x => tally[x.result] = (tally[x.result] || 0) + 1);
   const parts = Object.keys(RESULT).filter(k => tally[k]).map(k => `${tally[k]} ${RESULT_WORD[k]}`);
-  const point = x => `<li>${x.result !== 'confirmed' ? `<span class="badge ${RESULT[x.result][1]}">${RESULT[x.result][0]}</span> ` : ''}${esc(x.claim)}
-      <span class="small">· ${srcLink(x.source)} ${lvlBadge(x.evidence_level, true)}</span>
-      ${x.quote ? `<blockquote class="excerpt">“${esc(x.quote)}”</blockquote>` : ''}</li>`;
+  const point = x => `<li>${x.result !== 'confirmed' ? `<span class="badge ${RESULT[x.result][1]}">${RESULT[x.result][0]}</span> ` : ''}<span class="who">AI:</span> ${esc(x.claim)}
+      ${x.quote ? `<blockquote class="excerpt"><span class="who">Quote from ${srcLink(x.source)}</span> ${lvlBadge(x.evidence_level, true)}<br>“${esc(x.quote)}”</blockquote>`
+        : `<span class="small">· ${srcLink(x.source)} ${lvlBadge(x.evidence_level, true)}</span>`}</li>`;
   const off = v.filter(x => x.result !== 'confirmed'), ok = v.filter(x => x.result === 'confirmed');
   return `<h5>What we checked</h5>
     <p class="check-sum"><strong>${v.length} check${v.length > 1 ? 's' : ''}: ${parts.join(', ')}.</strong>
-      <span class="small">Each quote appears word for word in the paper, but the AI may have misread it: check anything your edit will rely on.</span></p>
+      <span class="small">Each point is the AI's statement, followed by the passage it relies on, quoted from the paper named. The quotes appear word for word in the paper, but the AI may have misread them: check anything your edit will rely on.</span></p>
     ${off.length ? `<ul class="verifs">${off.map(point).join('')}</ul>` : ''}
     ${ok.length ? `<details><summary>${off.length ? 'Show' : 'Show all'} ${ok.length} confirmed point${ok.length > 1 ? 's' : ''}</summary><ul class="verifs">${ok.map(point).join('')}</ul></details>` : ''}`;
 }
@@ -258,7 +259,7 @@ function evidenceBlock(it) {
   const row = (role, s, extra) => {
     const ex = excerpts(s.doi);
     return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${doiLink(s.doi)}${extra || ''}
-      ${ex.length ? `<details><summary>Quoted passages (${ex.length})</summary>${ex.map(e => `<blockquote class="excerpt">“${esc(e.excerpt)}”<br><span class="small">${esc(e.what_it_supports)}</span></blockquote>`).join('')}</details>` : ''}</td>
+      ${ex.length ? `<details><summary>Passages quoted from this paper (${ex.length})</summary>${ex.map(e => `<blockquote class="excerpt">“${esc(e.excerpt)}”<br><span class="small"><span class="who">AI's note:</span> ${esc(e.what_it_supports)}</span></blockquote>`).join('')}</details>` : ''}</td>
       <td>${lvlBadge(s.evidence_level)}</td></tr>`;
   };
   const known = [it.original.doi, ...it.replications.map(r => r.doi)].map(x => x.toLowerCase());
@@ -271,7 +272,8 @@ function evidenceBlock(it) {
     ${it.replications.map(r => row('Replication', r, `<br><span class="small">Database label: ${esc(r.flora_outcome)} (screening label, not citable)${r.doi_detected_on_page ? ' · already cited in the article' : ''}</span>`)).join('')}
     </tbody></table>
     ${extra.length ? `<details><summary>Other sources used for this card (${extra.length})</summary><ul class="tight">${extra.map(e => `<li>${srcLink(e.doi)} ${lvlBadge(e.evidence_level, true)} ${esc(e.what_it_supports)}${e.excerpt ? `<blockquote class="excerpt">“${esc(e.excerpt)}”</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}
-    ${revs.length ? `<details><summary>Review articles we checked for the replication: ${found.length} of ${revs.length} cite or mention it</summary><ul class="tight">${revs.map(r => `<li>${esc(r.title)} · ${srcLink(r.doi)} ${lvlBadge(r.evidence_level, true)} · ${r.mentions ? '<strong>mentions it</strong>' : 'no mention found'}${r.snippets?.[0] ? `<blockquote class="excerpt">…${esc(r.snippets[0].slice(0, 400))}…</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}`;
+    ${revs.length ? `<details><summary>Review articles we checked for the replication: ${found.length} of ${revs.length} cite or mention it</summary><ul class="tight">${revs.map(r => `<li>${esc(r.title)} · ${srcLink(r.doi)} ${lvlBadge(r.evidence_level, true)} · ${!r.mentions ? 'no mention found'
+      : r.reference_list_only ? '<strong>cites it</strong> (in its reference list; no passage in the text found)' : '<strong>mentions it</strong>'}${r.mentions && r.snippets?.length ? `<blockquote class="excerpt"><span class="who">Quote from the review:</span><br>“${esc(r.snippets[0])}”</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}`;
 }
 
 // The suggested edit as a pointer (where, what kind of change, which sources), never as article prose:
@@ -283,18 +285,20 @@ function pointerBlock(it) {
   if (!['provided', 'conditional'].includes(d.status)) return '';
   const cites = (d.citations || []).filter(x => x && !/^needs/i.test(x));
   const op = d.target_text && OPERATION[d.operation];
-  return `<h4 id="edit-${it.card_id}">Suggested edit</h4>
-    <p>${op ? esc(op) + '. ' : ''}<span class="small">Where: ${esc(d.location)}</span></p>
+  return `<p>${op ? `<strong>${esc(op)}.</strong> ` : ''}<span class="small">Where: ${esc(d.location)}</span></p>
     ${cites.length ? `<p>Sources it could cite: ${cites.map(srcLink).join('; ')}</p>` : ''}
-    ${d.status === 'conditional' ? '<p class="small">This depends on one of the questions under “Your call”.</p>' : ''}`;
+    ${d.status === 'conditional' ? '<p class="small">This depends on one of the questions under “Your call on this edit”.</p>' : ''}`;
 }
 
 function writingBlock(it) {
   const s = it.suggestion;
   const points = s.content_points.filter(x => !/^needs/i.test(x.source));
-  if (!points.length && !s.alternatives.length) return pointerBlock(it);
+  const pointer = pointerBlock(it), isEdit = EDIT_ACTIONS.has(s.proposed_action);
+  const head = pointer ? `<h4 id="edit-${it.card_id}">Suggested edit</h4>
+    <p class="small">No ready-made wording: where the change could go, sources to cite and points to cover, for you to write up.</p>${pointer}` : '';
+  if (!points.length && !s.alternatives.length) return head;
   const unread = points.some(x => x.evidence_level !== 'full_text');
-  return `${pointerBlock(it)}<h4>${EDIT_ACTIONS.has(s.proposed_action) ? 'Suggested points to cover' : 'Points worth knowing'}</h4>
+  return `${head}${points.length ? `<h5 class="sub-h">${pointer ? 'Points to cover' : isEdit ? 'Suggested points to cover' : 'Points worth knowing'}</h5>` : ''}
     ${unread ? '<p class="small">Points marked “Abstract only” or “Title and details only” were prepared without the full paper: check them against it.</p>' : ''}
     ${points.length ? `<ul class="tight">${points.map(x => `<li>${esc(x.point)} <span class="small">· ${srcLink(x.source)} ${lvlBadge(x.evidence_level, true)}</span></li>`).join('')}</ul>` : ''}
     ${s.alternatives.length ? `<details ${itemKind(it) === 'none' ? 'open' : ''}><summary>Other problems found and alternative fixes (${s.alternatives.length})</summary><ul class="tight">${s.alternatives.map(a => `<li>${esc(a.action)} <span class="small">${esc(a.when)}</span></li>`).join('')}</ul></details>` : ''}`;
@@ -325,17 +329,19 @@ const studyName = it => SOURCES[it.original.doi.toLowerCase()]?.label || it.orig
 
 // One study: the decision material first (gist, sentence, suggestion, edit, your call), then the
 // material for checking the AI's work, set apart and quieter.
-function itemSection(it, i, n, rec) {
+function itemSection(it, i, n) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
   const head = `${n > 1 ? `Study ${i + 1} of ${n}: ` : ''}${it.original.short}`;
   const more = [it.rationale_rest ? `<p>${esc(it.rationale_rest)}</p>` : '',
     it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this article does not cite yet.</p>' : '',
     it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
     `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
-  const body = `<p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
-    ${issueBlock(it)}
+  const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
+  const body = `${papers}${issueBlock(it)}
+    <h4>Suggestion</h4>
+    <p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
     <div class="proposal ${cls}">${more}</div>
-    ${writingBlock(it)}${yourCallBlock(it, rec)}
+    ${writingBlock(it)}${yourCallBlock(it)}
     <div class="checking"><h4>Checking the AI's work</h4>
       ${checksBlock(it)}${evidenceBlock(it)}${contextBlock(it)}${provenanceBlock(it)}</div>`;
   return `<section class="item" id="item-${it.card_id}" aria-labelledby="h-${it.card_id}">
@@ -343,8 +349,8 @@ function itemSection(it, i, n, rec) {
 }
 
 function overview(p) {
-  if (p.items.length < 2) return '';
-  return `<section class="overview"><h3>${p.items.length} studies from the database are cited on this page</h3>
+  if (p.items.length < 2) return `<p class="overview one"><strong>1 study to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(ACTION[p.items[0].suggestion.proposed_action])}</p>`;
+  return `<section class="overview"><h3>${p.items.length} studies to review on this page</h3>
     <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(ACTION[it.suggestion.proposed_action])}</li>`).join('')}</ol></section>`;
 }
 
@@ -378,13 +384,15 @@ function statusText(rec, draft) {
   return rec.updated_at ? `Saved ${stamp(rec.updated_at)}` : 'Not saved yet';
 }
 
-const baseRec = p => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid, items: {}, checks_done: {}});
+const baseRec = p => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid, items: {}});
 
 // Sticky bar: the card title (once the heading has scrolled away) and jump links to the parts of the card.
 function cardBar(p) {
   const links = p.items.length > 1
     ? p.items.map(it => [`item-${it.card_id}`, studyName(it)])
-    : [[`edit-${p.items[0].card_id}`, 'Suggested edit'], [`call-${p.items[0].card_id}`, 'Your call']];
+    : [[`edit-${p.items[0].card_id}`, 'Suggested edit'], [`call-${p.items[0].card_id}`, 'Your call']]
+      .filter(([id]) => p.items[0].suggestion && (id.startsWith('edit-') ? ['provided', 'conditional'].includes(p.items[0].suggestion.draft.status)
+        : (p.items[0].suggestion.required_checks || []).length));
   if (p.adjacent.length) links.push(['other-fixes', 'Other problems']);
   return `<div class="card-bar" id="card-bar"><button type="button" class="back" id="back">← List</button><span class="card-bar-title" aria-hidden="true">${esc(p.page.title)}</span>
     <nav aria-label="On this card">${links.map(([id, l]) => `<a href="#${id}" data-to="${id}">${esc(l)}</a>`).join('')}
@@ -419,7 +427,7 @@ function show(id, focus) {
       <button type="button" id="l-check">Check now</button></div>
     ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow WP:BLP and do not imply misconduct.</p>' : ''}
     ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (WP:MEDRS).</p>' : ''}
-    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length, rec)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec, draftGet(id))}`;
+    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec, draftGet(id))}`;
   // Scroll within the card pane on desktop, the page on mobile; open a folded study before jumping into it.
   detail.scrollTop = 0;
   const jump = target => {
@@ -438,12 +446,6 @@ function show(id, focus) {
   }
 
   document.getElementById('back').onclick = () => { document.getElementById('layout').classList.remove('has-card'); document.querySelector(`.card-btn[data-id="${id}"]`)?.focus(); };
-  document.querySelectorAll('[data-check]').forEach(cb => cb.onchange = () => {
-    const r = ledgerGet(id) || baseRec(p);
-    r.checks_done = r.checks_done || {};
-    r.checks_done[cb.dataset.item] = [...document.querySelectorAll(`[data-item="${cb.dataset.item}"]:checked`)].map(x => +x.dataset.check);
-    ledgerPut(id, r);
-  });
   // Autosave: every change to the form is kept as a draft; a draft equal to the saved record is dropped.
   let timer = null;
   const keepDraft = () => {
@@ -526,7 +528,6 @@ function ledgerRows() {
         reviewed_revision_id: r.reviewed_revision_id, live_revision_checked: r.live_revision_checked || '',
         stale_revision: r.live_revision_checked ? String(r.live_revision_checked) !== String(p.page.frozen_revid) : 'unchecked',
         decision: d, decision_label: DECISIONS[d], queue_decision: DECISION_QUEUE[d],
-        checks_done: (r.checks_done?.[it.card_id] || []).length + '/' + it.suggestion.required_checks.length,
         other_fix_done: r.other_fix_done || false, card_usefulness: r.draft_usefulness || '', reviewer: r.reviewer || '',
         updated_at: r.updated_at, ai_suggested_action: it.suggestion.proposed_action, notes: r.notes || ''});
     }
@@ -574,17 +575,18 @@ function buildHelp() {
   }).join('');
 }
 async function loadGuide() {
-  if (GUIDE_LOADED) return;
+  if (GUIDE_LOADED) return true;
   const box = document.getElementById('help-guide');
   try {
     const doc = new DOMParser().parseFromString(await (await fetch('guide.html')).text(), 'text/html');
     const prose = doc.querySelector('.prose');
-    prose.querySelectorAll('h4').forEach(h => h.outerHTML = `<h5>${h.innerHTML}</h5>`);
-    prose.querySelectorAll('h3').forEach(h => h.outerHTML = `<h4>${h.innerHTML}</h4>`);
-    prose.querySelectorAll('h2').forEach(h => h.outerHTML = `<h3>${h.innerHTML}</h3>`);
+    // Demote headings a level, keeping their ids so links can land on a section.
+    const demote = (from, to) => prose.querySelectorAll(from).forEach(h => h.outerHTML = `<${to}${h.id ? ` id="${h.id}"` : ''}>${h.innerHTML}</${to}>`);
+    demote('h4', 'h5'); demote('h3', 'h4'); demote('h2', 'h3');
     prose.querySelectorAll('a[href]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
     box.innerHTML = prose.innerHTML + '<p class="small"><a href="guide.html" target="_blank" rel="noopener">Open the workflow in its own tab ↗</a></p>';
     GUIDE_LOADED = true;
+    return true;
   } catch (e) {
     box.innerHTML = '<p><a href="guide.html" target="_blank" rel="noopener">Open the contributor workflow in a new tab ↗</a></p>';
   }
@@ -598,12 +600,22 @@ function helpTab(which) {
   });
   if (which === 'guide') loadGuide();
 }
-function openHelp(which = 'how') {
+// Opens the panel on a tab; with `anchor`, scrolls to that heading (else to the top), so a "Why?"
+// link always lands on its answer rather than wherever the panel was left.
+async function openHelp(which = 'how', anchor = '') {
   document.getElementById('help-panel').hidden = false;
   document.body.classList.add('help-open');
   document.getElementById('open-help').setAttribute('aria-expanded', 'true');
   helpTab(which);
   document.getElementById('tab-' + which).focus();
+  const box = document.getElementById('help-' + which);
+  if (which === 'guide') await loadGuide();
+  const target = anchor && box.querySelector('#' + CSS.escape(anchor));
+  if (target) {
+    box.scrollTop = target.offsetTop - box.offsetTop - 8;
+    target.classList.add('flash');
+    setTimeout(() => target.classList.remove('flash'), 1800);
+  } else box.scrollTop = 0;
 }
 function closeHelp() {
   document.getElementById('help-panel').hidden = true;
@@ -624,11 +636,13 @@ async function init() {
   rv.onchange = e => lsSet('flora-en-edit-proto:reviewer', e.target.value);
   document.getElementById('q').addEventListener('input', renderList);
   // Filters start folded away on every screen size; the button says how many are on.
-  document.getElementById('toggle-filters').onclick = e => {
-    const on = document.getElementById('layout').classList.toggle('show-filters');
+  const setFilters = on => {
+    document.getElementById('layout').classList.toggle('show-filters', on);
     document.getElementById('filters').hidden = !on;
-    e.currentTarget.setAttribute('aria-expanded', on);
+    document.getElementById('toggle-filters').setAttribute('aria-expanded', on);
   };
+  document.getElementById('toggle-filters').onclick = () => setFilters(document.getElementById('filters').hidden);
+  document.getElementById('close-filters').onclick = () => { setFilters(false); document.getElementById('toggle-filters').focus(); };
   document.getElementById('clear-filters').onclick = clearFilters;
   buildHelp();
   document.getElementById('open-help').onclick = () => document.getElementById('help-panel').hidden ? openHelp() : closeHelp();
@@ -641,7 +655,7 @@ async function init() {
     helpTab(next); document.getElementById('tab-' + next).focus();
   });
   document.getElementById('help-panel').addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
-  document.querySelectorAll('[data-open-help]').forEach(b => b.onclick = () => openHelp());
+  document.querySelectorAll('[data-open-help]').forEach(b => b.onclick = () => openHelp(b.dataset.openHelp || 'how', b.dataset.anchor || ''));
   const menu = document.getElementById('about-menu');
   document.addEventListener('click', e => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
   menu.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
@@ -653,7 +667,7 @@ async function init() {
     pages: PAGES.map(p => ledgerGet(p.page_id)).filter(Boolean)}, null, 2), 'application/json'); markExported(); };
   document.getElementById('export-csv').onclick = () => {
     const rows = ledgerRows();
-    const cols = ['page_id', 'page_title', 'card_id', 'study', 'reviewed_revision_id', 'live_revision_checked', 'stale_revision', 'decision', 'decision_label', 'queue_decision', 'checks_done', 'other_fix_done', 'card_usefulness', 'reviewer', 'updated_at', 'ai_suggested_action', 'notes'];
+    const cols = ['page_id', 'page_title', 'card_id', 'study', 'reviewed_revision_id', 'live_revision_checked', 'stale_revision', 'decision', 'decision_label', 'queue_decision', 'other_fix_done', 'card_usefulness', 'reviewer', 'updated_at', 'ai_suggested_action', 'notes'];
     const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
     download('flora-en-ledger.csv', [cols.join(',')].concat(rows.map(r => cols.map(k => q(r[k])).join(','))).join('\n'), 'text/csv');
     markExported();

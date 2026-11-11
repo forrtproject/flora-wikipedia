@@ -30,7 +30,7 @@
 
 <div class="notice" role="note">
   Write any edit in your own words from sources you have read. English Wikipedia does not allow AI-written article text.
-  <button class="linklike" type="button" data-open-help>Why?</button>
+  <button class="linklike" type="button" data-open-help="guide" data-anchor="the-rule-on-generated-text">Why?</button>
 </div>
 
 <div id="welcome" class="modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
@@ -87,21 +87,24 @@
       <p>A card has one section per study. The bar at the top of the card jumps to its parts and to the form for
         recording your review. Each section starts with what you need to decide:</p>
       <dl class="legend">
-        <dt>The one-line summary</dt><dd>The suggested action, its kind and the main reason, for example “Add missing context ·
-          Edit suggested · The article presents this study as an example of defaults shaping consent, but a large direct
-          replication did not find the default effect and found that the wording of the question mattered instead.”</dd>
+        <dt>Papers</dt><dd>The original study and its replications, named by author and year. Hover for the full
+          reference, click for the paper.</dd>
         <dt>The sentence at issue</dt><dd>Quoted from the article snapshot with its citations:
           <span class="cite focal">[this study]</span>, <span class="cite paired">[replication]</span> and
           <span class="cite other">[other source]</span>. Hover over a citation to see the full reference. Some
           suggestions are about a claim the cited study does not support rather than about a replication.</dd>
-        <dt>Suggested edit and points to cover</dt><dd>Where an edit could go, which sources it could cite, and facts
-          from those sources it could draw on. Sources are named by author and year; hover for the full reference, click
-          for the paper. We deliberately give no ready-made wording: the text is yours to write.</dd>
-        <dt>Your call</dt><dd>The editorial questions the AI could not settle. Tick them off as you go.</dd>
+        <dt>Suggestion</dt><dd>The suggested action, its kind and the main reason, for example “Add missing context ·
+          Edit suggested · The article presents this study as an example of defaults shaping consent, but a large direct
+          replication did not find the default effect and found that the wording of the question mattered instead.”</dd>
+        <dt>Suggested edit</dt><dd>Where an edit could go, which sources it could cite, and facts from those sources it
+          could draw on. We deliberately give no ready-made wording: the text is yours to write.</dd>
+        <dt>Your call on this edit</dt><dd>Questions about the same edit that the AI could not settle, such as how much
+          weight a replication deserves in a broad article. They are not separate problems.</dd>
       </dl>
       <p>Below that, under <strong>Checking the AI's work</strong>:</p>
       <dl class="legend">
-        <dt>What we checked</dt><dd>The facts the suggestion relies on, each with the passage from the paper, and a count
+        <dt>What we checked</dt><dd>The facts the suggestion relies on, each as the AI's statement (marked “AI:”)
+          followed by the passage quoted from the paper it names, and a count
           such as “9 checks: 8 confirmed, 1 contradicted”. Points marked <span class="badge bad">✗ Contradicted</span>,
           <span class="badge bad">✗ Not in the source</span> or <span class="badge warn">? Source not obtained</span>
           are shown; confirmed points are folded away. Papers were read in full unless marked
@@ -165,7 +168,8 @@
 <main class="layout" id="layout">
   <aside class="filters" id="filters" aria-label="Filters" hidden>
     <div class="filters-head"><h2 class="side-h">Filters</h2>
-      <button type="button" id="clear-filters" class="linklike small" hidden>Clear all</button></div>
+      <span class="filters-actions"><button type="button" id="clear-filters" class="linklike small" hidden>Clear all</button>
+      <button type="button" id="close-filters" aria-label="Close filters">Close ✕</button></span></div>
     <div id="filter-groups"></div>
   </aside>
   <section class="list" aria-label="Cards">
@@ -193,9 +197,12 @@
   </section>
   <article id="detail" class="detail" tabindex="-1">
     <div class="placeholder">
-      <h2>Pick a card from the list</h2>
-      <p>Cards marked <span class="badge repl">Adds a replication</span> are our main focus: the suggested edit cites a
-        replication the article does not cite yet. <button class="linklike" type="button" data-open-help>How this works</button></p>
+      <h2>Choose an article to review</h2>
+      <p>Each entry in the list on the left is one Wikipedia article. Click it to open its review card: the sentence
+        that cites the study, what the replication found and what, if anything, could change.</p>
+      <p>The list starts with articles marked <span class="badge repl">Adds a replication</span>, our main focus: the
+        suggested edit cites a replication the article does not cite yet. Use the buttons above the list to see other
+        kinds of suggestion. <button class="linklike" type="button" data-open-help>How this works</button></p>
     </div>
   </article>
 </main>

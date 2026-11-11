@@ -20,6 +20,7 @@ import subprocess
 import zipfile
 
 from common import PACKETS, ROOT, RUN, dump_json, load_json
+from review_snippets import snippets as review_snippets
 from validate import check
 from write_about import about_md
 
@@ -180,7 +181,7 @@ def build_items():
             replications=[dict(**src_view(r['source']), flora_outcome=r['flora_outcome'],
                                doi_detected_on_page=r['doi_detected_on_page']) for r in pk['replications']],
             replications_not_fetched=pk['replications_not_fetched'],
-            reviews_checked=pk.get('secondary_checked', []),
+            reviews_checked=reviews_view(pk),
             secondary_leads=[x for x in pk['secondary_leads'] if 'error' not in x],
             suggestion=final, best_evidence=best, two_run=two_run,
             adds_replication=adds_replication(final, pk),
@@ -193,6 +194,24 @@ def build_items():
                                               notes=(review or {}).get('notes', '')))))
     apply_text_overrides(items)
     return items, missing
+
+
+def reviews_view(pk):
+    """Review articles checked, with snippets re-extracted in reading order for display."""
+    cited = []
+    for r in pk['replications']:
+        c = r['source'].get('crossref') or {}
+        a = c.get('authors') or []
+        cited.append((a[0].split()[-1] if a and a[0] else '', c.get('year')))
+    abstracts = {l['doi'].lower(): l.get('abstract') or '' for l in pk['secondary_leads'] if l.get('doi')}
+    out = []
+    for r in pk.get('secondary_checked', []):
+        r = dict(r)
+        if r['mentions']:
+            r['snippets'], r['reference_list_only'] = review_snippets(r['doi'], r.get('text_path', ''), cited,
+                                                                      abstracts.get(r['doi'].lower(), ''))
+        out.append(r)
+    return out
 
 
 def apply_text_overrides(cards):
