@@ -429,3 +429,9 @@ blockquote.excerpt .who { display: inline-block; margin-bottom: .1rem; }
 .layout-desk .detail > *, .layout-desk .detail .item > details > * { max-width: 62rem; }
 @media (min-width: 1101px) { body.layout-desk .layout.has-card { grid-template-columns: 300px 1fr; } }
 @media (max-width: 760px) { .desk { grid-template-columns: 1fr; } }
+.tabs-rec { margin: .2rem 0; } .tabs-rec .origin { margin: .4rem 0 .1rem; }
+.desk-match { margin: .2rem 0 .6rem; }
+.detail { container-type: inline-size; }
+@media (max-width: 760px) { .desk { grid-template-columns: 1fr 1fr; } }
+@container (max-width: 760px) { .desk { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { dl.edit-kv { grid-template-columns: 1fr; } dl.edit-kv dt { margin-top: .3rem; } }
