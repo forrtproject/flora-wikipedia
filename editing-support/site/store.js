@@ -63,36 +63,48 @@ const Store = (() => {
   const queue = (pageId, rec) => { if (me()) setQueued({...queued(), [pageId]: rec?.updated_at || ''}); };
   const serial = (key, fn) => navigator.locks?.request ? navigator.locks.request(key, fn)
     : (chains[key] = (chains[key] || Promise.resolve()).then(fn, fn));
-  function push(pageId, rec) {
+  // `who` is fixed for the whole send: the record is read from, and the queue kept in, that reviewer's
+  // namespace only, whatever another tab does to the sign-in meanwhile.
+  function push(pageId, rec, who = me()) {
     if (!shared) return Promise.resolve({ok: true, local: true});
-    const who = me();
     if (!who) return Promise.resolve({ok: false, error: 'not signed in'});
-    queue(pageId, rec);
+    const qk = PFX + `u:${who.public_id}:unsynced`, q0 = getJSON(qk, {});
+    set(qk, JSON.stringify({...q0, [pageId]: rec?.updated_at || ''}));
     return serial(`${PFX}send:${who.public_id}:${pageId}`, async () => {
-      const latest = getJSON(nsFor(who) + 'page:' + pageId, null) || rec;
+      const latest = getJSON(nsFor(who) + 'page:' + pageId, null);
+      if (!latest) return {ok: false, error: 'no saved record'};
       const r = await attempt(() => rpc('save_review', {p_reviewer_id: who.reviewer_id, p_page_id: pageId, p_record: latest}));
-      const k = PFX + `u:${who.public_id}:unsynced`, q = getJSON(k, {});
-      if (r.ok && q[pageId] === (latest.updated_at || '')) { delete q[pageId]; set(k, Object.keys(q).length ? JSON.stringify(q) : null); }
+      const q = getJSON(qk, {});
+      if (r.ok && q[pageId] === (latest.updated_at || '')) { delete q[pageId]; set(qk, Object.keys(q).length ? JSON.stringify(q) : null); }
       return r;
     });
   }
-  // Send everything still queued, reading the latest saved version of each record.
-  async function flush(read) {
+  // Send everything still queued for the reviewer signed in now; stop if the sign-in changes meanwhile.
+  async function flush() {
+    const who = me();
+    if (!who) return 0;
+    const qk = PFX + `u:${who.public_id}:unsynced`;
     let sent = 0;
-    for (const id of pending()) {
-      const rec = read(id);
-      if (!rec) { const q = queued(); delete q[id]; setQueued(q); continue; }
-      if ((await push(id, rec)).ok) sent++; else break;
+    for (const id of Object.keys(getJSON(qk, {}))) {
+      if (me()?.public_id !== who.public_id) break;
+      const rec = getJSON(nsFor(who) + 'page:' + id, null);
+      if (!rec) { const q = getJSON(qk, {}); delete q[id]; set(qk, Object.keys(q).length ? JSON.stringify(q) : null); continue; }
+      if ((await push(id, rec, who)).ok) sent++; else break;
     }
     return sent;
   }
+  // A sign-in or new ID takes effect only if no other tab changed the sign-in while the request was out.
   async function signIn(id) {
+    const before = get(ME_KEY);
     const r = await attempt(() => rpc('sign_in', {p_reviewer_id: id}));
+    if (r.ok && r.v && get(ME_KEY) !== before) return {ok: false, error: 'The sign-in changed in another tab; try again.'};
     if (r.ok && r.v) set(ME_KEY, JSON.stringify(r.v));
     return r.ok ? (r.v ? {ok: true, me: r.v} : {ok: false, error: 'No reviewer has that ID. Check the letters and the four digits.'}) : r;
   }
   async function register(initials, email, number) {
+    const before = get(ME_KEY);
     const r = await attempt(() => rpc('register_reviewer', {p_initials: initials, p_email: email || null, p_number: number === '' || number == null ? null : Number(number)}));
+    if (r.ok && get(ME_KEY) !== before) return {ok: false, error: `Your new ID is ${r.v.reviewer_id}, but the sign-in changed in another tab; sign in with it here.`};
     if (r.ok) set(ME_KEY, JSON.stringify(r.v));
     return r.ok ? {ok: true, me: r.v} : r;
   }
@@ -105,7 +117,7 @@ const Store = (() => {
   const forPage = id => ({reviews: board.reviews.filter(r => r.page_id === id), claims: board.claims.filter(c => c.page_id === id),
     audits: board.audits.filter(a => a.page_id === id)});
 
-  return {shared, demo, prefix: PFX, meKey: ME_KEY, ns, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
+  return {shared, demo, prefix: PFX, meKey: ME_KEY, ns, nsFor, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
     status: () => ({online, lastError})};
 })();
 

@@ -752,11 +752,13 @@ function paintIdentity() {
 // anything saved here that the shared store does not have yet, and repaint.
 async function afterSignIn() {
   setNamespace();
-  const who = Store.me()?.reviewer_id, r = await Store.mine();
-  if (Store.me()?.reviewer_id !== who) return;  // signed in as someone else in another tab meanwhile: that tab's records win
+  // The records go into the namespace of the reviewer who signed in, named explicitly: another tab may
+  // change the sign-in (and this tab's LS) while the request is out.
+  const who = Store.me(), into = who && Store.nsFor(who) + 'page:', r = await Store.mine();
+  if (!who || Store.me()?.public_id !== who.public_id) return;
   if (r.ok) for (const rec of r.v || []) {
-    const p = PAGES.find(x => x.page_id === rec.page_id), here = ledgerGet(rec.page_id);
-    if (p && (!here || (here.updated_at || '') < rec.updated_at)) ledgerPut(rec.page_id, rec);
+    let here = null; try { here = JSON.parse(lsGet(into + rec.page_id)); } catch { /* none */ }
+    if (PAGES.some(x => x.page_id === rec.page_id) && (!here || (here.updated_at || '') < rec.updated_at)) lsSet(into + rec.page_id, JSON.stringify(rec));
   }
   await syncNow();
   paintIdentity();
@@ -794,7 +796,7 @@ window.addEventListener('storage', e => {
   Store.refresh().then(renderAll);
 });
 async function syncNow() {
-  if (Store.shared) { await Store.flush(ledgerGet); await Store.refresh(); }
+  if (Store.shared) { await Store.flush(); await Store.refresh(); }
   renderAll();
 }
 function markExported() { lsSet(EXPORT_KEY, new Date().toISOString()); updateLedgerCount(); }
@@ -983,7 +985,7 @@ async function init() {
   if (Store.shared) {
     paintIdentity();
     await Store.refresh();
-    if (Store.me()) Store.flush(ledgerGet).then(() => Store.refresh()).then(renderAll);
+    if (Store.me()) Store.flush().then(() => Store.refresh()).then(renderAll);
     setInterval(() => { if (document.visibilityState === 'visible') Store.refresh().then(renderAll); }, 60000);
   }
   buildSegments(); buildFilters(); renderList();
