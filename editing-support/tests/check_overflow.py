@@ -36,7 +36,9 @@ PROBE = r"""() => {
 
 
 async def main(base, widths, layouts):
-    ids = [p['page_id'] for p in json.load(urllib.request.urlopen(base + 'data/suggestions.json'))['pages']]
+    root = base.split('?')[0]  # a query such as ?cards=compare is kept for the page loads
+    data = 'data/suggestions-compare.json' if 'cards=' in base else 'data/suggestions.json'
+    ids = [p['page_id'] for p in json.load(urllib.request.urlopen(root + data))['pages']]
     problems, errors = [], []
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
@@ -47,7 +49,7 @@ async def main(base, widths, layouts):
             for lay in layouts:
                 for pid in ids:
                     # A unique query string forces a reload (a hash-only change would not).
-                    await page.goto(f'{base}?layout={lay}&welcome=0&c={lay}{w}{pid}#{pid}')
+                    await page.goto(f"{base}{'&' if '?' in base else '?'}layout={lay}&welcome=0&c={lay}{w}{pid}#{pid}")
                     await page.wait_for_selector('#detail .item', timeout=10000)
                     for tab in (['papers', 'article', 'plan'] if lay == 'tabs' else ['']):
                         if tab:

@@ -58,7 +58,9 @@ the full English audit (`../search/runs/english-full-gh/en`) and the review queu
 | Screen and select articles (outcome-blind strata) | `select_pages.py` | `packet_features.csv`, `selection.json` | none |
 | Build evidence packets | `evidence.py` | `evidence/<card>/packet.{md,json}`, `article_plain.txt`, `cache/` | first run only: Wikipedia read API, Crossref, Europe PMC, OpenAlex, open PDFs (serial, paced, cached) |
 | Find full texts and check reviews | `fetch_fulltext.py`, `check_reviews.py` | `cache/fulltext_skill/`, `cache/reviews_checked/`, `ft-skill/` | free routes only |
-| Draft | `make_prompt.py` with `drafting_brief.md`; Claude sub-agents, or `run_route.py` for Codex | `drafts/<route>/<card>.json` | subscription CLIs only |
+| Drop articles that already cite every replication (brief v6) | `prefilter.py` | report (JSON) | none |
+| Drafting copies of packets without FLoRA outcome codes (brief v6) | `blind_packets.py` | `evidence_v6/<card>/` | none |
+| Draft | `make_prompt.py` with `drafting_brief.md` (v6; earlier briefs are kept in the run directory); Claude sub-agents, or `run_route.py` for Codex | `drafts/<route>/<card>.json` | subscription CLIs only |
 | Validate | `validate.py`, `validate_all.py` | `validation-report.json` | none |
 | Orchestrator review | `review/<card>.json` | verdicts and overrides | none |
 | Live spot-check | `inspect_sample.py` | `manual-inspection.json` | Wikipedia read API |
@@ -71,10 +73,18 @@ FLoRA/FORRT may not appear as a source. The validator also rejects placeholder c
 and checks left to contributors that the pipeline should have done ("confirm", "check",
 "read").
 
+Brief-v6 drafts carry `brief_version: "v6"` and are checked against `suggestion.schema.json`;
+earlier drafts are checked against `runs/edit-prototype-en/suggestion.schema.v5.json`. For v6 no-change suggestions,
+`build_site.py` (`no_change_tier`) assigns one of three tiers from the coded fields alone:
+*already covered*, *likely no change* or *judgement call* (the default). Earlier drafts keep
+the v5 rule and the hand-made calls in `label_overrides.json`. See
+[`docs/brief-v6-pilot.md`](docs/brief-v6-pilot.md).
+
 Card text is cleaned at build time without touching the raw drafts.
 `text_overrides.json` holds exact replacements and `gist_overrides.json` the reviewed
 one-line summaries, each tied to a hash of the text it replaces; the build fails if a
-draft changes underneath an override.
+draft changes underneath an override. Both were written for pre-v6 drafts and are skipped
+for cards shown from a v6 draft.
 
 ## Commands
 
@@ -88,6 +98,10 @@ bash editing-support/build.sh
 bash editing-support/build.sh --refresh-live
 # Tests
 python3 editing-support/tests/test_edit_prototype.py
+# Add a second card set (e.g. a new brief's pilot) to the app: a "Cards" switch with the
+# new set alone or side by side with the current cards (?cards=new, ?cards=compare)
+python3 editing-support/build_site.py --output-dir ../flora-wikipedia-brief-v6-compare \
+  --compare-assignment editing-support/runs/edit-prototype-en/route_assignment.pilot-v6.json
 # Re-draft cards through a CLI route (restartable; skips parsed outputs)
 python3 editing-support/run_route.py --route codex <card_id> ...
 ```

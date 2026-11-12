@@ -43,7 +43,7 @@ def run_card(route, card, model, effort):
             return 'cached'
         except ValueError:
             pass
-    ptext = prompt(card)
+    ptext = prompt(card, out)
     (out / f'{card}.prompt.txt').write_text(ptext)
     raw = out / f'{card}.raw.txt'
     log = out / f'{card}.log'

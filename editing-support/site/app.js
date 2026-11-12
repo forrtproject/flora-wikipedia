@@ -36,11 +36,18 @@ const DECISIONS = {
 const DECISION_QUEUE = {edit: 'retain', talk: 'retain', no_change: 'drop', later: 'defer', skip: 'defer'};
 const KIND = {edit: ['Edit suggested', 'edit'], judgement: ['Judgement call', 'warn'], optional: ['Optional addition', 'info'],
   other: ['No change needed', 'none'], none: ['No change needed', 'none']};
+// Brief-v6 no-change tiers (#9): judgement calls already come as kind 'judgement'; the other two get their own label.
+const TIER = {likely_no_change: ['Likely no change', 'none'], already_covered: ['Already covered', 'none']};
+const kindOf = it => (itemKind(it) === 'none' && TIER[it.no_change_tier]) || KIND[itemKind(it)];
 const STRENGTH = {fix: 'Fix: the Wikipedia article says something the source does not support',
   recommended_addition: 'Add missing evidence: a replication that bears on this claim is not mentioned',
   optional_addition: 'Optional: the Wikipedia article is accurate; this would only add to it', none: 'Nothing to change'};
 
 let DATA = null, PAGES = [], ACTIVE = null, SEGMENT = 'repl', SOURCES = {};
+// Card sets: ?cards=current (default), ?cards=new (the second set, e.g. a new brief's pilot) or ?cards=compare
+// (both side by side, on the pages the second set covers). The second set comes from data/suggestions-compare.json.
+const CARDS = new URLSearchParams(location.search).get('cards') || 'current';
+let COMPARE = null, COMPARE_BY_ID = {};
 const filters = {};
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -69,7 +76,7 @@ const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="l
 
 function itemKind(it) { return it.kind || (EDIT_ACTIONS.has(it.suggestion.proposed_action) ? 'edit' : 'none'); }
 // A no-change suggestion shown as a judgement call (#9): never headline it "No change needed".
-const actionLabel = it => it.judgement_basis === 'replication_bears_on_claim' ? 'The AI suggests no change' : ACTION[it.suggestion.proposed_action];
+const actionLabel = it => it.judgement_basis === 'replication_bears_on_claim' || it.no_change_tier ? 'The AI suggests no change' : ACTION[it.suggestion.proposed_action];
 const minorNotes = p => (p.adjacent.length || p.items.some(it => (it.suggestion.alternatives || []).length))
   && (pageKind(p) === 'other' || (pageKind(p) === 'judgement' && p.items.every(it => it.suggestion.proposed_action === 'no_change')));
 const KORDER = {edit: 0, judgement: 1, optional: 2, other: 3, none: 4};
@@ -81,6 +88,12 @@ function pageKind(p) {
 }
 // Our main scope: edits that bring in a replication the page does not yet cite. Whether that edit is
 // recommended or optional is already carried by the kind label, so this is a plain yes/no marker.
+// Page badge: v6 no-change pages say which tier (likely no change unless every study is already covered).
+function pageLabel(p) {
+  const k = pageKind(p), tiers = p.items.map(it => it.no_change_tier).filter(Boolean);
+  if (!['none', 'other'].includes(k) || !tiers.length) return KIND[k];
+  return tiers.every(t => t === 'already_covered') ? TIER.already_covered : TIER.likely_no_change;
+}
 const pageRepl = p => p.items.some(it => it.adds_replication);
 // Whether every original and replication on the page can be read without a library subscription (#17).
 const needsLibrary = p => p.items.some(it => [it.original, ...it.replications].some(s => SOURCES[s.doi.toLowerCase()]?.access?.kind === 'none'));
@@ -202,12 +215,12 @@ function renderList() {
     (nf ? ` · ${nf} filter${nf > 1 ? 's' : ''} on <button type="button" class="linklike" id="summary-clear">clear</button>` : '');
   document.getElementById('summary-clear')?.addEventListener('click', clearFilters);
   document.getElementById('cards').innerHTML = list.map(p => {
-    const [label, cls] = KIND[pageKind(p)], fl = flags(p);
+    const [label, cls] = pageLabel(p), fl = flags(p);
     const studies = p.items.length > 1 ? `${p.items.length} publications: ${p.items.map(i => i.original.short.split(':')[0]).join('; ')}` : p.items[0].original.short;
     return `<li><button type="button" class="card-btn${ACTIVE === p.page_id ? ' active' : ''}" data-id="${p.page_id}" aria-current="${ACTIVE === p.page_id}">
       <span class="t">${esc(p.page.title)}</span>
       <span class="m">${esc(studies)}</span>
-      <span class="badges"><span class="badge ${cls}">${label}</span>
+      <span class="badges"><span class="badge ${cls}">${label}</span>${CARDS === 'compare' && COMPARE_BY_ID[p.page_id] ? `<span class="badge ${pageLabel(COMPARE_BY_ID[p.page_id])[1]}" title="${esc(COMPARE.label)}">New: ${pageLabel(COMPARE_BY_ID[p.page_id])[0]}</span>` : ''}
       ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${minorNotes(p) ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
       ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}${needsLibrary(p) ? '<span class="badge lib" title="At least one paper has no known free copy">Library access</span>' : ''}
@@ -388,7 +401,7 @@ const studyName = it => SOURCES[it.original.doi.toLowerCase()]?.label || it.orig
 // One study: the decision material first (gist, sentence, suggestion, edit, your call), then the
 // material for checking the AI's work, set apart and quieter.
 function itemSection(it, i, n) {
-  const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
+  const s = it.suggestion, k = itemKind(it), [label, cls] = kindOf(it);
   const head = `${n > 1 ? `Publication ${i + 1} of ${n}: ` : ''}${it.original.short}`;
   // No-change cards say why up front (#9), so a reader can disagree on sight rather than take the label on trust.
   const bears = it.judgement_basis === 'replication_bears_on_claim';
@@ -410,6 +423,17 @@ function itemSection(it, i, n) {
       ${checksBlock(it)}${evidenceBlock(it)}${contextBlock(it)}${provenanceBlock(it)}</div>`;
   return `<section class="item" id="item-${it.card_id}" aria-labelledby="h-${it.card_id}">
     <details ${k !== 'none' || n === 1 || s.alternatives.length ? 'open' : ''}><summary><h3 class="item-head" id="h-${it.card_id}">${esc(head)}</h3></summary>${body}</details></section>`;
+}
+
+// Both card sets in two columns. The second set's element IDs get a prefix so tabs and jump links stay unique;
+// its review controls are left out (reviews are recorded once, below, for the article).
+const prefixed = q => ({...q, items: q.items.map(it => ({...it, card_id: 'n-' + it.card_id}))});
+function cardBody(p) {
+  const studies = q => `${overview(q)}${q.items.map((it, i) => itemSection(it, i, q.items.length)).join('')}`;
+  const q = COMPARE_BY_ID[p.page_id];
+  if (CARDS !== 'compare' || !q) return studies(p);
+  return `<div class="cmp"><section class="cmp-col" aria-label="${esc(COMPARE.base_label)}"><p class="cmp-h">${esc(COMPARE.base_label)}</p>${studies(p)}</section>
+    <section class="cmp-col cmp-new" aria-label="${esc(COMPARE.label)}"><p class="cmp-h">${esc(COMPARE.label)}</p>${studies(prefixed(q))}</section></div>`;
 }
 
 function overview(p) {
@@ -496,7 +520,7 @@ function show(id, focus) {
       <button type="button" id="l-check">Check now</button></div>
     ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow <a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a> and do not imply misconduct.</p>' : ''}
     ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</p>' : ''}
-    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length)).join('')}${otherFixesBlock(p)}${Store.shared ? '<section class="group" id="group" aria-labelledby="group-h"></section>' : ''}${decisionBlock(p, rec, draftGet(id))}`;
+    ${cardBody(p)}${otherFixesBlock(p)}${Store.shared ? '<section class="group" id="group" aria-labelledby="group-h"></section>' : ''}${decisionBlock(p, rec, draftGet(id))}`;
   // Scroll within the card pane on desktop, the page on mobile; open a folded study before jumping into it.
   detail.scrollTop = 0;
   const jump = target => {
@@ -913,10 +937,30 @@ function closeHelp() {
   document.getElementById('open-help').focus();
 }
 
+function cardSetSwitch() {
+  const n = COMPARE.pages.length, bar = document.createElement('nav');
+  bar.className = 'layout-switch cards-switch';
+  bar.setAttribute('aria-label', 'Card set');
+  const opts = {current: COMPARE.base_label, new: `${COMPARE.label} (${n} articles)`, compare: `Side by side (${n} articles)`};
+  const href = k => { const u = new URLSearchParams(location.search); k === 'current' ? u.delete('cards') : u.set('cards', k); u.set('welcome', '0'); return '?' + u; };
+  bar.innerHTML = '<span>Cards:</span>' + Object.entries(opts).map(([k, l]) => `<a href="${href(k)}" ${k === CARDS ? 'aria-current="true"' : ''}>${esc(l)}</a>`).join('');
+  bar.addEventListener('click', e => { const a = e.target.closest('a'); if (a) { e.preventDefault(); location.href = a.getAttribute('href') + location.hash; } });
+  const layoutBar = document.querySelector('.layout-switch');
+  if (layoutBar) layoutBar.after(bar); else document.body.prepend(bar);
+  document.body.classList.add('cards-' + CARDS);
+}
+
 async function init() {
   DATA = await (await fetch('data/suggestions.json')).json();
   PAGES = DATA.pages;
   SOURCES = DATA.sources || {};
+  try { const r = await fetch('data/suggestions-compare.json'); COMPARE = r.ok ? await r.json() : null; } catch { COMPARE = null; }
+  if (COMPARE) {
+    COMPARE.pages.forEach(q => { COMPARE_BY_ID[q.page_id] = q; });
+    if (CARDS === 'new') PAGES = COMPARE.pages;
+    if (CARDS === 'compare') PAGES = PAGES.filter(p => COMPARE_BY_ID[p.page_id]);
+    cardSetSwitch();
+  }
   PAGES.sort((a, b) => (pageRepl(a) && KORDER[pageKind(a)] < 2 ? 0 : 1) - (pageRepl(b) && KORDER[pageKind(b)] < 2 ? 0 : 1) || KORDER[pageKind(a)] - KORDER[pageKind(b)] || a.page.title.localeCompare(b.page.title));
   if (Store.demo) Demo.init(PAGES.slice(0, 4));
   PAGES.forEach(p => p.search = [p.page.title, ...p.items.flatMap(it => [it.original.short, it.original.citation,

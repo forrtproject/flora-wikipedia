@@ -8,8 +8,9 @@
 // reviews from made-up reviewers, so the shared features can be tried without a project.
 const Store = (() => {
   const cfg = window.FLORA_STORE || {};
-  const demo = new URLSearchParams(location.search).get('store') === 'demo';
-  const shared = demo || !!(cfg.url && cfg.anonKey);
+  const params = new URLSearchParams(location.search), demo = params.get('store') === 'demo';
+  // Only the main card set is shared: the trial sets (?cards=new|compare) reuse page IDs with other cards.
+  const shared = (demo || !!(cfg.url && cfg.anonKey)) && (params.get('cards') || 'current') === 'current';
   const PFX = demo ? 'flora-demo:' : 'flora-en-edit-proto:';
   const ME_KEY = PFX + 'me';
   const get = k => { try { return localStorage.getItem(k); } catch { return null; } };

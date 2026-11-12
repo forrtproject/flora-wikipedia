@@ -25,7 +25,8 @@ from validate import check
 from write_about import about_md
 
 HERE = pathlib.Path(__file__).resolve().parent
-ROUTE_LABEL = {k: 'Claude' for k in ('claude', 'claude_ft', 'claude_v4', 'claude_v41', 'claude_v5a', 'claude_v5b')}
+ROUTE_LABEL = {k: 'Claude' for k in ('claude', 'claude_ft', 'claude_v4', 'claude_v41', 'claude_v5a', 'claude_v5b',
+                                     'claude_v6a', 'claude_v6b')}
 ROUTE_LABEL.update(codex='Codex', agy='Gemini', orchestrator='Claude')
 LEVEL = {'metadata_only': 0, 'abstract': 1, 'full_text': 2}
 
@@ -177,11 +178,11 @@ def adds_replication(draft, pk):
     return dict(dois=new, level='optional' if draft.get('edit_strength') == 'optional_addition' else 'recommended')
 
 
-def build_items():
+def build_items(assignment=None):
     """One item per (page, FLoRA original) on the selected pages."""
     from evidence import page_packets
     sel = load_json(RUN / 'selection.json')['pages']
-    assignment = load_json(RUN / 'route_assignment.json', {})
+    assignment = assignment if assignment is not None else load_json(RUN / 'route_assignment.json', {})
     packets = {p['packet_id']: p for p in json.loads(PACKETS.read_text())}
     review_dir = RUN / assignment.get('review_dir', 'review')
     items, missing = [], []
@@ -189,14 +190,18 @@ def build_items():
         cid = p['packet_id']
         route = assignment.get('cards', {}).get(cid, assignment.get('default'))
         two_run = None
-        run_b = assignment.get('second_run')
+        run_b = assignment.get('second_runs', {}).get(cid, assignment.get('second_run'))  # per-card second run, if any
         if run_b and (RUN / 'drafts' / run_b / f'{cid}.json').exists() and (RUN / 'drafts' / str(route) / f'{cid}.json').exists():
             da, db = load_json(RUN / 'drafts' / route / f'{cid}.json'), load_json(RUN / 'drafts' / run_b / f'{cid}.json')
             ka, kb = strength_class(da), strength_class(db)
-            if STRENGTH_ORDER[kb] > STRENGTH_ORDER[ka]:  # show the run that proposes more; the other is reported
-                route, da, db, ka, kb = run_b, db, da, kb, ka
+            ta, tb = draft_tier(da), draft_tier(db)
+            # Show the run that proposes more; between two v6 no-change runs, the one with the more cautious tier.
+            if STRENGTH_ORDER[kb] > STRENGTH_ORDER[ka] or (ka == kb and ta and tb and TIER_CAUTION[tb] > TIER_CAUTION[ta]):
+                route, da, db, ka, kb, ta, tb = run_b, db, da, kb, ka, tb, ta
             two_run = dict(agree=ka == kb, shown=dict(run=route, strength=da.get('edit_strength'), action=da['proposed_action']),
                            other=dict(strength=db.get('edit_strength'), action=db['proposed_action'], rationale=db['rationale']))
+            if ta and tb:
+                two_run.update(tier_agree=ta == tb, other_tier=tb)
         dpath = RUN / 'drafts' / str(route) / f'{cid}.json'
         if not route or not dpath.exists():
             missing.append(dict(card_id=cid, page=p['page_title'], route=route))
@@ -254,21 +259,68 @@ def replication_bears_on_claim(it):
             and any(r['flora_outcome'] not in CONFIRMING for r in it['replications']))
 
 
-def label_no_change(items):
-    """Relabel AI no-change items as judgement calls where a replication bears on a claim the article relies on (#9).
+HISTORY_USES = ('historical_attribution', 'example', 'bibliography_listing')
+TIER_CAUTION = {'already_covered': 0, 'likely_no_change': 1, 'judgement_call': 2}
 
-    label_overrides.json records the calls the rule cannot make, card by card, with the reason."""
+
+def no_change_tier(s):
+    """Tier of a brief-v6 no-change suggestion, from the AI's coded fields only (#9).
+
+    judgement_call is the default. A replication that bears, or may bear, on the Wikipedia article ('relevant') keeps
+    the card a judgement call unless:
+    already_covered: no report on the page is inaccurate; every relevant replication is reported accurately (or, if none
+      is relevant, at least one replication is), each with a verbatim page quote;
+    likely_no_change: no replication is relevant; or the article neither states the finding as true nor relies on it;
+      or it cites the paper for history, as an example or in a list without relying on it, and every relevant
+      replication confirms what it says.
+    An inaccurate report of a replication on the page is always a judgement call. FLoRA outcome codes are not used."""
+    from validate import relevant
+    reps, use = s['replications_assessed'], s['article_use']
+    rel = [r for r in reps if relevant(r)]
+    if any(r['report_accurate'] is False for r in reps):
+        return 'judgement_call'
+    if all(r['already_on_page'] != 'no' and r['report_accurate'] is True for r in rel) and \
+            any(r['already_on_page'] != 'no' and r['report_accurate'] is True for r in reps):
+        return 'already_covered'
+    if not rel or (use['states_finding'] in ('no', 'reported_as_disputed') and not use['relies_as_evidence']):
+        return 'likely_no_change'
+    if s['citation_function'] in HISTORY_USES and not use['relies_as_evidence'] and \
+            all(r['result_vs_article_claim'] == 'confirms' for r in rel):
+        return 'likely_no_change'
+    return 'judgement_call'
+
+
+def draft_tier(d):
+    """no_change_tier for a v6 no-change draft, else None."""
+    if d and 'brief_version' in d and d['proposed_action'] == 'no_change' and d.get('edit_strength') == 'none':
+        return no_change_tier(d)
+    return None
+
+
+def label_no_change(items):
+    """Sort AI no-change items into tiers (#9): judgement calls are shown as such; the others keep 'no change'.
+
+    Brief-v6 drafts use no_change_tier. Earlier drafts use replication_bears_on_claim, with the card-by-card calls in
+    label_overrides.json that the v5 fields cannot support."""
     overrides = {o['card_id']: o for o in json.loads((HERE / 'label_overrides.json').read_text())}
+    known = {it['card_id'] for it in items}
+    if set(overrides) - known:
+        raise ValueError(f'Label override for an unknown card: {sorted(set(overrides) - known)}')
     for it in items:
-        o = overrides.pop(it['card_id'], None)
+        s = it['suggestion']
+        o = overrides.get(it['card_id'])
+        if 'brief_version' in s:  # v6: the rule decides; overrides do not apply
+            if it['kind'] == 'none' and s['proposed_action'] == 'no_change':
+                it['no_change_tier'] = no_change_tier(s)
+                if it['no_change_tier'] == 'judgement_call':
+                    it['kind'], it['judgement_basis'] = 'judgement', 'replication_bears_on_claim'
+            continue
         if it['kind'] != 'none':
             if o:
                 raise ValueError(f"Label override for a card the AI did not mark 'no change': {it['card_id']}")
             continue
         if (o['bears_on_claim'] if o else replication_bears_on_claim(it)):
             it['kind'], it['judgement_basis'] = 'judgement', 'replication_bears_on_claim'
-    if overrides:
-        raise ValueError(f'Label override for an unknown card: {sorted(overrides)}')
 
 
 def reviews_view(pk):
@@ -290,10 +342,14 @@ def reviews_view(pk):
 
 
 def apply_text_overrides(cards):
-    """Apply display-only rewrites; reject stale paths or source text."""
-    by_id = {c['card_id']: c for c in cards}
+    """Apply display-only rewrites; reject stale paths or source text.
+
+    The rewrites were made for drafts written before brief v6; cards now shown from a v6 draft skip them."""
+    by_id = {c['card_id']: c for c in cards if 'brief_version' not in c['suggestion']}
     for o in json.loads((HERE / 'text_overrides.json').read_text()):
         label = f"{o['card_id']}:{o['field']}"
+        if o['card_id'] not in by_id and o['card_id'] in {c['card_id'] for c in cards}:
+            continue  # shown from a v6 draft
         try:
             target = by_id[o['card_id']]
             keys = [int(k) if k.isdigit() else k for k in
@@ -308,7 +364,7 @@ def apply_text_overrides(cards):
         target[keys[-1]] = o['new']
 
 
-def build_pages(items):
+def build_pages(items, assignment=None):
     """Group items into one card per Wikipedia page; carry over page-level verified problems."""
     pages = {}
     for it in items:
@@ -318,7 +374,8 @@ def build_pages(items):
     for pg in pages.values():
         seen = set()
         for it in pg['items']:  # verified adjacent problems from the orchestrator's earlier page review
-            review_dir = RUN / (load_json(RUN / 'route_assignment.json', {}) or {}).get('review_dir', 'review')
+            review_dir = RUN / (assignment if assignment is not None else load_json(RUN / 'route_assignment.json', {})
+                                or {}).get('review_dir', 'review')
             for a in (load_json(review_dir / f"{it['card_id']}.json") or {}).get('adjacent_opportunities', []):
                 if a['sentence'] not in seen:
                     seen.add(a['sentence'])
@@ -343,6 +400,7 @@ def counts(cards, pages=None):
         two_runs=sum(bool(c['two_run']) for c in cards),
         two_runs_agree=sum(bool(c['two_run'] and c['two_run']['agree']) for c in cards),
         no_change_flagged=sum(c.get('judgement_basis') == 'replication_bears_on_claim' for c in cards),
+        no_change_tier=tally(lambda c: c.get('no_change_tier', 'n/a')),
         pages_with_adjacent=sum(bool(p['adjacent']) for p in pages or []),
         open_literature_tasks=sum(any(w.startswith('open-ended') for w in c['validation']['warnings']) for c in cards),
         proposed_action=tally(lambda c: c['suggestion']['proposed_action']),
@@ -362,7 +420,7 @@ def counts(cards, pages=None):
 def flat_csv(cards):
     buf = io.StringIO()
     cols = ['card_id', 'page_title', 'frozen_revid', 'stratum', 'article_scope', 'citation_function', 'proposed_action',
-            'queue_recommendation', 'draft_status', 'confidence', 'blp', 'medrs', 'best_evidence', 'route', 'model',
+            'queue_recommendation', 'draft_status', 'no_change_tier', 'confidence', 'blp', 'medrs', 'best_evidence', 'route', 'model',
             'orchestrator_verdict', 'validation_errors', 'original_doi', 'replication_dois', 'rationale']
     w = csv.DictWriter(buf, fieldnames=cols)
     w.writeheader()
@@ -371,7 +429,7 @@ def flat_csv(cards):
         w.writerow(dict(card_id=c['card_id'], page_title=c['page']['title'], frozen_revid=c['page']['frozen_revid'],
                         stratum=c['stratum'], article_scope=s['article_scope'], citation_function=s['citation_function'],
                         proposed_action=s['proposed_action'], queue_recommendation=s['queue_recommendation'],
-                        draft_status=s['draft']['status'], confidence=s['confidence'], blp=s['flags']['blp'],
+                        no_change_tier=c.get('no_change_tier', ''), draft_status=s['draft']['status'], confidence=s.get('confidence', ''), blp=s['flags']['blp'],
                         medrs=s['flags']['medrs'], best_evidence=c['best_evidence'], route=c['provenance']['route'],
                         model=c['provenance']['model'], orchestrator_verdict=c['provenance']['orchestrator']['verdict'],
                         validation_errors=len(c['validation']['errors']), original_doi=c['original']['doi'],
@@ -502,7 +560,7 @@ def card_gist(card):
     showing a summary of an older rationale. With a rewrite, the card shows the full rationale below it."""
     rationale = card['suggestion']['rationale']
     o = (load_json(GIST_OVERRIDES, {}) or {}).get(card['card_id'])
-    if not o:
+    if not o or 'brief_version' in card['suggestion']:  # rewrites were made for pre-v6 drafts
         return split_gist(rationale)
     if o['rationale_sha'] != rationale_sha(rationale):
         raise ValueError(f"gist_overrides.json is stale for {card['card_id']}: its rationale has changed")
@@ -560,6 +618,18 @@ def say_wikipedia_article(o):
     return o
 
 
+def prepare_cards(cards):
+    """Display preparation: drop draft wording, set the one-line gist, say "Wikipedia article" in pre-v6 text."""
+    for c in cards:
+        c['suggestion']['draft'].pop('wording', None)
+        c['gist'], c['rationale_rest'] = card_gist(c)
+        if 'brief_version' not in c['suggestion']:  # v6 drafts say "the Wikipedia article" themselves (validated)
+            c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
+            c['suggestion'] = say_wikipedia_article(c['suggestion'])
+        if c['two_run']:
+            c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
+
+
 def pandoc(md, html_out, title):
     subprocess.run(['pandoc', str(md), '-s', '--metadata', f'title={title}', '-c', 'style.css',
                     '--template', str(HERE / 'site' / 'page.template.html'), '-o', str(html_out)], check=True)
@@ -570,6 +640,10 @@ def main():
     ap.add_argument('--output-dir', required=True, type=pathlib.Path)
     ap.add_argument('--fetch-labels', action='store_true',
                     help='fetch Crossref details for sources that have no cached author and year')
+    ap.add_argument('--compare-assignment', type=pathlib.Path,
+                    help='route assignment for a second card set, shown in the app as a toggle and side by side')
+    ap.add_argument('--compare-label', default='Brief v6 pilot')
+    ap.add_argument('--base-label', default='Current cards (brief v5)')
     a = ap.parse_args()
     out = a.output_dir.resolve()
     if out == ROOT.parent or ROOT.parent in out.parents:
@@ -580,15 +654,19 @@ def main():
     archive = RUN / 'archive'
     archive.mkdir(exist_ok=True)
     dump_json(archive / 'suggestions-with-draft-wording.json', cards)
-    for c in cards:
-        c['suggestion']['draft'].pop('wording', None)
-        c['gist'], c['rationale_rest'] = card_gist(c)
-        c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
-        c['suggestion'] = say_wikipedia_article(c['suggestion'])
-        if c['two_run']:
-            c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
-    sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
-    for c in cards:  # sources the evidence cache has no authors for: use the label cache's details
+    prepare_cards(cards)
+    compare = None
+    if a.compare_assignment:  # a second card set (e.g. a new brief's pilot) for the app's side-by-side view
+        ca = load_json(a.compare_assignment)
+        ccards, _ = build_items(ca)
+        prepare_cards(ccards)
+        new_routes = set(ca.get('cards', {}).values()) | set(ca.get('second_runs', {}).values())
+        keep = {c['pageid'] for c in ccards if c['provenance']['route'] in new_routes}
+        ccards = [c for c in ccards if c['pageid'] in keep]
+        compare = dict(label=a.compare_label, base_label=a.base_label, pages=build_pages(ccards, ca),
+                       counts=counts(ccards, build_pages(ccards, ca)))
+    sources, unlabelled = source_labels(cards + (ccards if compare else []), fetch=a.fetch_labels)
+    for c in cards + (ccards if compare else []):  # sources the evidence cache has no authors for: use the label cache
         for src in [c['original'], *c['replications']]:
             lab = sources.get(src['doi'].lower())
             if src['citation'].startswith('Unknown authors') and lab and not lab['label'].startswith('doi:'):
@@ -609,6 +687,8 @@ def main():
         shutil.copy2(HERE / 'site' / f, out / f)
     (out / 'config.js').write_text(store_config())
     dump_json(out / 'data' / 'suggestions.json', data)
+    if compare:
+        dump_json(out / 'data' / 'suggestions-compare.json', compare)
     (RUN / 'about.md').write_text(about_md(dict(data, cards=cards)))
     pandoc(HERE / 'docs' / 'contributor-workflow.md', out / 'guide.html', 'Contributor workflow')
     pandoc(RUN / 'about.md', out / 'about.html', 'Method & coverage')
