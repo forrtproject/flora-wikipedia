@@ -475,6 +475,7 @@ function formState(p) {
 const sameForm = (a, b) => JSON.stringify(a.items || {}) === JSON.stringify(b.items || {}) && !!a.other_fix_done === !!b.other_fix_done
   && (a.draft_usefulness || '') === (b.draft_usefulness || '') && (a.notes || '') === (b.notes || '');
 
+let NOTES_TIMER = null;
 function show(id, focus) {
   ACTIVE = id;
   const p = PAGES.find(x => x.page_id === id), pg = p.page, lc = p.live_check, rec = ledgerGet(id) || baseRec(p), fl = flags(p);
@@ -515,7 +516,7 @@ function show(id, focus) {
 
   document.getElementById('back').onclick = () => { document.getElementById('layout').classList.remove('has-card'); document.querySelector(`.card-btn[data-id="${id}"]`)?.focus(); };
   // Autosave: every change to the form is kept as a draft; a draft equal to the saved record is dropped.
-  let timer = null;
+  clearTimeout(NOTES_TIMER);  // a notes autosave pending from the previous drawing of a card must not fire
   // The form belongs to the reviewer ID it was drawn for. If the ID changed since (another tab), redraw
   // instead of keeping a draft or saving, so one person's form is never stored or sent as another's.
   const drawnFor = LS;
@@ -530,9 +531,9 @@ function show(id, focus) {
   };
   const form = document.getElementById('record');
   form.addEventListener('change', e => { if (e.target.id !== 'l-save') keepDraft(); });
-  document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(keepDraft, 600); });
+  document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(NOTES_TIMER); NOTES_TIMER = setTimeout(keepDraft, 600); });
   document.getElementById('l-save').onclick = async () => {
-    clearTimeout(timer);
+    clearTimeout(NOTES_TIMER);
     if (stale()) return;
     const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
@@ -640,9 +641,11 @@ function auditControls(g, popup) {
       ${popup ? '<button type="button" data-later>Decide later</button>' : ''}<span class="small a-status" role="status"></span></div></div>`;
 }
 function wireAudit(root, p, done) {
+  const drawnFor = Store.me()?.reviewer_id;  // audit controls act only for the ID they were drawn for
   root.querySelectorAll('[data-signin]').forEach(b => b.onclick = () => { done?.(); openMine(); });
   root.querySelectorAll('[data-later]').forEach(b => b.onclick = () => done?.());
   root.querySelectorAll('[data-audit]').forEach(b => b.onclick = async () => {
+    if (Store.me()?.reviewer_id !== drawnFor) { done?.(); setNamespace(); paintIdentity(); reshow(); return; }
     const st = root.querySelector('.a-status');
     st.textContent = 'Saving…';
     const r = await Store.audit(p.page_id, b.dataset.audit === '1', root.querySelector('.a-note')?.value);
@@ -785,6 +788,7 @@ function reshow() {
 // Signing in or out in another tab changes the ID here too: switch records and redraw.
 window.addEventListener('storage', e => {
   if (!Store.shared || e.key !== Store.meKey) return;
+  document.getElementById('audit-modal').hidden = true;  // drawn for the previous ID
   setNamespace(); paintIdentity(); reshow();
   Store.refresh().then(renderAll);
 });
