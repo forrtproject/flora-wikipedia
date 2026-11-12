@@ -752,7 +752,8 @@ function paintIdentity() {
 // anything saved here that the shared store does not have yet, and repaint.
 async function afterSignIn() {
   setNamespace();
-  const r = await Store.mine();
+  const who = Store.me()?.reviewer_id, r = await Store.mine();
+  if (Store.me()?.reviewer_id !== who) return;  // signed in as someone else in another tab meanwhile: that tab's records win
   if (r.ok) for (const rec of r.v || []) {
     const p = PAGES.find(x => x.page_id === rec.page_id), here = ledgerGet(rec.page_id);
     if (p && (!here || (here.updated_at || '') < rec.updated_at)) ledgerPut(rec.page_id, rec);
