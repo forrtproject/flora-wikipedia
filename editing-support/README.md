@@ -101,7 +101,7 @@ python3 editing-support/tests/test_edit_prototype.py
 # Add a second card set (e.g. a new brief's pilot) to the app: a "Cards" switch with the
 # new set alone or side by side with the current cards (?cards=new, ?cards=compare)
 python3 editing-support/build_site.py --output-dir ../flora-wikipedia-brief-v6-compare \
-  --compare-assignment editing-support/runs/edit-prototype-en/drafts/claude_v6a/route_assignment.pilot-v6.json
+  --compare-assignment editing-support/runs/edit-prototype-en/route_assignment.pilot-v6.json
 # Re-draft cards through a CLI route (restartable; skips parsed outputs)
 python3 editing-support/run_route.py --route codex <card_id> ...
 ```
