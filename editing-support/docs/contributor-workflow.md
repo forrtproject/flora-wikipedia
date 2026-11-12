@@ -87,8 +87,12 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    the suggestion). What you enter is kept in your browser as a draft as you
    go; the card counts as reviewed once you click "Save review", and cards with
    an unsaved draft are marked "Draft" in the list. Export your records from
-   "Your reviews" below the list. The record notes which article version you
-   reviewed.
+   "Your reviews" at the top right. The record notes which article version you
+   reviewed. Where shared storage is switched on, sign in under "Your reviews"
+   with your reviewer ID (initials and four digits, such as BS#1312): saved
+   reviews are then shared, "I'm reviewing this now" marks a card as under
+   review, and two other people audit each review before the card counts as
+   audited.
 
 ## Reading a replication
 
