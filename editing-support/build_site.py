@@ -75,7 +75,10 @@ def author_year(c):
 
 def short(s):
     c = dict(s.get('crossref') or {})
-    return f"{author_year(c)}: {_clean(c.get('title'))[:80]}"
+    t = _clean(c.get('title'))
+    if len(t) > 80:  # cut at a word boundary, marked
+        t = t[:80].rsplit(' ', 1)[0].rstrip(' :,;.') + '…'
+    return f"{author_year(c)}: {t}"
 
 
 def src_view(s):
