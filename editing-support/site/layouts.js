@@ -2,6 +2,8 @@
 // Card layout options for review (issue #4). Loaded after app.js; ?layout=brief|tabs|desk swaps the
 // per-study renderer, ?layout=current (default) keeps the existing card. Uses app.js helpers.
 const LAYOUT = new URLSearchParams(location.search).get('layout') || 'current';
+// Mock-up reviews are kept apart from reviews saved on the main card site (same origin when published).
+{ const get = lsGet, set = lsSet; lsGet = k => get('layouts:' + k); lsSet = (k, v) => set('layouts:' + k, v); }
 const LAYOUTS = {current: 'Current', brief: '1 · Decision brief', tabs: '2 · Source tabs', desk: '3 · Comparison desk'};
 
 // ---------- shared pieces ----------

@@ -423,15 +423,15 @@ blockquote.excerpt .who { display: inline-block; margin-bottom: .1rem; }
 .ltab { border-radius: 8px 8px 0 0; border-bottom: 0; } .ltab[aria-selected=true] { background: var(--accent); color: #fff; border-color: var(--accent); }
 .ltab[aria-selected=true] .n { color: #dbe8f2; }
 .task { margin: .3rem 0; }
-.desk { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; align-items: start; }
+.desk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
 .desk-l .target { font-size: 1rem; } .desk-src { margin-bottom: .5rem; }
 .desk-ai { margin-top: .4rem; }
 .layout-desk .detail > *, .layout-desk .detail .item > details > * { max-width: 62rem; }
 @media (min-width: 1101px) { body.layout-desk .layout.has-card { grid-template-columns: 300px 1fr; } }
-@media (max-width: 760px) { .desk { grid-template-columns: 1fr; } }
 .tabs-rec { margin: .2rem 0; } .tabs-rec .origin { margin: .4rem 0 .1rem; }
 .desk-match { margin: .2rem 0 .6rem; }
 .detail { container-type: inline-size; }
-@media (max-width: 760px) { .desk { grid-template-columns: 1fr 1fr; } }
-@container (max-width: 760px) { .desk { grid-template-columns: 1fr; } }
+@container (max-width: 760px) { .desk { grid-template-columns: minmax(0, 1fr); } }
+/* Long DOIs, URLs and table runs in quoted passages must wrap, not push the card wider. */
+.detail { overflow-wrap: anywhere; } .detail * { min-width: 0; }
 @media (max-width: 520px) { dl.edit-kv { grid-template-columns: 1fr; } dl.edit-kv dt { margin-top: .3rem; } }
