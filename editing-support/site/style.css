@@ -502,3 +502,4 @@ a.oa-gold, .oa-gold { color: #8f6500; } a.oa-green, .oa-green { color: #2d7a3e; 
 .mine-id .new-id summary { cursor: pointer; color: var(--accent); }
 .mine-id .rid { font-family: ui-monospace, monospace; }
 .mine-id #id-msg:empty { display: none; }
+.group li.stale { color: var(--muted); }

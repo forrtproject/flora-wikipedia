@@ -11,6 +11,12 @@
 -- board(): other people see initials and a random public_id. Four digits stop accidental mix-ups and
 -- casual impersonation, not a determined attacker (10,000 guesses); see README.md.
 
+-- The cards on the site. Filled by pages.sql (make_pages_sql.py); the functions refuse any other page.
+create table if not exists pages (
+  page_id text primary key check (page_id ~ '^[0-9]{1,12}$'),
+  title   text not null default ''
+);
+
 create table if not exists reviewers (
   reviewer_id text primary key check (reviewer_id ~ '^[A-Z]{1,4}#[0-9]{4}$'),
   public_id   uuid not null unique default gen_random_uuid(),
@@ -29,6 +35,8 @@ create table if not exists reviews (
   updated_at  timestamptz not null default now(),
   primary key (page_id, reviewer_id)
 );
+-- When the decisions (record->'items') last changed. Audits made before it no longer count.
+alter table reviews add column if not exists decided_at timestamptz not null default now();
 
 -- "I'm reviewing this now". Shown as "Under review" for 24 hours unless switched off or a review is saved.
 create table if not exists claims (
@@ -48,11 +56,12 @@ create table if not exists audits (
   primary key (page_id, auditor_id)
 );
 
+alter table pages     enable row level security;
 alter table reviewers enable row level security;
 alter table reviews   enable row level security;
 alter table claims    enable row level security;
 alter table audits    enable row level security;
-revoke all on reviewers, reviews, claims, audits from anon, authenticated;
+revoke all on pages, reviewers, reviews, claims, audits from anon, authenticated;
 
 -- Caps that bound what a script holding the public key can do.
 create or replace function _limits() returns jsonb language sql immutable as
@@ -65,6 +74,14 @@ begin
   select reviewer_id into v from reviewers where reviewer_id = upper(trim(p_reviewer_id));
   if v is null then raise exception 'unknown reviewer ID' using errcode = '28000'; end if;
   return v;
+end $$;
+
+create or replace function _page(p_page_id text) returns text
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if not exists (select 1 from pages where page_id = p_page_id) then
+    raise exception 'unknown page (run pages.sql for the current cards)' using errcode = '22023'; end if;
+  return p_page_id;
 end $$;
 
 -- Create a reviewer ID. p_number picks the four digits (if free); otherwise a free one is drawn.
@@ -104,6 +121,7 @@ create or replace function save_review(p_reviewer_id text, p_page_id text, p_rec
 language plpgsql volatile security definer set search_path = public as $$
 declare me text := _who(p_reviewer_id); ini text; now_ts timestamptz := now();
 begin
+  perform _page(p_page_id);
   if jsonb_typeof(p_record) <> 'object' or pg_column_size(p_record) > (_limits()->>'record_bytes')::int then
     raise exception 'record too large or malformed' using errcode = '22023'; end if;
   if jsonb_typeof(coalesce(p_record->'items', '{}')) <> 'object' or exists (
@@ -111,9 +129,11 @@ begin
        where value not in ('edit', 'talk', 'no_change', 'later', 'skip')) then
     raise exception 'unknown decision' using errcode = '22023'; end if;
   select initials into ini from reviewers where reviewer_id = me;
-  insert into reviews (page_id, reviewer_id, record, updated_at)
-  values (p_page_id, me, p_record || jsonb_build_object('page_id', p_page_id, 'reviewer', ini), now_ts)
-  on conflict (page_id, reviewer_id) do update set record = excluded.record, updated_at = excluded.updated_at;
+  insert into reviews (page_id, reviewer_id, record, updated_at, decided_at)
+  values (p_page_id, me, p_record || jsonb_build_object('page_id', p_page_id, 'reviewer', ini), now_ts, now_ts)
+  on conflict (page_id, reviewer_id) do update set record = excluded.record, updated_at = excluded.updated_at,
+    decided_at = case when reviews.record->'items' is distinct from excluded.record->'items' then excluded.decided_at
+                      else reviews.decided_at end;
   delete from claims where page_id = p_page_id and reviewer_id = me;
   return now_ts;
 end $$;
@@ -122,6 +142,7 @@ create or replace function set_claim(p_reviewer_id text, p_page_id text, p_on bo
 language plpgsql volatile security definer set search_path = public as $$
 declare me text := _who(p_reviewer_id);
 begin
+  perform _page(p_page_id);
   if p_on then
     insert into claims (page_id, reviewer_id) values (p_page_id, me)
     on conflict (page_id, reviewer_id) do update set started_at = now();
@@ -130,13 +151,17 @@ begin
   end if;
 end $$;
 
--- Record whether the work on a page is finished. Someone who reviewed the page cannot audit it.
+-- Record whether the work on a page is finished. Only once someone else has reviewed it; someone who
+-- reviewed the page cannot audit it.
 create or replace function save_audit(p_reviewer_id text, p_page_id text, p_finished boolean, p_note text default '')
 returns void language plpgsql volatile security definer set search_path = public as $$
 declare me text := _who(p_reviewer_id);
 begin
+  perform _page(p_page_id);
   if exists (select 1 from reviews where page_id = p_page_id and reviewer_id = me) then
     raise exception 'you reviewed this page, so someone else needs to audit it' using errcode = '42501'; end if;
+  if not exists (select 1 from reviews where page_id = p_page_id and reviewer_id <> me) then
+    raise exception 'nobody else has reviewed this page yet' using errcode = '22023'; end if;
   insert into audits (page_id, auditor_id, finished, note) values (p_page_id, me, p_finished, coalesce(p_note, ''))
   on conflict (page_id, auditor_id) do update set finished = excluded.finished, note = excluded.note, updated_at = now();
 end $$;
@@ -146,7 +171,7 @@ create or replace function board() returns jsonb
 language sql stable security definer set search_path = public as $$
   select jsonb_build_object(
     'reviews', coalesce((select jsonb_agg(jsonb_build_object('page_id', v.page_id, 'public_id', r.public_id,
-                 'initials', r.initials, 'record', v.record - 'reviewer_id', 'updated_at', v.updated_at))
+                 'initials', r.initials, 'record', v.record - 'reviewer_id', 'updated_at', v.updated_at, 'decided_at', v.decided_at))
                from reviews v join reviewers r using (reviewer_id)), '[]'),
     'claims', coalesce((select jsonb_agg(jsonb_build_object('page_id', c.page_id, 'public_id', r.public_id,
                  'initials', r.initials, 'started_at', c.started_at))
@@ -163,6 +188,6 @@ language sql stable security definer set search_path = public as $$
   from reviews where reviewer_id = _who(p_reviewer_id)
 $$;
 
-revoke execute on function _who(text), _limits() from public, anon, authenticated;
+revoke execute on function _who(text), _page(text), _limits() from public, anon, authenticated;
 grant execute on function register_reviewer(text, text, int), sign_in(text), save_review(text, text, jsonb),
   set_claim(text, text, boolean), save_audit(text, text, boolean, text), board(), my_reviews(text) to anon, authenticated;

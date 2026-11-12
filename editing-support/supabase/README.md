@@ -11,7 +11,9 @@ without a project, open the site with `?store=demo`: a pretend backend in the br
    `flora-wikipedia-reviews`, region close to the reviewers). Keep the database password in a password manager;
    the site does not need it.
 2. Open **SQL Editor → New query**, paste the whole of [`schema.sql`](schema.sql) and click **Run**. Running it
-   again later is safe: it replaces the functions and keeps the rows.
+   again later is safe: it replaces the functions and keeps the rows. Then do the same with
+   [`pages.sql`](pages.sql), the list of cards the store accepts. When the set of cards changes, regenerate it with
+   `python3 editing-support/supabase/make_pages_sql.py` and run it again.
 3. Open **Project Settings → API Keys** (older dashboards: **Settings → API**) and copy
    - the **Project URL** (`https://<project-ref>.supabase.co`), and
    - the **publishable** key (`sb_publishable_…`) or, on older projects, the **anon public** key (`eyJ…`).
@@ -43,18 +45,23 @@ functions that check their input:
 |---|---|---|
 | `register_reviewer(initials, email?, number?)` | anyone | creates an ID such as `BS#1312` (chosen or random digits) |
 | `sign_in(id)` | anyone | returns initials and a random public ID, or nothing |
-| `save_review(id, page_id, record)` | holder of an ID | one record per reviewer and card; ends their "under review" mark |
+| `save_review(id, page_id, record)` | holder of an ID | one record per reviewer and card; ends their "under review" mark; `decided_at` moves only when the decisions change |
 | `set_claim(id, page_id, on)` | holder of an ID | "I'm reviewing this now", shown for 24 hours |
-| `save_audit(id, page_id, finished, note)` | holder of an ID who did not review the card | finished / not finished |
+| `save_audit(id, page_id, finished, note)` | holder of an ID who did not review the card, once someone else has | finished / not finished |
 | `board()` | anyone | all reviews, current claims and audits, with initials and public IDs only |
 | `my_reviews(id)` | holder of an ID | that reviewer's records, to restore them in a new browser |
 
-Limits: at most 300 reviewer IDs and 20 kB per review record (`_limits()` in `schema.sql`). Emails are stored only in
+Every function accepts only the cards listed in `pages`. Limits: at most 300 reviewer IDs and 20 kB per review record (`_limits()` in `schema.sql`). Emails are stored only in
 `reviewers.email`, visible to project owners in the dashboard and never returned by the functions.
 
 Rules computed in the site (`groupState` in `site/app.js`): a review counts once every publication on the card has a
 decision and at least one decision is "edited", "talk page" or "no change needed". The card is then "to be audited"
-until two people other than its reviewers mark it finished; it is then "audited".
+until two people who did not review it mark it finished; it is then "audited". An audit counts only if it was
+made after the latest change of decisions in a counting review, so changing a decision asks for a fresh audit (editing
+only the notes does not).
+
+In the browser, records are kept per reviewer ID. Reviews saved without an ID (or from before shared storage) are
+shared only when someone signed in clicks "Share as …" under "Your reviews".
 
 ## Running the project
 

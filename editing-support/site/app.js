@@ -2,7 +2,11 @@
 // Private review UI: one card per Wikipedia page, one item per database study cited on it.
 // Read-only with respect to Wikipedia: the only Wikipedia call is a revision-ID lookup (MediaWiki read API)
 // when a card is opened. Reviews are kept in this browser and, when configured, in a shared store (store.js).
-const LS = Store.prefix + 'page:';
+// Saved records and drafts. In shared mode each reviewer ID has its own namespace (Store.ns); ANON holds
+// records saved without an ID, including everything from browser-only mode.
+const ANON = Store.prefix + 'page:';
+let LS = Store.ns() + 'page:';
+const setNamespace = () => { LS = Store.ns() + 'page:'; };
 const WELCOME_KEY = 'flora-en-edit-proto:welcome-hidden';
 
 // Plain-language labels for the model's controlled vocabulary.
@@ -103,12 +107,16 @@ function groupState(p) {
   const s = Store.forPage(p.page_id), mine = Store.me()?.public_id;
   const complete = s.reviews.filter(r => p.items.every(it => r.record.items?.[it.card_id])
     && Object.values(r.record.items).some(d => SETTLED.includes(d)));
-  const reviewers = new Set(complete.map(r => r.public_id));
-  const confirmed = s.audits.filter(a => a.finished && !reviewers.has(a.public_id));
-  const state = confirmed.length >= AUDITS_NEEDED ? 'audited' : complete.length ? 'to_audit' : s.claims.length ? 'under_review' : 'open';
-  return {...s, complete, confirmed, state, acted: complete.some(r => Object.values(r.record.items).some(d => ACTED.includes(d))),
-    mine, claimedByMe: !!mine && s.claims.some(c => c.public_id === mine), reviewedByMe: !!mine && s.reviews.some(r => r.public_id === mine),
-    myAudit: mine ? s.audits.find(a => a.public_id === mine) : null};
+  // An audit counts only if it was made after the latest change of decisions in a counting review, and
+  // never from anyone who reviewed the page.
+  const decided = Math.max(0, ...complete.map(r => Date.parse(r.decided_at || r.updated_at)));
+  const reviewers = new Set(s.reviews.map(r => r.public_id));
+  const current = s.audits.filter(a => complete.length && !reviewers.has(a.public_id) && Date.parse(a.updated_at) >= decided);
+  const confirmed = current.filter(a => a.finished);
+  const state = !complete.length ? (s.claims.length ? 'under_review' : 'open') : confirmed.length >= AUDITS_NEEDED ? 'audited' : 'to_audit';
+  return {...s, complete, current, confirmed, state, acted: complete.some(r => Object.values(r.record.items).some(d => ACTED.includes(d))),
+    mine, claimedByMe: !!mine && s.claims.some(c => c.public_id === mine), reviewedByMe: !!mine && reviewers.has(mine),
+    myAudit: mine ? current.find(a => a.public_id === mine) : null};
 }
 const names = rows => [...new Set(rows.map(r => r.initials))].join(', ');
 function groupBadges(p) {
@@ -604,7 +612,7 @@ function paintGroup(p) {
     await Store.refresh(); renderAll();
   };
   const theirs = g.reviews.filter(r => r.public_id !== g.mine);
-  const audits = g.audits.map(a => `<li><strong>${esc(a.initials)}</strong> ${a.finished ? 'confirmed the work is finished' : 'found it not finished yet'} (${esc(ago(a.updated_at))})${a.note ? `: ${esc(a.note)}` : ''}</li>`).join('');
+  const audits = g.audits.map(a => `<li${g.current.includes(a) ? '' : ' class="stale"'}><strong>${esc(a.initials)}</strong> ${a.finished ? 'confirmed the work is finished' : 'found it not finished yet'} (${esc(ago(a.updated_at))})${a.note ? `: ${esc(a.note)}` : ''}${g.current.includes(a) ? '' : ' <span class="small">(before the latest review, so it no longer counts)</span>'}</li>`).join('');
   const canAudit = g.complete.some(r => r.public_id !== g.mine) && !g.reviewedByMe;
   sec.innerHTML = `<h3 id="group-h">Group progress</h3>
     <p>${g.state === 'audited' ? `Audited: ${g.confirmed.length} people confirmed the work is finished.`
@@ -686,7 +694,8 @@ function updateLedgerCount() {
   document.getElementById('mine-menu').classList.toggle('unexported', !!fresh);
   el.textContent = `${fresh} saved review${fresh > 1 ? 's are' : ' is'} not in an export yet. Reviews stay only in this browser: export them to keep a copy or share them.`;
   if (Store.shared) {  // the shared store replaces the export reminder; warn only about reviews not sent yet
-    const unsent = Store.pending().length;
+    // Signed out, every review saved here is unshared (it has no reviewer ID yet).
+    const unsent = Store.me() ? Store.pending().length : PAGES.filter(p => ledgerGet(p.page_id)?.updated_at).length;
     el.hidden = !unsent;
     document.getElementById('mine-menu').classList.toggle('unexported', !!unsent);
     el.innerHTML = `${unsent} saved review${unsent > 1 ? 's are' : ' is'} kept in this browser but not shared yet` +
@@ -702,7 +711,10 @@ function paintIdentity() {
   document.getElementById('initials-label').hidden = true;
   box.innerHTML = (Store.demo ? '<p class="small warntext">Demo mode: shared reviews are pretend and stay in this browser.</p>' : '') + (who
     ? `<p class="small">Signed in as <strong class="rid">${esc(who.reviewer_id)}</strong>. Keep this ID: it is how you sign in on another device.
-        Others see only your initials. <button type="button" class="linklike" id="sign-out">Sign out</button></p>`
+        Others see only your initials. <button type="button" class="linklike" id="sign-out">Sign out</button></p>` +
+      (anonRecords().length ? `<p class="small">${anonRecords().length} review${anonRecords().length > 1 ? 's' : ''} in this browser
+        ${anonRecords().length > 1 ? 'were' : 'was'} saved without a reviewer ID. If you wrote ${anonRecords().length > 1 ? 'them' : 'it'}:
+        <button type="button" id="adopt">Share as ${esc(who.reviewer_id)}</button></p>` : '')
     : `<form id="sign-in" class="id-form"><label class="small" for="sid-id">Your reviewer ID</label>
         <span class="row"><input id="sid-id" placeholder="e.g. BS#1312" autocomplete="username" maxlength="9"><button type="submit">Sign in</button></span></form>
       <details class="new-id"><summary class="small">New here? Get a reviewer ID</summary>
@@ -712,7 +724,8 @@ function paintIdentity() {
         <input id="reg-email" type="email" autocomplete="email">
         <button type="submit">Get my ID</button></form></details>`) + '<p class="small warntext" id="id-msg" role="status"></p>';
   const msg = t => { document.getElementById('id-msg').textContent = t; };
-  document.getElementById('sign-out')?.addEventListener('click', () => { Store.signOut(); paintIdentity(); renderAll(); });
+  document.getElementById('sign-out')?.addEventListener('click', () => { Store.signOut(); setNamespace(); paintIdentity(); reshow(); });
+  document.getElementById('adopt')?.addEventListener('click', adopt);
   document.getElementById('sign-in')?.addEventListener('submit', async e => {
     e.preventDefault(); msg('Signing in…');
     const r = await Store.signIn(document.getElementById('sid-id').value);
@@ -729,16 +742,39 @@ function paintIdentity() {
 // After signing in: bring this reviewer's shared records into this browser (newer copy wins), send
 // anything saved here that the shared store does not have yet, and repaint.
 async function afterSignIn() {
+  setNamespace();
   const r = await Store.mine();
   if (r.ok) for (const rec of r.v || []) {
     const p = PAGES.find(x => x.page_id === rec.page_id), here = ledgerGet(rec.page_id);
     if (p && (!here || (here.updated_at || '') < rec.updated_at)) ledgerPut(rec.page_id, rec);
   }
-  PAGES.forEach(p => { const rec = ledgerGet(p.page_id); if (rec?.updated_at && !(r.v || []).some(x => x.page_id === p.page_id && x.updated_at >= rec.updated_at)) Store.queue(p.page_id); });
   await syncNow();
   paintIdentity();
+  reshow();
+}
+// Records saved without a reviewer ID: shared only when their author says so, then moved to that ID.
+function anonRecords() {
+  if (!Store.me()) return [];
+  return PAGES.map(p => { try { return JSON.parse(lsGet(ANON + p.page_id)); } catch { return null; } }).filter(r => r?.updated_at);
+}
+async function adopt() {
+  for (const rec of anonRecords()) {
+    const here = ledgerGet(rec.page_id);
+    if (!here || (here.updated_at || '') < rec.updated_at) {
+      const r = {...rec, reviewer: Store.me().initials, updated_at: new Date().toISOString()};
+      ledgerPut(rec.page_id, r);
+      Store.queue(rec.page_id, r);
+    }
+    if (!draftGet(rec.page_id) && lsGet(ANON + rec.page_id + ':draft')) lsSet(LS + rec.page_id + ':draft', lsGet(ANON + rec.page_id + ':draft'));
+    lsSet(ANON + rec.page_id, null); lsSet(ANON + rec.page_id + ':draft', null);
+  }
+  await syncNow();
+  paintIdentity();
+  reshow();
+}
+function reshow() {
   const p = PAGES.find(x => x.page_id === ACTIVE);
-  if (p) show(p.page_id, false);
+  if (p) show(p.page_id, false); else renderAll();
 }
 async function syncNow() {
   if (Store.shared) { await Store.flush(ledgerGet); await Store.refresh(); }
@@ -898,7 +934,7 @@ async function init() {
   mine.addEventListener('toggle', () => mine.classList.toggle('to-left',
     mine.getBoundingClientRect().left + mine.querySelector('.mine-panel').offsetWidth > document.documentElement.clientWidth - 8));
   document.querySelectorAll('.top .menu').forEach(menu => {
-    document.addEventListener('click', e => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+    document.addEventListener('click', e => { if (menu.open && e.target.isConnected && !menu.contains(e.target)) menu.open = false; });  // a button the menu just replaced is not outside
     menu.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
   });
   document.getElementById('welcome-close').onclick = closeWelcome;
@@ -921,7 +957,7 @@ async function init() {
       const p = PAGES.find(x => x.page_id === r.page_id);
       if (!p || String(r.reviewed_revision_id) !== String(p.page.frozen_revid)) { skipped++; continue; }
       ledgerPut(r.page_id, r); n++;
-      if (Store.shared) Store.queue(r.page_id);
+      if (Store.shared) Store.queue(r.page_id, r);
     }
     document.getElementById('summary').textContent = `Imported ${n} page reviews; skipped ${skipped} for unknown pages or a different article version.` +
       (Store.shared ? (Store.me() ? ' They are shared under your reviewer ID.' : ' Sign in to share them.') : '');

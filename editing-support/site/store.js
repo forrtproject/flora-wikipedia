@@ -11,7 +11,7 @@ const Store = (() => {
   const demo = new URLSearchParams(location.search).get('store') === 'demo';
   const shared = demo || !!(cfg.url && cfg.anonKey);
   const PFX = demo ? 'flora-demo:' : 'flora-en-edit-proto:';
-  const ME_KEY = PFX + 'me', PENDING_KEY = PFX + 'unsynced';
+  const ME_KEY = PFX + 'me';
   const get = k => { try { return localStorage.getItem(k); } catch { return null; } };
   const set = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* not stored */ } };
   const getJSON = (k, d) => { try { return JSON.parse(get(k)) ?? d; } catch { return d; } };
@@ -38,8 +38,15 @@ const Store = (() => {
   }
 
   const me = () => shared ? getJSON(ME_KEY, null) : null;
-  const pending = () => getJSON(PENDING_KEY, []);
-  const setPending = ids => set(PENDING_KEY, ids.length ? JSON.stringify([...new Set(ids)]) : null);
+  // Where this browser keeps records: one namespace per reviewer ID, so signing in as someone else never
+  // sends the previous person's reviews under the new ID. Records saved without an ID (and everything from
+  // local-only mode) stay in the plain namespace until their owner chooses to share them (adopt()).
+  const ns = () => PFX + (me() ? `u:${me().public_id}:` : '');
+  // The send queue, per reviewer: {page_id: updated_at of the version still to send}.
+  const pendingKey = () => me() ? PFX + `u:${me().public_id}:unsynced` : null;
+  const queued = () => { const k = pendingKey(), v = k ? getJSON(k, {}) : {}; return Array.isArray(v) ? {} : v; };
+  const setQueued = q => { const k = pendingKey(); if (k) set(k, Object.keys(q).length ? JSON.stringify(q) : null); };
+  const pending = () => Object.keys(queued());
 
   async function refresh() {
     if (!shared) return false;
@@ -47,22 +54,29 @@ const Store = (() => {
     if (r.ok) board = r.v;
     return r.ok;
   }
-  // Send one saved record. Without a sign-in, or offline, it waits in the queue.
-  async function push(pageId, rec) {
-    if (!shared) return {ok: true, local: true};
-    setPending([...pending(), pageId]);
+  // Send one saved record. Sends for a page run one after another, so an older version can never arrive
+  // after a newer one, and the queue entry is cleared only if no newer version was saved meanwhile.
+  const chains = {};
+  const queue = (pageId, rec) => { if (me()) setQueued({...queued(), [pageId]: rec?.updated_at || ''}); };
+  function push(pageId, rec) {
+    if (!shared) return Promise.resolve({ok: true, local: true});
     const who = me();
-    if (!who) return {ok: false, error: 'not signed in'};
-    const r = await attempt(() => rpc('save_review', {p_reviewer_id: who.reviewer_id, p_page_id: pageId, p_record: rec}));
-    if (r.ok) setPending(pending().filter(x => x !== pageId));
-    return r;
+    if (!who) return Promise.resolve({ok: false, error: 'not signed in'});
+    queue(pageId, rec);
+    const run = async () => {
+      const r = await attempt(() => rpc('save_review', {p_reviewer_id: who.reviewer_id, p_page_id: pageId, p_record: rec}));
+      const q = queued();
+      if (r.ok && me()?.reviewer_id === who.reviewer_id && q[pageId] === (rec.updated_at || '')) { delete q[pageId]; setQueued(q); }
+      return r;
+    };
+    return (chains[pageId] = (chains[pageId] || Promise.resolve()).then(run, run));
   }
-  const queue = pageId => setPending([...pending(), pageId]);
+  // Send everything still queued, reading the latest saved version of each record.
   async function flush(read) {
     let sent = 0;
     for (const id of pending()) {
       const rec = read(id);
-      if (!rec) { setPending(pending().filter(x => x !== id)); continue; }
+      if (!rec) { const q = queued(); delete q[id]; setQueued(q); continue; }
       if ((await push(id, rec)).ok) sent++; else break;
     }
     return sent;
@@ -86,7 +100,7 @@ const Store = (() => {
   const forPage = id => ({reviews: board.reviews.filter(r => r.page_id === id), claims: board.claims.filter(c => c.page_id === id),
     audits: board.audits.filter(a => a.page_id === id)});
 
-  return {shared, demo, prefix: PFX, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
+  return {shared, demo, prefix: PFX, ns, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
     status: () => ({online, lastError})};
 })();
 
@@ -132,8 +146,11 @@ const Demo = (() => {
     sign_in({p_reviewer_id}) { try { const r = who(p_reviewer_id); return {reviewer_id: r.reviewer_id, ...pub(r)}; } catch { return null; } },
     save_review({p_reviewer_id, p_page_id, p_record}) {
       const r = who(p_reviewer_id), t = now();
-      db.reviews = db.reviews.filter(x => !(x.page_id === p_page_id && x.reviewer_id === r.reviewer_id));
-      db.reviews.push({page_id: p_page_id, reviewer_id: r.reviewer_id, record: {...p_record, page_id: p_page_id, reviewer: r.initials}, updated_at: t});
+      const old = db.reviews.find(x => x.page_id === p_page_id && x.reviewer_id === r.reviewer_id);
+      const same = old && JSON.stringify(old.record.items || {}) === JSON.stringify(p_record.items || {});
+      db.reviews = db.reviews.filter(x => x !== old);
+      db.reviews.push({page_id: p_page_id, reviewer_id: r.reviewer_id, record: {...p_record, page_id: p_page_id, reviewer: r.initials},
+        updated_at: t, decided_at: same ? (old.decided_at || old.updated_at) : t});
       db.claims = db.claims.filter(x => !(x.page_id === p_page_id && x.reviewer_id === r.reviewer_id));
       save(db); return t;
     },
@@ -146,6 +163,7 @@ const Demo = (() => {
     save_audit({p_reviewer_id, p_page_id, p_finished, p_note}) {
       const r = who(p_reviewer_id);
       if (db.reviews.some(x => x.page_id === p_page_id && x.reviewer_id === r.reviewer_id)) throw new Error('you reviewed this page, so someone else needs to audit it');
+      if (!db.reviews.some(x => x.page_id === p_page_id)) throw new Error('nobody else has reviewed this page yet');
       db.audits = db.audits.filter(x => !(x.page_id === p_page_id && x.auditor_id === r.reviewer_id));
       db.audits.push({page_id: p_page_id, auditor_id: r.reviewer_id, finished: p_finished, note: p_note || '', updated_at: now()});
       save(db); return null;
@@ -153,7 +171,7 @@ const Demo = (() => {
     board() {
       const byId = id => pub(db.reviewers.find(r => r.reviewer_id === id));
       const fresh = Date.now() - 24 * 3600e3;
-      return {reviews: db.reviews.map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), record: x.record, updated_at: x.updated_at})),
+      return {reviews: db.reviews.map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), record: x.record, updated_at: x.updated_at, decided_at: x.decided_at || x.updated_at})),
         claims: db.claims.filter(x => Date.parse(x.started_at) > fresh).map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), started_at: x.started_at})),
         audits: db.audits.map(x => ({page_id: x.page_id, ...byId(x.auditor_id), finished: x.finished, note: x.note, updated_at: x.updated_at}))};
     },
