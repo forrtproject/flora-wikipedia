@@ -28,8 +28,12 @@ git -C "$stage" add -A
 git -C "$stage" -c user.name="$(git -C "$repo" config user.name)" -c user.email="$(git -C "$repo" config user.email)" \
   commit -q -m "Publish review cards ($rev); card-layouts/ redirects to the main cards"
 git -C "$stage" push -q -f "$(git -C "$repo" remote get-url origin)" gh-pages
-for _ in $(seq 1 30); do
-  [[ "$(gh api repos/forrtproject/flora-wikipedia/pages/builds/latest --jq .status)" == built ]] && break
+sha="$(git -C "$stage" rev-parse HEAD)"
+status=pending
+for _ in $(seq 1 40); do  # wait for the Pages build of this commit, not the previous one
+  status="$(gh api repos/forrtproject/flora-wikipedia/pages/builds/latest --jq 'if .commit == "'"$sha"'" then .status else "queued" end')"
+  [[ "$status" == built || "$status" == errored ]] && break
   sleep 8
 done
-echo "Published $rev: https://forrt.org/flora-wikipedia/ (Pages: $(gh api repos/forrtproject/flora-wikipedia/pages/builds/latest --jq .status))"
+echo "Published $rev: https://forrt.org/flora-wikipedia/ (Pages build: $status)"
+[[ "$status" == built ]]
