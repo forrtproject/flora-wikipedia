@@ -26,8 +26,9 @@ contributors read the sources and write their own text.
 
 AI suggests a change for 42 of the 73 studies and no change for 31. Each study was
 assessed twice, independently; where the two assessments disagree (7 of 73), the card
-shows both as a judgement call. Nobody has yet checked the cards, and the dashboard
-cannot edit Wikipedia.
+shows both as a judgement call. Six of the 31 no-change studies are also shown as
+judgement calls, because a replication bears on a claim the article relies on (issue #9).
+Nobody has yet checked the cards, and the dashboard cannot edit Wikipedia.
 
 See [`editing-support/README.md`](editing-support/README.md) for the pipeline, grounding
 checks and rebuild commands, and

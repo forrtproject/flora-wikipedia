@@ -48,20 +48,26 @@ function srcLink(d) {
   const s = SOURCES[d.toLowerCase()];
   return s ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener" title="${esc(s.citation)}">${esc(s.label)}</a>` : doiLink(d);
 }
-// Where a reader can check a paper without a subscription (#17): a free copy, open access at the
-// publisher, or a note that none is known, so reviewers know when they need library access.
-function accessLink(d, short) {
-  const a = SOURCES[(d || '').replace(/^doi:/i, '').trim().toLowerCase()]?.access;
-  if (!a) return '';
-  if (a.url) return `<a class="access" href="${esc(a.url)}" target="_blank" rel="noopener">${esc(short ? 'Free copy' : a.label)} ↗</a>`;
-  if (a.kind === 'publisher') return `<span class="access">${short ? 'Free at the publisher' : 'Free to read at the publisher (DOI link)'}</span>`;
-  return `<span class="access none">${short ? 'No free copy known' : 'No free copy known: checking it may need library access'}</span>`;
+// Open access next to a paper (#17): an unlocked padlock, gold when the publisher's own page is free (links the
+// DOI), green when a free copy is elsewhere (links that copy). Closed papers get no icon; the list's
+// "Library access" badge and filter cover them. With `text`, the label follows the icon.
+const UNLOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false"><path d="M4.5 7V5a3.5 3.5 0 0 1 6.8-1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="2.5" y="7" width="11" height="8" rx="1.6" fill="currentColor"/></svg>';
+function accessLink(d, text) {
+  d = (d || '').replace(/^doi:/i, '').trim();
+  const a = SOURCES[d.toLowerCase()]?.access;
+  if (!a || !(a.url || a.kind === 'publisher')) return '';
+  const pub = !a.url, label = pub ? 'Free to read at the publisher' : a.label;
+  return `<a class="oa ${pub ? 'oa-gold' : 'oa-green'}" href="${esc(pub ? 'https://doi.org/' + d : a.url)}" target="_blank" rel="noopener" title="${esc(label)}" aria-label="${esc(label)}">${UNLOCK}${text ? `<span>${esc(label)}</span>` : ''}</a>`;
 }
 // What the model read. In lists, full text is the default and stays unmarked; anything less is named.
 const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="lvl ${l === 'full_text' ? '' : l === 'abstract' ? 'abs' : 'thin'}">${esc(LEVEL[l] || l)}</span>`;
 
 
 function itemKind(it) { return it.kind || (EDIT_ACTIONS.has(it.suggestion.proposed_action) ? 'edit' : 'none'); }
+// A no-change suggestion shown as a judgement call (#9): never headline it "No change needed".
+const actionLabel = it => it.judgement_basis === 'replication_bears_on_claim' ? 'The AI suggests no change' : ACTION[it.suggestion.proposed_action];
+const minorNotes = p => (p.adjacent.length || p.items.some(it => (it.suggestion.alternatives || []).length))
+  && (pageKind(p) === 'other' || (pageKind(p) === 'judgement' && p.items.every(it => it.suggestion.proposed_action === 'no_change')));
 const KORDER = {edit: 0, judgement: 1, optional: 2, other: 3, none: 4};
 function pageKind(p) {
   const ks = p.items.map(itemKind);
@@ -72,6 +78,8 @@ function pageKind(p) {
 // Our main scope: edits that bring in a replication the page does not yet cite. Whether that edit is
 // recommended or optional is already carried by the kind label, so this is a plain yes/no marker.
 const pageRepl = p => p.items.some(it => it.adds_replication);
+// Whether every original and replication on the page can be read without a library subscription (#17).
+const needsLibrary = p => p.items.some(it => [it.original, ...it.replications].some(s => SOURCES[s.doi.toLowerCase()]?.access?.kind === 'none'));
 const flags = p => ({blp: p.items.some(i => i.suggestion.flags.blp), medrs: p.items.some(i => i.suggestion.flags.medrs)});
 
 // Browser storage can be missing or blocked (private windows, previews): never let that break the page.
@@ -122,6 +130,7 @@ const FACETS = [
   ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : hasDraft(p) ? 'Draft, not saved' : 'Not reviewed yet', true],
   ...(Store.shared ? [['group', 'Group progress', p => { const g = groupState(p);
     return [GROUP[g.state], g.claims.length && g.state !== 'under_review' && GROUP.under_review].filter(Boolean); }, true, Object.values(GROUP)]] : []),
+  ['access', 'Reading the papers', p => needsLibrary(p) ? 'Some need library access' : 'All free to read', true],
   ['scope', 'Kind of article', p => SCOPE[p.items[0].suggestion.article_scope] || p.items[0].suggestion.article_scope, true],
   ['many', 'Publications on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
   ['care', 'Extra care', p => [flags(p).blp && 'Living person (BLP)', flags(p).medrs && 'Health / medical (MEDRS)',
@@ -191,9 +200,9 @@ function renderList() {
       <span class="t">${esc(p.page.title)}</span>
       <span class="m">${esc(studies)}</span>
       <span class="badges"><span class="badge ${cls}">${label}</span>
-      ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${pageKind(p) === 'other' ? '<span class="badge">Minor notes</span>' : ''}
+      ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${minorNotes(p) ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
-      ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}
+      ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}${needsLibrary(p) ? '<span class="badge lib" title="At least one paper has no known free copy">Library access</span>' : ''}
       ${reviewed(p) ? `<span class="badge done">✓ ${Store.shared ? 'you reviewed' : 'reviewed'}</span>` : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}
       ${groupBadges(p)}</span></button></li>`;
   }).join('') || '<li class="small">No articles match. Try "All articles" or clear some filters.</li>';
@@ -299,7 +308,7 @@ function evidenceBlock(it) {
   const excerpts = doi => used.filter(e => e.doi.toLowerCase() === doi.toLowerCase() && e.excerpt);
   const row = (role, s, extra) => {
     const ex = excerpts(s.doi);
-    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${[doiLink(s.doi), accessLink(s.doi)].filter(Boolean).join(' · ')}${extra || ''}
+    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${doiLink(s.doi)} ${accessLink(s.doi, true)}${extra || ''}
       ${ex.length ? `<details><summary>Passages quoted from this paper (${ex.length})</summary>${ex.map(e => `<blockquote class="excerpt">“${esc(e.excerpt)}”<br><span class="small"><span class="who">AI's note:</span> ${esc(e.what_it_supports)}</span></blockquote>`).join('')}</details>` : ''}</td>
       <td>${lvlBadge(s.evidence_level)}</td></tr>`;
   };
@@ -374,7 +383,8 @@ function itemSection(it, i, n) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
   const head = `${n > 1 ? `Publication ${i + 1} of ${n}: ` : ''}${it.original.short}`;
   // No-change cards say why up front (#9), so a reader can disagree on sight rather than take the label on trust.
-  const whyNone = k === 'none' || k === 'other' ? `<p class="why-none"><span class="who">Why the AI suggests no change:</span></p><ul class="tight">
+  const bears = it.judgement_basis === 'replication_bears_on_claim';
+  const whyNone = k === 'none' || k === 'other' || bears ? `${bears ? '<p class="twoRun"><strong>Judgement call: a replication bears on a claim this Wikipedia article relies on.</strong> The AI suggests no change; weigh its reasons and decide.</p>' : ''}<p class="why-none"><span class="who">Why the AI suggests no change:</span></p><ul class="tight">
       <li><strong>Does the replication test this sentence?</strong> ${esc(s.specific_study_match.note)}</li>
       <li><strong>Does the Wikipedia article already cover it?</strong> ${esc(s.existing_acknowledgement.note)}</li></ul>
       <p class="small">This is the AI's reading. If you think the replication does bear on the sentence, record your own decision below.</p>` : '';
@@ -382,10 +392,10 @@ function itemSection(it, i, n) {
     it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this Wikipedia article does not cite yet.</p>' : '',
     it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
     `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
-  const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
+  const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${accessLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}${accessLink(r.doi)}`).join('')}</p>`;
   const body = `${papers}${issueBlock(it)}
     <h4>Suggestion</h4>
-    <p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
+    <p class="gist"><strong>${esc(actionLabel(it))}</strong> <span class="sep" aria-hidden="true">·</span> ${label === actionLabel(it) ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
     <div class="proposal ${cls}">${more}</div>
     ${writingBlock(it)}${yourCallBlock(it)}
     <div class="checking"><h4>Checking the AI's work</h4>
@@ -395,10 +405,10 @@ function itemSection(it, i, n) {
 }
 
 function overview(p) {
-  if (p.items.length < 2) return `<p class="overview one"><strong>1 publication to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(ACTION[p.items[0].suggestion.proposed_action])}</p>`;
+  if (p.items.length < 2) return `<p class="overview one"><strong>1 publication to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(actionLabel(p.items[0]))}</p>`;
   return `<section class="overview"><h3>${p.items.length} publications to review on this page</h3>
     <p class="small">Each is a paper the Wikipedia article cites that others have tried to replicate. One paper can report several studies; a replication may test only some of them.</p>
-    <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(ACTION[it.suggestion.proposed_action])}</li>`).join('')}</ol></section>`;
+    <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(actionLabel(it))}</li>`).join('')}</ol></section>`;
 }
 
 function otherFixesBlock(p) {
@@ -416,7 +426,7 @@ function decisionBlock(p, rec, draft) {
     : '<p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>'}
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
-    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
+    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(actionLabel(it))})</span></legend>
       ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
     ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
     <label for="l-useful">Was this card useful?</label>

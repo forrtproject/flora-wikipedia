@@ -399,8 +399,42 @@ dl.edit-kv { display: grid; grid-template-columns: 4.2rem 1fr; gap: .15rem .6rem
 dl.edit-kv dt { color: var(--muted); font-weight: 600; font-size: .85rem; padding-top: .05rem; } dl.edit-kv dd { margin: 0; }
 .proto-note { background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: .3rem .6rem; }
 
+/* ---------- card layout options (issue #4; layouts.js) ---------- */
+.layout-switch { display: flex; flex-wrap: wrap; gap: .3rem .8rem; align-items: center; padding: .35rem 1.6rem; background: #23263a; color: #fff; font-size: .85rem; }
+.layout-switch a { color: #c9d7f3; } .layout-switch a[aria-current] { color: #fff; font-weight: 700; text-decoration: none; }
+.origin { font-size: .74rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin: 1rem 0 .2rem; display: flex; align-items: center; gap: .35rem; }
+.origin::before { content: ""; width: .6rem; height: .6rem; border-radius: 2px; display: inline-block; }
+.origin-wiki { color: #5b6170; } .origin-wiki::before { background: #9aa0ac; }
+.origin-ai { color: #6741a1; } .origin-ai::before { background: #8d6bd0; border-radius: 50%; }
+.origin-paper { color: #25592b; } .origin-paper::before { background: #5f9b62; }
+.reason { border-left: 3px solid #b9a6e6; padding: .1rem 0 .1rem .9rem; }
+.reason p { margin: .3rem 0; }
+.ai-note { margin: .15rem 0 .2rem 1rem; font-size: .88rem; color: #4b4f66; }
+blockquote.excerpt .who { display: inline-block; margin-bottom: .1rem; }
+.pgroup { margin: .5rem 0 .7rem; } .pgroup-h { margin: .2rem 0; font-weight: 600; font-size: .9rem; }
+.decide { margin-top: 1rem; padding: .6rem .9rem; border-radius: 10px; background: #fff7e6; }
+.decide h4 { margin-top: 0 !important; }
+.fold { margin: .25rem 0; } .fold > summary { font-size: .9rem; }
+.more-h { margin: 1.4rem 0 .3rem; font-size: .78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; border-top: 1px solid var(--line); padding-top: .6rem; }
+.papers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .6rem; margin: .4rem 0; }
+.paper { border: 1px solid var(--line); border-radius: 10px; padding: .5rem .8rem; font-size: .9rem; } .paper p { margin: .2rem 0; }
+.paper-role { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #25592b; }
+.ltabs { display: flex; gap: .3rem; border-bottom: 1px solid var(--line); margin: .6rem 0 .4rem; flex-wrap: wrap; }
+.ltab { border-radius: 8px 8px 0 0; border-bottom: 0; } .ltab[aria-selected=true] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.ltab[aria-selected=true] .n { color: #dbe8f2; }
+.task { margin: .3rem 0; }
+.desk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; align-items: start; }
+.desk-l .target { font-size: 1rem; } .desk-src { margin-bottom: .5rem; }
+.desk-ai { margin-top: .4rem; }
+.layout-desk .detail > *, .layout-desk .detail .item > details > * { max-width: 62rem; }
+@media (min-width: 1101px) { body.layout-desk .layout.has-card { grid-template-columns: 300px 1fr; } }
+.tabs-rec { margin: .2rem 0; } .tabs-rec .origin { margin: .4rem 0 .1rem; }
+.desk-match { margin: .2rem 0 .6rem; }
+.detail { container-type: inline-size; }
+@container (max-width: 760px) { .desk { grid-template-columns: minmax(0, 1fr); } }
 /* Long DOIs, URLs and table runs in quoted passages must wrap, not push the card wider. */
 .detail { overflow-wrap: anywhere; } .detail * { min-width: 0; }
+@media (max-width: 520px) { dl.edit-kv { grid-template-columns: 1fr; } dl.edit-kv dt { margin-top: .3rem; } }
 
 /* ---------- review round 4 (issues #11-#18) ---------- */
 /* "Your reviews" lives in the header (#11); the panel opens towards whichever side has room (app.js) */
@@ -416,6 +450,37 @@ dl.edit-kv dt { color: var(--muted); font-weight: 600; font-size: .85rem; paddin
 .access { font-size: .85em; } span.access.none { color: var(--muted); }
 .why-none { margin: .3rem 0 .1rem; }
 table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
+
+/* ---------- card layouts, review round 4 (#12-#15, #4 combined layout) ---------- */
+@media (min-width: 1101px) {
+  body.layout-combo .layout.has-card { grid-template-columns: 300px 1fr; }
+  /* opening Filters with a card open keeps three columns: filters, list, card (#12) */
+  body.layout-desk .layout.has-card.show-filters, body.layout-combo .layout.has-card.show-filters { grid-template-columns: 205px 300px 1fr; }
+  body.layout-desk.help-open .layout.has-card.show-filters, body.layout-combo.help-open .layout.has-card.show-filters { grid-template-columns: 170px 260px 1fr; }
+}
+.layout-combo .detail > *, .layout-combo .detail .item > details > * { max-width: 62rem; }
+/* fold arrows inside a study sit with their text, not on the box edge (#14); headings in folds match the text (#13) */
+.item details details > summary, .item .lpanel summary, .item .reason summary { list-style-position: inside; }
+.item h6 { font-size: .95rem; font-weight: 700; margin: .8rem 0 .3rem; color: var(--ink); }
+.origin a { color: inherit; text-underline-offset: 2px; }
+.paper-role .src-meta { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--muted); }
+.paper-role .access { font-size: inherit; }
+.combo-box { border: 1px solid var(--line); border-radius: 12px; padding: .2rem 1rem .9rem; margin: .6rem 0 1rem; }
+.combo-box .ltabs { margin-top: .5rem; }
+.paper-wide { margin: .6rem 0; }
+.split-src { margin: .8rem 0 1.1rem; }
+.split-h, .split-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.split-h { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: .2rem 0; }
+.split-h span:first-child { color: #6741a1; }
+.split-row { border-top: 1px solid var(--line); padding: .4rem 0; }
+.split-ai p { margin: .1rem 0; font-size: .9rem; color: #4b4f66; }
+.split-q blockquote.excerpt { margin: 0; }
+@container (max-width: 760px) { .split-h { display: none; } .split-row { grid-template-columns: minmax(0, 1fr); gap: .2rem; } }
+@container (max-width: 500px) { .combo-box { padding: .1rem .6rem .7rem; } }
+.badge.lib { background: #eef0f3; color: #4b5360; }
+a.oa { display: inline-flex; align-items: center; gap: .25rem; margin-left: .2rem; vertical-align: -.1em; text-decoration: none; font-size: .85em; }
+a.oa svg { flex: none; } a.oa span { text-decoration: underline; text-underline-offset: 2px; }
+a.oa-gold, .oa-gold { color: #8f6500; } a.oa-green, .oa-green { color: #2d7a3e; }
 
 /* Shared reviews (issue #10): group status badges, the "reviewing now" toggle, group progress, sign-in. */
 .badge.review { background: #ece6f7; color: #4d2f86; }

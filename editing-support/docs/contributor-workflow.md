@@ -70,8 +70,13 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    addition** means the article relies on the study and leaves out a replication
    that tested the same claim and failed or clearly qualified it. An **optional
    addition** means the article is accurate and adding information is your
-   choice. A **judgement call** means two independent AI assessments disagreed about
-   whether a change is needed. The card shows both views for you to weigh.
+   choice. A **judgement call** means one of two things: two independent AI
+   assessments disagreed about whether a change is needed (the card shows both
+   views), or the AI suggests no change although a replication bears on a claim
+   the article relies on (the card shows the AI's reasons for you to weigh).
+   **No change needed** is kept only where no edit has a point: the paper is only
+   listed, a biography or list mentions it in passing, the article already reports
+   the replication, or the replication tests something the article does not rely on.
 7. **Write in your own words**, matching the article's variety of English, tone
    and citation style. Attribute primary findings in text ("A 2016 preregistered
    replication by … found …"), avoid weasel words, and keep due weight: a

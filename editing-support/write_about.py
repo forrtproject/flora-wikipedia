@@ -76,6 +76,12 @@ def about_md(data):
          f"broad category (edit, optional addition or no change) for {c['two_runs_agree']} of {c['two_runs']} studies. "
          f"The other {disagree} are shown as judgement calls with both views; the card leads with the view that "
          'suggests more change. Agreement does not mean an assessment is right.', '',
+         f"Where both assessments suggest no change, the card is still shown as a judgement call if a replication "
+         'tested a claim the article relies on, the article does not report it and the replication did not plainly '
+         f"confirm the original ({c.get('no_change_flagged', 0)} studies). The replication database's outcome codes "
+         'only decide which cards are flagged this way; they never shape what a card says. "No change needed" is '
+         'kept where no edit has a point: the paper is only listed, a biography or list mentions it in passing, the '
+         'article already reports the replication, or the replication tests something the article does not rely on.', '',
          'We searched for legitimate free copies of every paper we had only as an abstract: on author and lab pages, '
          'in university repositories and on preprint and working-paper servers. The AI then checked each fact a '
          'suggestion relies on against the papers, and the card lists these checks with the passages quoted. An '
