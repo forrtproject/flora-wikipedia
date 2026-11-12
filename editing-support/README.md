@@ -60,7 +60,7 @@ the full English audit (`../search/runs/english-full-gh/en`) and the review queu
 | Find full texts and check reviews | `fetch_fulltext.py`, `check_reviews.py` | `cache/fulltext_skill/`, `cache/reviews_checked/`, `ft-skill/` | free routes only |
 | Drop articles that already cite every replication (brief v6) | `prefilter.py` | report (JSON) | none |
 | Drafting copies of packets without FLoRA outcome codes (brief v6) | `blind_packets.py` | `evidence_v6/<card>/` | none |
-| Draft | `make_prompt.py` with `drafting_brief.md` (v6; v5 kept as `drafting_brief.v5.md`); Claude sub-agents, or `run_route.py` for Codex | `drafts/<route>/<card>.json` | subscription CLIs only |
+| Draft | `make_prompt.py` with `drafting_brief.md` (v6; earlier briefs are kept in the run directory); Claude sub-agents, or `run_route.py` for Codex | `drafts/<route>/<card>.json` | subscription CLIs only |
 | Validate | `validate.py`, `validate_all.py` | `validation-report.json` | none |
 | Orchestrator review | `review/<card>.json` | verdicts and overrides | none |
 | Live spot-check | `inspect_sample.py` | `manual-inspection.json` | Wikipedia read API |
@@ -74,7 +74,7 @@ and checks left to contributors that the pipeline should have done ("confirm", "
 "read").
 
 Brief-v6 drafts carry `brief_version: "v6"` and are checked against `suggestion.schema.json`;
-earlier drafts are checked against `suggestion.schema.v5.json`. For v6 no-change suggestions,
+earlier drafts are checked against `runs/edit-prototype-en/suggestion.schema.v5.json`. For v6 no-change suggestions,
 `build_site.py` (`no_change_tier`) assigns one of three tiers from the coded fields alone:
 *already covered*, *likely no change* or *judgement call* (the default). Earlier drafts keep
 the v5 rule and the hand-made calls in `label_overrides.json`. See

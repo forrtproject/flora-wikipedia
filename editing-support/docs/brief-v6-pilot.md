@@ -64,8 +64,8 @@ match the packet in order, a verbatim page quote whenever a replication is coded
 page, and `report_accurate` to be null exactly when it is not. Source quotes must now come from
 the named source; only claims that start with "Wikipedia article:" may quote the article. It
 also warns where the coding and the chosen strength or reason disagree. v5 drafts are still
-validated against `suggestion.schema.v5.json`, and the v5 brief is kept as
-`drafting_brief.v5.md`.
+validated against the v5 schema, kept with the earlier briefs and schemas in the run
+directory (`suggestion.schema.v5.json`, `drafting_brief.v5.md`).
 
 ## Model reviews: what I adopted
 

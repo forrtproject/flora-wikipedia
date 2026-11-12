@@ -21,7 +21,7 @@ from common import RUN, wikitext
 
 HERE = pathlib.Path(__file__).parent
 SCHEMA = json.loads((HERE / 'suggestion.schema.json').read_text())  # brief v6
-SCHEMA_V5 = json.loads((HERE / 'suggestion.schema.v5.json').read_text())  # drafts written before v6
+SCHEMA_V5_PATH = RUN / 'suggestion.schema.v5.json'  # drafts written before v6; kept with the run, like v3 and v4
 LEVEL = {'metadata_only': 0, 'abstract': 1, 'full_text': 2}
 HUMAN_CHORE = re.compile(r'^\s*(confirm|check|verify|read|obtain|look up|open|find|search|consult|compare|see whether|ensure)\b', re.I)
 DELEGATED = re.compile(r'(raise|ask|note|query|post)[^.;]{0,40}talk page (whether|if|to check|asking)|'
@@ -69,7 +69,7 @@ def check(draft, pk):
     errors, warnings = [], []
     v6 = 'brief_version' in draft
     try:
-        jsonschema.validate(draft, SCHEMA if v6 else SCHEMA_V5)
+        jsonschema.validate(draft, SCHEMA if v6 else json.loads(SCHEMA_V5_PATH.read_text()))
     except jsonschema.ValidationError as e:
         return [f'schema: {e.message} at {list(e.absolute_path)}'], warnings
     if draft['card_id'] != pk['card_id']:
