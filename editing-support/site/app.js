@@ -48,14 +48,16 @@ function srcLink(d) {
   const s = SOURCES[d.toLowerCase()];
   return s ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener" title="${esc(s.citation)}">${esc(s.label)}</a>` : doiLink(d);
 }
-// Where a reader can check a paper without a subscription (#17): a free copy, open access at the
-// publisher, or a note that none is known, so reviewers know when they need library access.
-function accessLink(d, short) {
-  const a = SOURCES[(d || '').replace(/^doi:/i, '').trim().toLowerCase()]?.access;
-  if (!a) return '';
-  if (a.url) return `<a class="access" href="${esc(a.url)}" target="_blank" rel="noopener">${esc(short ? 'Free copy' : a.label)} ↗</a>`;
-  if (a.kind === 'publisher') return `<span class="access">${short ? 'Free at the publisher' : 'Free to read at the publisher (DOI link)'}</span>`;
-  return `<span class="access none">${short ? 'No free copy known' : 'No free copy known: checking it may need library access'}</span>`;
+// Open access next to a paper (#17): an unlocked padlock, gold when the publisher's own page is free (links the
+// DOI), green when a free copy is elsewhere (links that copy). Closed papers get no icon; the list's
+// "Library access" badge and filter cover them. With `text`, the label follows the icon.
+const UNLOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false"><path d="M4.5 7V5a3.5 3.5 0 0 1 6.8-1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="2.5" y="7" width="11" height="8" rx="1.6" fill="currentColor"/></svg>';
+function accessLink(d, text) {
+  d = (d || '').replace(/^doi:/i, '').trim();
+  const a = SOURCES[d.toLowerCase()]?.access;
+  if (!a || !(a.url || a.kind === 'publisher')) return '';
+  const pub = !a.url, label = pub ? 'Free to read at the publisher' : a.label;
+  return `<a class="oa ${pub ? 'oa-gold' : 'oa-green'}" href="${esc(pub ? 'https://doi.org/' + d : a.url)}" target="_blank" rel="noopener" title="${esc(label)}" aria-label="${esc(label)}">${UNLOCK}${text ? `<span>${esc(label)}</span>` : ''}</a>`;
 }
 // What the model read. In lists, full text is the default and stays unmarked; anything less is named.
 const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="lvl ${l === 'full_text' ? '' : l === 'abstract' ? 'abs' : 'thin'}">${esc(LEVEL[l] || l)}</span>`;
@@ -270,7 +272,7 @@ function evidenceBlock(it) {
   const excerpts = doi => used.filter(e => e.doi.toLowerCase() === doi.toLowerCase() && e.excerpt);
   const row = (role, s, extra) => {
     const ex = excerpts(s.doi);
-    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${[doiLink(s.doi), accessLink(s.doi)].filter(Boolean).join(' · ')}${extra || ''}
+    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${doiLink(s.doi)} ${accessLink(s.doi, true)}${extra || ''}
       ${ex.length ? `<details><summary>Passages quoted from this paper (${ex.length})</summary>${ex.map(e => `<blockquote class="excerpt">“${esc(e.excerpt)}”<br><span class="small"><span class="who">AI's note:</span> ${esc(e.what_it_supports)}</span></blockquote>`).join('')}</details>` : ''}</td>
       <td>${lvlBadge(s.evidence_level)}</td></tr>`;
   };
@@ -353,7 +355,7 @@ function itemSection(it, i, n) {
     it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this Wikipedia article does not cite yet.</p>' : '',
     it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
     `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
-  const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
+  const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${accessLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}${accessLink(r.doi)}`).join('')}</p>`;
   const body = `${papers}${issueBlock(it)}
     <h4>Suggestion</h4>
     <p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>

@@ -478,3 +478,6 @@ table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
 @container (max-width: 760px) { .split-h { display: none; } .split-row { grid-template-columns: minmax(0, 1fr); gap: .2rem; } }
 @container (max-width: 500px) { .combo-box { padding: .1rem .6rem .7rem; } }
 .badge.lib { background: #eef0f3; color: #4b5360; }
+a.oa { display: inline-flex; align-items: center; gap: .25rem; margin-left: .2rem; vertical-align: -.1em; text-decoration: none; font-size: .85em; }
+a.oa svg { flex: none; } a.oa span { text-decoration: underline; text-underline-offset: 2px; }
+a.oa-gold, .oa-gold { color: #8f6500; } a.oa-green, .oa-green { color: #2d7a3e; }

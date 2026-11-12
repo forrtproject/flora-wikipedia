@@ -66,7 +66,7 @@ function passagesFor(it, doi) {
 }
 
 // With `bare`, the heading above already names the paper and what was read, so the quote stands alone (#15).
-const quoteBox = (it, doi, q, lvl, bare) => `<blockquote class="excerpt">${bare ? '' : `<span class="who">Quote from ${srcLink(doi)} · ${roleOf(it, doi)} · ${esc(LEVEL[lvl] || 'read')}${accessLink(doi, true) ? ` · ${accessLink(doi, true)}` : ''}</span><br>`}“${esc(q)}”</blockquote>`;
+const quoteBox = (it, doi, q, lvl, bare) => `<blockquote class="excerpt">${bare ? '' : `<span class="who">Quote from ${srcLink(doi)}${accessLink(doi)} · ${roleOf(it, doi)} · ${esc(LEVEL[lvl] || 'read')}</span><br>`}“${esc(q)}”</blockquote>`;
 
 // Every AI check, including those without a quote and those on other sources: nothing is lost to deduplication.
 function checksFold(it) {
@@ -115,8 +115,8 @@ function decideBlock(it) {
 
 function paperCard(it, s, role, extra = '') {
   const pass = passagesFor(it, s.doi);
-  return `<div class="paper"><p class="paper-role">${role}</p><p>${esc(s.citation)}<br>${doiLink(s.doi)}</p>
-    <p class="small">What the AI read: ${lvlBadge(s.evidence_level)}${extra}${accessLink(s.doi) ? ` · ${accessLink(s.doi)}` : ''}</p>
+  return `<div class="paper"><p class="paper-role">${role}</p><p>${esc(s.citation)}<br>${doiLink(s.doi)} ${accessLink(s.doi, true)}</p>
+    <p class="small">What the AI read: ${lvlBadge(s.evidence_level)}${extra}</p>
     ${pass.length ? `<details class="fold"><summary>Passages quoted from this paper (${pass.length})</summary><ul class="verifs">${pass.join('')}</ul></details>` : ''}</div>`;
 }
 const replExtra = r => r.doi_detected_on_page ? ' · already cited in the Wikipedia article' : ' · not cited in the Wikipedia article yet';
@@ -149,7 +149,7 @@ function methodFold(it) {
     <dt>Status</dt><dd>Prepared with AI${it.provenance.finished_at ? ' on ' + esc(it.provenance.finished_at.slice(0, 10)) : ''}; not yet checked by people.</dd></dl></details>`;
 }
 const studyHead = (it, i, n) => `${n > 1 ? `Publication ${i + 1} of ${n}: ` : ''}${it.original.short}`;
-const papersLine = it => `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
+const papersLine = it => `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${accessLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}${accessLink(r.doi)}`).join('')}</p>`;
 const wrap = (it, i, n, body) => {
   return `<section class="item lay-${LAYOUT}" id="item-${it.card_id}" aria-labelledby="h-${it.card_id}">
     <details ${n === 1 || i === 0 ? 'open' : ''}><summary><h3 class="item-head" id="h-${it.card_id}">${esc(studyHead(it, i, n))}</h3></summary>${body}</details></section>`;
@@ -202,7 +202,7 @@ document.addEventListener('keydown', e => {
 });
 
 // "ORIGINAL: BAIRD ET AL. (2012) · Full text read · Free copy ↗": one line names the paper, what was read and where to check it.
-const srcHead = (src, role, lvl) => `<p class="paper-role">${role}: ${srcLink(src.doi)} <span class="src-meta">· ${esc(LEVEL[lvl || src.evidence_level] || 'read')}${accessLink(src.doi, true) ? ` · ${accessLink(src.doi, true)}` : ''}</span></p>`;
+const srcHead = (src, role, lvl) => `<p class="paper-role">${role}: ${srcLink(src.doi)}${accessLink(src.doi)} <span class="src-meta">· ${esc(LEVEL[lvl || src.evidence_level] || 'read')}</span></p>`;
 
 // ---------- layout 3: comparison desk ----------
 // The right column shows the first passage quoted from each paper. It was not chosen for this comparison,
@@ -242,7 +242,7 @@ const comboSources = it => [[it.original, 'Original study'], ...it.replications.
 function comboPapers(it) {  // full-width tiles; quotes only, no AI interpretation
   return comboSources(it).map(([src, role]) => {
     const qs = quotesFor(it, src.doi);
-    return `<div class="paper paper-wide"><p class="paper-role">${role}</p><p>${esc(src.citation)}<br>${doiLink(src.doi)}${accessLink(src.doi) ? ` · ${accessLink(src.doi)}` : ''}</p>
+    return `<div class="paper paper-wide"><p class="paper-role">${role}</p><p>${esc(src.citation)}<br>${doiLink(src.doi)} ${accessLink(src.doi, true)}</p>
       <p class="small">What the AI read: ${lvlBadge(src.evidence_level)}${role === 'Replication' ? replExtra(src) : ''}</p>
       ${qs.length ? `<details class="fold"><summary>Passages quoted from this paper (${qs.length})</summary>${qs.map(q => quoteBox(it, src.doi, q.quote, src.evidence_level, true)).join('')}</details>`
         : '<p class="small">No passage quoted from this paper.</p>'}</div>`;
