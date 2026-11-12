@@ -41,7 +41,8 @@ const Store = (() => {
   // Where this browser keeps records: one namespace per reviewer ID, so signing in as someone else never
   // sends the previous person's reviews under the new ID. Records saved without an ID (and everything from
   // local-only mode) stay in the plain namespace until their owner chooses to share them (adopt()).
-  const ns = () => PFX + (me() ? `u:${me().public_id}:` : '');
+  const nsFor = who => PFX + (who ? `u:${who.public_id}:` : '');
+  const ns = () => nsFor(me());
   // The send queue, per reviewer: {page_id: updated_at of the version still to send}.
   const pendingKey = () => me() ? PFX + `u:${me().public_id}:unsynced` : null;
   const queued = () => { const k = pendingKey(), v = k ? getJSON(k, {}) : {}; return Array.isArray(v) ? {} : v; };
@@ -54,22 +55,26 @@ const Store = (() => {
     if (r.ok) board = r.v;
     return r.ok;
   }
-  // Send one saved record. Sends for a page run one after another, so an older version can never arrive
-  // after a newer one, and the queue entry is cleared only if no newer version was saved meanwhile.
+  // Send a page's saved record. Sends for a page run one at a time across all tabs of this site (Web Locks;
+  // a per-tab chain where those are missing), and each send reads the latest saved version from this
+  // browser, so an older version can never overwrite a newer one. The queue entry is cleared only if no
+  // newer version was saved meanwhile.
   const chains = {};
   const queue = (pageId, rec) => { if (me()) setQueued({...queued(), [pageId]: rec?.updated_at || ''}); };
+  const serial = (key, fn) => navigator.locks?.request ? navigator.locks.request(key, fn)
+    : (chains[key] = (chains[key] || Promise.resolve()).then(fn, fn));
   function push(pageId, rec) {
     if (!shared) return Promise.resolve({ok: true, local: true});
     const who = me();
     if (!who) return Promise.resolve({ok: false, error: 'not signed in'});
     queue(pageId, rec);
-    const run = async () => {
-      const r = await attempt(() => rpc('save_review', {p_reviewer_id: who.reviewer_id, p_page_id: pageId, p_record: rec}));
-      const q = queued();
-      if (r.ok && me()?.reviewer_id === who.reviewer_id && q[pageId] === (rec.updated_at || '')) { delete q[pageId]; setQueued(q); }
+    return serial(`${PFX}send:${who.public_id}:${pageId}`, async () => {
+      const latest = getJSON(nsFor(who) + 'page:' + pageId, null) || rec;
+      const r = await attempt(() => rpc('save_review', {p_reviewer_id: who.reviewer_id, p_page_id: pageId, p_record: latest}));
+      const k = PFX + `u:${who.public_id}:unsynced`, q = getJSON(k, {});
+      if (r.ok && q[pageId] === (latest.updated_at || '')) { delete q[pageId]; set(k, Object.keys(q).length ? JSON.stringify(q) : null); }
       return r;
-    };
-    return (chains[pageId] = (chains[pageId] || Promise.resolve()).then(run, run));
+    });
   }
   // Send everything still queued, reading the latest saved version of each record.
   async function flush(read) {
@@ -100,7 +105,7 @@ const Store = (() => {
   const forPage = id => ({reviews: board.reviews.filter(r => r.page_id === id), claims: board.claims.filter(c => c.page_id === id),
     audits: board.audits.filter(a => a.page_id === id)});
 
-  return {shared, demo, prefix: PFX, ns, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
+  return {shared, demo, prefix: PFX, meKey: ME_KEY, ns, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
     status: () => ({online, lastError})};
 })();
 

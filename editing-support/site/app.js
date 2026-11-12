@@ -528,6 +528,8 @@ function show(id, focus) {
   document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(keepDraft, 600); });
   document.getElementById('l-save').onclick = async () => {
     clearTimeout(timer);
+    // Signed in or out in another tab since this card was drawn: redraw it for the current ID first.
+    if (LS !== Store.ns() + 'page:') { setNamespace(); paintIdentity(); reshow(); return; }
     const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
     const disagrees = p.items.some(it => {
@@ -776,6 +778,11 @@ function reshow() {
   const p = PAGES.find(x => x.page_id === ACTIVE);
   if (p) show(p.page_id, false); else renderAll();
 }
+// Signing in or out in another tab changes the ID here too: switch records and redraw.
+window.addEventListener('storage', e => {
+  if (!Store.shared || e.key !== Store.meKey) return;
+  setNamespace(); paintIdentity(); Store.refresh().then(reshow);
+});
 async function syncNow() {
   if (Store.shared) { await Store.flush(ledgerGet); await Store.refresh(); }
   renderAll();

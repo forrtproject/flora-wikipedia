@@ -36,7 +36,10 @@ create table if not exists reviews (
   primary key (page_id, reviewer_id)
 );
 -- When the decisions (record->'items') last changed. Audits made before it no longer count.
-alter table reviews add column if not exists decided_at timestamptz not null default now();
+-- Existing rows (from before this column) take their last save time, so earlier audits keep counting.
+alter table reviews add column if not exists decided_at timestamptz;
+update reviews set decided_at = updated_at where decided_at is null;
+alter table reviews alter column decided_at set default now(), alter column decided_at set not null;
 
 -- "I'm reviewing this now". Shown as "Under review" for 24 hours unless switched off or a review is saved.
 create table if not exists claims (
