@@ -18,7 +18,7 @@ def prompt(card_id, evidence_dir='evidence'):
 
 
 def page_prompt(pageid, out_dir, evidence_dir='evidence'):
-    """Prompt for drafting all items on one page (brief v3)."""
+    """Prompt for drafting all items on one page (brief v3 onwards; v6 adds where replications are cited)."""
     import json
     items = []
     for d in sorted((RUN / evidence_dir).iterdir()):
@@ -27,8 +27,16 @@ def page_prompt(pageid, out_dir, evidence_dir='evidence'):
             items.append(pk)
     items.sort(key=lambda pk: [i['packet_id'] for i in pk.get('page_items', [])].index(pk['card_id'])
                if pk.get('page_items') else 0)
+    from prefilter import on_page_index
+    found = on_page_index()
+    how = {'doi': 'cited on the page (DOI found)', 'title': 'cited on the page (title found)',
+           None: 'not found on the page by DOI or title'}
+
+    def reps(pk):
+        return ''.join(f"\n  - replication doi:{r['doi']}: {how[found.get((str(pageid), r['doi'].lower()))]}"
+                       for r in pk['replications'])
     item_list = '\n'.join(f"- item `{pk['card_id']}`: {pk['original']['flora_title']} (doi:{pk['original']['doi']}); "
-                           f"packet {RUN / evidence_dir / pk['card_id'] / 'packet.md'}" for pk in items)
+                           f"packet {RUN / evidence_dir / pk['card_id'] / 'packet.md'}{reps(pk)}" for pk in items)
     brief = (HERE / 'drafting_brief.md').read_text()
     schema = (HERE / 'suggestion.schema.json').read_text()
     return brief.format(item_list=item_list, run_dir=RUN, schema_path=HERE / 'suggestion.schema.json',

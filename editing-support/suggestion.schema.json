@@ -1,13 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "FLoRA English edit suggestion draft (private review material)",
+  "title": "FLoRA English edit suggestion draft, brief v6 (private review material)",
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "brief_version",
     "card_id",
     "claim_sites",
     "article_scope",
     "citation_function",
+    "article_use",
+    "replications_assessed",
     "specific_study_match",
     "existing_acknowledgement",
     "evidence_used",
@@ -20,12 +23,15 @@
     "alternatives",
     "uncertainties",
     "required_checks",
-    "confidence",
     "flags",
     "verifications",
-    "edit_strength"
+    "edit_strength",
+    "no_change_basis"
   ],
   "properties": {
+    "brief_version": {
+      "const": "v6"
+    },
     "card_id": {
       "type": "string",
       "pattern": "^[0-9a-f]{20}$"
@@ -83,6 +89,100 @@
         "unclear"
       ]
     },
+    "article_use": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "states_finding",
+        "relies_as_evidence",
+        "note"
+      ],
+      "properties": {
+        "states_finding": {
+          "enum": [
+            "as_fact",
+            "attributed",
+            "no"
+          ],
+          "description": "Whether the Wikipedia article itself states the paper's result: in its own voice, attributed ('X found that'), or not at all (named, listed, described, quoted prize citation or title)."
+        },
+        "relies_as_evidence": {
+          "type": "boolean",
+          "description": "True if a statement in the Wikipedia article depends on the paper's result being right."
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "replications_assessed": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One entry per FLoRA-linked replication in the packet, in packet order.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "doi",
+          "tests",
+          "bears_on_article_claim",
+          "result_vs_original",
+          "already_on_page",
+          "report_accurate",
+          "note"
+        ],
+        "properties": {
+          "doi": {
+            "type": "string"
+          },
+          "tests": {
+            "enum": [
+              "same_claim",
+              "same_paper_related_result",
+              "same_paper_unrelated_result",
+              "reanalysis_same_data",
+              "different_topic",
+              "unclear"
+            ]
+          },
+          "bears_on_article_claim": {
+            "enum": [
+              "direct",
+              "indirect",
+              "none"
+            ]
+          },
+          "result_vs_original": {
+            "enum": [
+              "confirms",
+              "qualifies",
+              "fails",
+              "inconclusive",
+              "not_determinable"
+            ],
+            "description": "The model's reading of the papers, never the FLoRA outcome code."
+          },
+          "already_on_page": {
+            "enum": [
+              "cited",
+              "reported_in_prose",
+              "reported_via_other_source",
+              "no"
+            ]
+          },
+          "report_accurate": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Null exactly when already_on_page is no."
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "specific_study_match": {
       "type": "object",
       "additionalProperties": false,
@@ -103,7 +203,8 @@
         "note": {
           "type": "string"
         }
-      }
+      },
+      "description": "Card-level summary of replications_assessed (shown on the card)."
     },
     "existing_acknowledgement": {
       "type": "object",
@@ -124,7 +225,8 @@
         "note": {
           "type": "string"
         }
-      }
+      },
+      "description": "Card-level summary of already_on_page across replications (shown on the card)."
     },
     "evidence_used": {
       "type": "array",
@@ -278,15 +380,30 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
+          "type",
           "action",
-          "when"
+          "when",
+          "target_article"
         ],
         "properties": {
+          "type": {
+            "enum": [
+              "reference_slip",
+              "wording",
+              "optional_reference",
+              "belongs_elsewhere",
+              "other"
+            ]
+          },
           "action": {
             "type": "string"
           },
           "when": {
             "type": "string"
+          },
+          "target_article": {
+            "type": "string",
+            "description": "Title of the other Wikipedia article for belongs_elsewhere; empty otherwise."
           }
         }
       }
@@ -304,13 +421,6 @@
         "type": "string"
       },
       "description": "Only editorial judgement calls left to the human (for example how much weight to give a finding). Never verification or reading tasks."
-    },
-    "confidence": {
-      "enum": [
-        "low",
-        "medium",
-        "high"
-      ]
     },
     "flags": {
       "type": "object",
@@ -382,6 +492,19 @@
         "none"
       ],
       "description": "fix = the article states something the source contradicts or does not support; recommended_addition = a failed or materially qualifying direct replication (or reanalysis) of a finding the article relies on is missing; optional_addition = the article is accurate and the addition only confirms or enriches; none = nothing to do."
+    },
+    "no_change_basis": {
+      "enum": [
+        "listed_only",
+        "named_without_finding",
+        "history_or_example",
+        "tests_other_claim",
+        "already_reported",
+        "confirms_claim",
+        "none_applies",
+        "not_applicable"
+      ],
+      "description": "Main reason for no_change; not_applicable for any other action."
     }
   }
 }

@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FLoRA English edit suggestion draft (private review material)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "card_id",
+    "claim_sites",
+    "article_scope",
+    "citation_function",
+    "specific_study_match",
+    "existing_acknowledgement",
+    "evidence_used",
+    "assessment",
+    "proposed_action",
+    "queue_recommendation",
+    "rationale",
+    "draft",
+    "content_points",
+    "alternatives",
+    "uncertainties",
+    "required_checks",
+    "confidence",
+    "flags",
+    "verifications",
+    "edit_strength"
+  ],
+  "properties": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{20}$"
+    },
+    "claim_sites": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "occurrence",
+          "section",
+          "visible_claim_quote",
+          "is_visible_claim",
+          "note"
+        ],
+        "properties": {
+          "occurrence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "section": {
+            "type": "string"
+          },
+          "visible_claim_quote": {
+            "type": "string"
+          },
+          "is_visible_claim": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "article_scope": {
+      "enum": [
+        "paper",
+        "effect",
+        "effect_section",
+        "broad_topic",
+        "biography_history",
+        "incidental",
+        "list_or_bibliography"
+      ]
+    },
+    "citation_function": {
+      "enum": [
+        "current_empirical_support",
+        "historical_attribution",
+        "example",
+        "bibliography_listing",
+        "unclear"
+      ]
+    },
+    "specific_study_match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "matched",
+            "partial",
+            "mismatch",
+            "uncertain",
+            "not_applicable"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "existing_acknowledgement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "yes",
+            "partial",
+            "no",
+            "unclear"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "doi",
+          "role",
+          "evidence_level",
+          "excerpt",
+          "what_it_supports"
+        ],
+        "properties": {
+          "doi": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "original",
+              "replication",
+              "secondary_lead",
+              "other_packet_source"
+            ]
+          },
+          "evidence_level": {
+            "enum": [
+              "full_text",
+              "abstract",
+              "metadata_only"
+            ]
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "what_it_supports": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "string",
+      "minLength": 40
+    },
+    "proposed_action": {
+      "enum": [
+        "no_change",
+        "contextualise",
+        "narrow_claim",
+        "replace_source",
+        "upgrade_source",
+        "remove_unsupported_claim",
+        "remove_citation",
+        "talk_page",
+        "defer"
+      ]
+    },
+    "queue_recommendation": {
+      "enum": [
+        "retain",
+        "drop",
+        "defer"
+      ]
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 20
+    },
+    "draft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "location",
+        "operation",
+        "target_text",
+        "wording",
+        "citations",
+        "withheld_reason"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "provided",
+            "conditional",
+            "not_applicable",
+            "withheld"
+          ]
+        },
+        "location": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "insert_after",
+            "replace",
+            "modify",
+            "remove",
+            "none"
+          ]
+        },
+        "target_text": {
+          "type": "string"
+        },
+        "wording": {
+          "type": "string"
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "withheld_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "content_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "point",
+          "source",
+          "evidence_level"
+        ],
+        "properties": {
+          "point": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "evidence_level": {
+            "enum": [
+              "full_text",
+              "abstract",
+              "metadata_only",
+              "needs_source"
+            ]
+          }
+        }
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "when"
+        ],
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_checks": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "string"
+      },
+      "description": "Only editorial judgement calls left to the human (for example how much weight to give a finding). Never verification or reading tasks."
+    },
+    "confidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blp",
+        "medrs",
+        "other"
+      ],
+      "properties": {
+        "blp": {
+          "type": "boolean"
+        },
+        "medrs": {
+          "type": "boolean"
+        },
+        "other": {
+          "type": "string"
+        }
+      }
+    },
+    "verifications": {
+      "type": "array",
+      "description": "Every factual claim the suggestion relies on, or that the article makes about the study, checked by the model itself against the source text.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim",
+          "source",
+          "result",
+          "quote",
+          "evidence_level"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 10
+          },
+          "source": {
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "confirmed",
+              "contradicted",
+              "not_in_source",
+              "source_unavailable"
+            ]
+          },
+          "quote": {
+            "type": "string"
+          },
+          "evidence_level": {
+            "enum": [
+              "full_text",
+              "abstract",
+              "metadata_only"
+            ]
+          }
+        }
+      }
+    },
+    "edit_strength": {
+      "enum": [
+        "fix",
+        "recommended_addition",
+        "optional_addition",
+        "none"
+      ],
+      "description": "fix = the article states something the source contradicts or does not support; recommended_addition = a failed or materially qualifying direct replication (or reanalysis) of a finding the article relies on is missing; optional_addition = the article is accurate and the addition only confirms or enriches; none = nothing to do."
+    }
+  }
+}

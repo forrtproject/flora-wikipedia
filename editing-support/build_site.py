@@ -25,7 +25,8 @@ from validate import check
 from write_about import about_md
 
 HERE = pathlib.Path(__file__).resolve().parent
-ROUTE_LABEL = {k: 'Claude' for k in ('claude', 'claude_ft', 'claude_v4', 'claude_v41', 'claude_v5a', 'claude_v5b')}
+ROUTE_LABEL = {k: 'Claude' for k in ('claude', 'claude_ft', 'claude_v4', 'claude_v41', 'claude_v5a', 'claude_v5b',
+                                     'claude_v6a', 'claude_v6b')}
 ROUTE_LABEL.update(codex='Codex', agy='Gemini', orchestrator='Claude')
 LEVEL = {'metadata_only': 0, 'abstract': 1, 'full_text': 2}
 
@@ -230,21 +231,55 @@ def replication_bears_on_claim(it):
             and any(r['flora_outcome'] not in CONFIRMING for r in it['replications']))
 
 
-def label_no_change(items):
-    """Relabel AI no-change items as judgement calls where a replication bears on a claim the article relies on (#9).
+HISTORY_USES = ('historical_attribution', 'example', 'bibliography_listing')
 
-    label_overrides.json records the calls the rule cannot make, card by card, with the reason."""
+
+def no_change_tier(s):
+    """Tier of a brief-v6 no-change suggestion, from the AI's coded fields only (#9).
+
+    already_covered: the Wikipedia article reports at least one replication, and reports accurately every replication
+      that bears on its claim.
+    likely_no_change: clear cases only. No replication bears on what the article says; or the article neither states
+      the finding nor relies on it; or it cites the paper for history, as an example or in a list and every
+      replication that bears on it confirms the result.
+    judgement_call: everything else (the default).
+    FLoRA outcome codes are not used."""
+    reps, use = s['replications_assessed'], s['article_use']
+    relevant = [r for r in reps if r['bears_on_article_claim'] != 'none']
+    if any(r['already_on_page'] != 'no' for r in reps) and all(
+            r['already_on_page'] != 'no' and r['report_accurate'] is not False for r in relevant):
+        return 'already_covered'
+    if not relevant or (use['states_finding'] == 'no' and not use['relies_as_evidence']):
+        return 'likely_no_change'
+    if s['citation_function'] in HISTORY_USES and all(r['result_vs_original'] == 'confirms' for r in relevant):
+        return 'likely_no_change'
+    return 'judgement_call'
+
+
+def label_no_change(items):
+    """Sort AI no-change items into tiers (#9): judgement calls are shown as such; the others keep 'no change'.
+
+    Brief-v6 drafts use no_change_tier. Earlier drafts use replication_bears_on_claim, with the card-by-card calls in
+    label_overrides.json that the v5 fields cannot support."""
     overrides = {o['card_id']: o for o in json.loads((HERE / 'label_overrides.json').read_text())}
+    known = {it['card_id'] for it in items}
+    if set(overrides) - known:
+        raise ValueError(f'Label override for an unknown card: {sorted(set(overrides) - known)}')
     for it in items:
-        o = overrides.pop(it['card_id'], None)
+        s = it['suggestion']
+        o = overrides.get(it['card_id'])
+        if 'brief_version' in s:  # v6: the rule decides; overrides do not apply
+            if it['kind'] == 'none' and s['proposed_action'] == 'no_change':
+                it['no_change_tier'] = no_change_tier(s)
+                if it['no_change_tier'] == 'judgement_call':
+                    it['kind'], it['judgement_basis'] = 'judgement', 'replication_bears_on_claim'
+            continue
         if it['kind'] != 'none':
             if o:
                 raise ValueError(f"Label override for a card the AI did not mark 'no change': {it['card_id']}")
             continue
         if (o['bears_on_claim'] if o else replication_bears_on_claim(it)):
             it['kind'], it['judgement_basis'] = 'judgement', 'replication_bears_on_claim'
-    if overrides:
-        raise ValueError(f'Label override for an unknown card: {sorted(overrides)}')
 
 
 def reviews_view(pk):
@@ -319,6 +354,7 @@ def counts(cards, pages=None):
         two_runs=sum(bool(c['two_run']) for c in cards),
         two_runs_agree=sum(bool(c['two_run'] and c['two_run']['agree']) for c in cards),
         no_change_flagged=sum(c.get('judgement_basis') == 'replication_bears_on_claim' for c in cards),
+        no_change_tier=tally(lambda c: c.get('no_change_tier', 'n/a')),
         pages_with_adjacent=sum(bool(p['adjacent']) for p in pages or []),
         open_literature_tasks=sum(any(w.startswith('open-ended') for w in c['validation']['warnings']) for c in cards),
         proposed_action=tally(lambda c: c['suggestion']['proposed_action']),
@@ -338,7 +374,7 @@ def counts(cards, pages=None):
 def flat_csv(cards):
     buf = io.StringIO()
     cols = ['card_id', 'page_title', 'frozen_revid', 'stratum', 'article_scope', 'citation_function', 'proposed_action',
-            'queue_recommendation', 'draft_status', 'confidence', 'blp', 'medrs', 'best_evidence', 'route', 'model',
+            'queue_recommendation', 'draft_status', 'no_change_tier', 'confidence', 'blp', 'medrs', 'best_evidence', 'route', 'model',
             'orchestrator_verdict', 'validation_errors', 'original_doi', 'replication_dois', 'rationale']
     w = csv.DictWriter(buf, fieldnames=cols)
     w.writeheader()
@@ -347,7 +383,7 @@ def flat_csv(cards):
         w.writerow(dict(card_id=c['card_id'], page_title=c['page']['title'], frozen_revid=c['page']['frozen_revid'],
                         stratum=c['stratum'], article_scope=s['article_scope'], citation_function=s['citation_function'],
                         proposed_action=s['proposed_action'], queue_recommendation=s['queue_recommendation'],
-                        draft_status=s['draft']['status'], confidence=s['confidence'], blp=s['flags']['blp'],
+                        no_change_tier=c.get('no_change_tier', ''), draft_status=s['draft']['status'], confidence=s.get('confidence', ''), blp=s['flags']['blp'],
                         medrs=s['flags']['medrs'], best_evidence=c['best_evidence'], route=c['provenance']['route'],
                         model=c['provenance']['model'], orchestrator_verdict=c['provenance']['orchestrator']['verdict'],
                         validation_errors=len(c['validation']['errors']), original_doi=c['original']['doi'],
@@ -559,8 +595,9 @@ def main():
     for c in cards:
         c['suggestion']['draft'].pop('wording', None)
         c['gist'], c['rationale_rest'] = card_gist(c)
-        c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
-        c['suggestion'] = say_wikipedia_article(c['suggestion'])
+        if 'brief_version' not in c['suggestion']:  # v6 drafts say "the Wikipedia article" themselves (validated)
+            c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
+            c['suggestion'] = say_wikipedia_article(c['suggestion'])
         if c['two_run']:
             c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
     sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
