@@ -166,14 +166,18 @@ def build_items():
         cid = p['packet_id']
         route = assignment.get('cards', {}).get(cid, assignment.get('default'))
         two_run = None
-        run_b = assignment.get('second_run')
+        run_b = assignment.get('second_runs', {}).get(cid, assignment.get('second_run'))  # per-card second run, if any
         if run_b and (RUN / 'drafts' / run_b / f'{cid}.json').exists() and (RUN / 'drafts' / str(route) / f'{cid}.json').exists():
             da, db = load_json(RUN / 'drafts' / route / f'{cid}.json'), load_json(RUN / 'drafts' / run_b / f'{cid}.json')
             ka, kb = strength_class(da), strength_class(db)
-            if STRENGTH_ORDER[kb] > STRENGTH_ORDER[ka]:  # show the run that proposes more; the other is reported
-                route, da, db, ka, kb = run_b, db, da, kb, ka
+            ta, tb = draft_tier(da), draft_tier(db)
+            # Show the run that proposes more; between two v6 no-change runs, the one with the more cautious tier.
+            if STRENGTH_ORDER[kb] > STRENGTH_ORDER[ka] or (ka == kb and ta and tb and TIER_CAUTION[tb] > TIER_CAUTION[ta]):
+                route, da, db, ka, kb, ta, tb = run_b, db, da, kb, ka, tb, ta
             two_run = dict(agree=ka == kb, shown=dict(run=route, strength=da.get('edit_strength'), action=da['proposed_action']),
                            other=dict(strength=db.get('edit_strength'), action=db['proposed_action'], rationale=db['rationale']))
+            if ta and tb:
+                two_run.update(tier_agree=ta == tb, other_tier=tb)
         dpath = RUN / 'drafts' / str(route) / f'{cid}.json'
         if not route or not dpath.exists():
             missing.append(dict(card_id=cid, page=p['page_title'], route=route))
@@ -232,28 +236,41 @@ def replication_bears_on_claim(it):
 
 
 HISTORY_USES = ('historical_attribution', 'example', 'bibliography_listing')
+TIER_CAUTION = {'already_covered': 0, 'likely_no_change': 1, 'judgement_call': 2}
 
 
 def no_change_tier(s):
     """Tier of a brief-v6 no-change suggestion, from the AI's coded fields only (#9).
 
-    already_covered: the Wikipedia article reports at least one replication, and reports accurately every replication
-      that bears on its claim.
-    likely_no_change: clear cases only. No replication bears on what the article says; or the article neither states
-      the finding nor relies on it; or it cites the paper for history, as an example or in a list and every
-      replication that bears on it confirms the result.
-    judgement_call: everything else (the default).
-    FLoRA outcome codes are not used."""
+    judgement_call is the default. A replication that bears, or may bear, on the Wikipedia article ('relevant') keeps
+    the card a judgement call unless:
+    already_covered: no report on the page is inaccurate; every relevant replication is reported accurately (or, if none
+      is relevant, at least one replication is), each with a verbatim page quote;
+    likely_no_change: no replication is relevant; or the article neither states the finding as true nor relies on it;
+      or it cites the paper for history, as an example or in a list without relying on it, and every relevant
+      replication confirms what it says.
+    An inaccurate report of a replication on the page is always a judgement call. FLoRA outcome codes are not used."""
+    from validate import relevant
     reps, use = s['replications_assessed'], s['article_use']
-    relevant = [r for r in reps if r['bears_on_article_claim'] != 'none']
-    if any(r['already_on_page'] != 'no' for r in reps) and all(
-            r['already_on_page'] != 'no' and r['report_accurate'] is not False for r in relevant):
+    rel = [r for r in reps if relevant(r)]
+    if any(r['report_accurate'] is False for r in reps):
+        return 'judgement_call'
+    if all(r['already_on_page'] != 'no' and r['report_accurate'] is True for r in rel) and \
+            any(r['already_on_page'] != 'no' and r['report_accurate'] is True for r in reps):
         return 'already_covered'
-    if not relevant or (use['states_finding'] == 'no' and not use['relies_as_evidence']):
+    if not rel or (use['states_finding'] in ('no', 'reported_as_disputed') and not use['relies_as_evidence']):
         return 'likely_no_change'
-    if s['citation_function'] in HISTORY_USES and all(r['result_vs_original'] == 'confirms' for r in relevant):
+    if s['citation_function'] in HISTORY_USES and not use['relies_as_evidence'] and \
+            all(r['result_vs_article_claim'] == 'confirms' for r in rel):
         return 'likely_no_change'
     return 'judgement_call'
+
+
+def draft_tier(d):
+    """no_change_tier for a v6 no-change draft, else None."""
+    if d and 'brief_version' in d and d['proposed_action'] == 'no_change' and d.get('edit_strength') == 'none':
+        return no_change_tier(d)
+    return None
 
 
 def label_no_change(items):
@@ -301,10 +318,14 @@ def reviews_view(pk):
 
 
 def apply_text_overrides(cards):
-    """Apply display-only rewrites; reject stale paths or source text."""
-    by_id = {c['card_id']: c for c in cards}
+    """Apply display-only rewrites; reject stale paths or source text.
+
+    The rewrites were made for drafts written before brief v6; cards now shown from a v6 draft skip them."""
+    by_id = {c['card_id']: c for c in cards if 'brief_version' not in c['suggestion']}
     for o in json.loads((HERE / 'text_overrides.json').read_text()):
         label = f"{o['card_id']}:{o['field']}"
+        if o['card_id'] not in by_id and o['card_id'] in {c['card_id'] for c in cards}:
+            continue  # shown from a v6 draft
         try:
             target = by_id[o['card_id']]
             keys = [int(k) if k.isdigit() else k for k in
@@ -514,7 +535,7 @@ def card_gist(card):
     showing a summary of an older rationale. With a rewrite, the card shows the full rationale below it."""
     rationale = card['suggestion']['rationale']
     o = (load_json(GIST_OVERRIDES, {}) or {}).get(card['card_id'])
-    if not o:
+    if not o or 'brief_version' in card['suggestion']:  # rewrites were made for pre-v6 drafts
         return split_gist(rationale)
     if o['rationale_sha'] != rationale_sha(rationale):
         raise ValueError(f"gist_overrides.json is stale for {card['card_id']}: its rationale has changed")

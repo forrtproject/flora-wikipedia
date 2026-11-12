@@ -102,9 +102,10 @@
           "enum": [
             "as_fact",
             "attributed",
+            "reported_as_disputed",
             "no"
           ],
-          "description": "Whether the Wikipedia article itself states the paper's result: in its own voice, attributed ('X found that'), or not at all (named, listed, described, quoted prize citation or title)."
+          "description": "Whether the Wikipedia article itself states the paper's result: in its own voice, attributed ('X found that'), only to say it was retracted, refuted, disputed or mixed, or not at all (named, listed, described, prize citation or title)."
         },
         "relies_as_evidence": {
           "type": "boolean",
@@ -124,10 +125,12 @@
         "additionalProperties": false,
         "required": [
           "doi",
-          "tests",
+          "method",
+          "tested_result",
           "bears_on_article_claim",
-          "result_vs_original",
+          "result_vs_article_claim",
           "already_on_page",
+          "page_quote",
           "report_accurate",
           "note"
         ],
@@ -135,12 +138,17 @@
           "doi": {
             "type": "string"
           },
-          "tests": {
+          "method": {
             "enum": [
-              "same_claim",
-              "same_paper_related_result",
-              "same_paper_unrelated_result",
-              "reanalysis_same_data",
+              "replication",
+              "reanalysis",
+              "other"
+            ]
+          },
+          "tested_result": {
+            "enum": [
+              "cited_result",
+              "other_result_same_paper",
               "different_topic",
               "unclear"
             ]
@@ -149,10 +157,11 @@
             "enum": [
               "direct",
               "indirect",
-              "none"
+              "none",
+              "unclear"
             ]
           },
-          "result_vs_original": {
+          "result_vs_article_claim": {
             "enum": [
               "confirms",
               "qualifies",
@@ -160,7 +169,7 @@
               "inconclusive",
               "not_determinable"
             ],
-            "description": "The model's reading of the papers, never the FLoRA outcome code."
+            "description": "The model's reading of the papers against the result as the Wikipedia article states or relies on it; never the FLoRA outcome code."
           },
           "already_on_page": {
             "enum": [
@@ -169,6 +178,10 @@
               "reported_via_other_source",
               "no"
             ]
+          },
+          "page_quote": {
+            "type": "string",
+            "description": "Verbatim sentence of the Wikipedia article that reports the replication; empty when already_on_page is no."
           },
           "report_accurate": {
             "type": [
@@ -312,9 +325,7 @@
         "status": {
           "enum": [
             "provided",
-            "conditional",
-            "not_applicable",
-            "withheld"
+            "not_applicable"
           ]
         },
         "location": {
@@ -367,8 +378,7 @@
             "enum": [
               "full_text",
               "abstract",
-              "metadata_only",
-              "needs_source"
+              "metadata_only"
             ]
           }
         }
@@ -495,16 +505,17 @@
     },
     "no_change_basis": {
       "enum": [
+        "already_reported",
         "listed_only",
         "named_without_finding",
-        "history_or_example",
         "tests_other_claim",
-        "already_reported",
+        "scope_or_policy_limit",
         "confirms_claim",
+        "history_or_example",
         "none_applies",
         "not_applicable"
       ],
-      "description": "Main reason for no_change; not_applicable for any other action."
+      "description": "Main reason for no_change: the first value in this order that applies; not_applicable for any other action."
     }
   }
 }

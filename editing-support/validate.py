@@ -142,14 +142,18 @@ def check(draft, pk):
         if vf['result'] == 'source_unavailable':
             continue
         if not vf['quote'].strip():
-            errors.append(f'verification without a quote: {vf["claim"][:70]}')
+            if not (v6 and vf['result'] == 'not_in_source' and vf['evidence_level'] == 'full_text'):
+                errors.append(f'verification without a quote: {vf["claim"][:70]}')
             continue
         pool_text, level = src.get(src_doi, ('', None))
+        # v6: a source quote must come from the named source; only claims about the article's wording quote the article.
+        about_article = re.match(r'\s*(wikipedia )?article:', vf['claim'], re.I)
+        allowed = (pool_text + ' ' + art) if (not v6 or about_article) else pool_text
         if src_doi not in src and src_doi not in page_raw:
             errors.append(f'verification source not in packet: {vf["source"]}')
         elif level and LEVEL[vf['evidence_level']] > LEVEL[level]:
             errors.append(f'verification claims {vf["evidence_level"]} but cache has {level}: {src_doi}')
-        elif norm(vf['quote']) not in (pool_text + ' ' + art):
+        elif norm(vf['quote']) not in allowed:
             errors.append(f'verification quote not verbatim in source: {vf["quote"][:70]!r}')
     for chk in draft['required_checks']:
         if HUMAN_CHORE.search(chk):
@@ -180,18 +184,25 @@ def check(draft, pk):
 
 
 BARE_ARTICLE = re.compile(r'(?<!Wikipedia )\b(the|this)( live)? article\b|^Article:', re.I)
-RULE2_PAGES_BANNED = ('biography_history', 'list_or_bibliography', 'incidental')
+ADDITIONS_BANNED = ('biography_history', 'list_or_bibliography', 'incidental')
+QUOTED = re.compile(r'"[^"]*"|“[^”]*”|‘[^’]*’|(?<!\w)\'[^\']*\'(?!\w)')
 
 
 def ai_prose(draft):
-    """The model's own sentences (not quotations of sources or the Wikipedia article)."""
+    """The model's own sentences, with quoted spans removed."""
     out = [draft['assessment'], draft['rationale'], draft['article_use']['note'],
            draft['specific_study_match']['note'], draft['existing_acknowledgement']['note']]
     out += [r['note'] for r in draft['replications_assessed']] + draft['uncertainties'] + draft['required_checks']
     out += [a['action'] + ' ' + a['when'] for a in draft['alternatives']]
     out += [c['note'] for c in draft['claim_sites']] + [p['point'] for p in draft['content_points']]
-    out += [v['claim'] for v in draft['verifications']] + [e['what_it_supports'] for e in draft['evidence_used']]
-    return [re.sub(r'"[^"]*"|“[^”]*”', '', t) for t in out]  # quoted text is exempt
+    out += [e['what_it_supports'] for e in draft['evidence_used']]
+    out += [v['claim'] for v in draft['verifications'] if not re.match(r'\s*Wikipedia article:', v['claim'])]
+    return [QUOTED.sub('', t) for t in out]
+
+
+def relevant(r):
+    """A replication that bears, or may bear, on what the Wikipedia article says (shared with the build rule)."""
+    return r['bears_on_article_claim'] != 'none' or r['tested_result'] == 'unclear'
 
 
 def check_v6(draft, pk):
@@ -199,13 +210,22 @@ def check_v6(draft, pk):
     errors, warnings = [], []
     want = [r['doi'].lower() for r in pk['replications']]
     got = [r['doi'].lower().replace('https://doi.org/', '').replace('doi:', '').strip() for r in draft['replications_assessed']]
-    if sorted(got) != sorted(want):
-        errors.append(f'replications_assessed must list the packet replications {want}, got {got}')
+    if got != want:
+        errors.append(f'replications_assessed must list the packet replications in order {want}, got {got}')
+    art = article_texts(pk)
     for r in draft['replications_assessed']:
-        if (r['already_on_page'] == 'no') != (r['report_accurate'] is None):
+        on = r['already_on_page'] != 'no'
+        if on != (r['report_accurate'] is not None):
             errors.append(f"{r['doi']}: report_accurate must be null exactly when already_on_page is no")
-        if r['tests'] in ('different_topic', 'same_paper_unrelated_result') and r['bears_on_article_claim'] != 'none':
-            warnings.append(f"{r['doi']}: tests {r['tests']} but bears_on_article_claim is {r['bears_on_article_claim']}")
+        if on and (len(norm(r['page_quote'])) < 30 or norm(r['page_quote']) not in art):
+            errors.append(f"{r['doi']}: already_on_page {r['already_on_page']} needs a verbatim page_quote (30+ characters)")
+        if not on and r['page_quote'].strip():
+            errors.append(f"{r['doi']}: page_quote must be empty when already_on_page is no")
+        if r['tested_result'] == 'different_topic' and r['bears_on_article_claim'] != 'none':
+            warnings.append(f"{r['doi']}: tested_result different_topic but bears_on_article_claim is {r['bears_on_article_claim']}")
+        if r['tested_result'] == 'cited_result' and r['bears_on_article_claim'] == 'none' \
+                and draft['article_use']['states_finding'] != 'no':
+            warnings.append(f"{r['doi']}: tested_result cited_result but bears_on_article_claim is none")
     idle = draft['proposed_action'] == 'no_change'
     if idle != (draft['no_change_basis'] != 'not_applicable'):
         errors.append(f"no_change_basis {draft['no_change_basis']} inconsistent with proposed_action {draft['proposed_action']}")
@@ -215,27 +235,36 @@ def check_v6(draft, pk):
     for t in ai_prose(draft):
         m = BARE_ARTICLE.search(t)
         if m:
-            errors.append(f'say "the Wikipedia article", not "{m.group(0)}": {t[max(0, m.start() - 30):m.end() + 30]!r}')
+            warnings.append(f'say "the Wikipedia article", not "{m.group(0)}": {t[max(0, m.start() - 30):m.end() + 30]!r}')
             break
-    reps, use = draft['replications_assessed'], draft['article_use']
-    rule2 = [r['doi'] for r in reps if r['tests'] in ('same_claim', 'reanalysis_same_data')
-             and r['bears_on_article_claim'] == 'direct' and r['result_vs_original'] in ('fails', 'qualifies')
-             and r['already_on_page'] == 'no']
+    reps, use, cf = draft['replications_assessed'], draft['article_use'], draft['citation_function']
+    rel = [r for r in reps if relevant(r)]
+    on_page = [r for r in reps if r['already_on_page'] != 'no']
+    ack = draft['existing_acknowledgement']['status']
+    if (ack == 'yes' and len(on_page) < len(reps)) or (ack == 'no' and on_page):
+        errors.append(f'existing_acknowledgement {ack} disagrees with already_on_page in replications_assessed')
+    if cf == 'current_empirical_support' and not use['relies_as_evidence']:
+        warnings.append('current_empirical_support but relies_as_evidence is false')
+    if cf == 'bibliography_listing' and (use['states_finding'] in ('as_fact', 'attributed') or use['relies_as_evidence']):
+        warnings.append('bibliography_listing but the Wikipedia article states or relies on the finding')
+    rule2 = [r['doi'] for r in reps if r['tested_result'] == 'cited_result' and r['bears_on_article_claim'] == 'direct'
+             and r['result_vs_article_claim'] in ('fails', 'qualifies') and r['already_on_page'] == 'no']
     es = draft.get('edit_strength')
     if rule2 and use['relies_as_evidence'] and es in ('optional_addition', 'none') \
-            and draft['article_scope'] not in RULE2_PAGES_BANNED and not draft['flags']['medrs']:
+            and draft['article_scope'] not in ADDITIONS_BANNED and not draft['flags']['medrs']:
         warnings.append(f'recommended_addition conditions appear met ({", ".join(rule2)}) but edit_strength is {es}')
     if es == 'recommended_addition' and not rule2:
         warnings.append('recommended_addition without a direct, unreported replication that fails or qualifies the claim')
     basis = draft['no_change_basis']
-    relevant = [r for r in reps if r['bears_on_article_claim'] != 'none']
-    if basis == 'tests_other_claim' and relevant:
+    if basis == 'tests_other_claim' and rel:
         warnings.append('no_change_basis tests_other_claim, but a replication is coded as bearing on the claim')
-    if basis == 'already_reported' and all(r['already_on_page'] == 'no' for r in reps):
-        warnings.append('no_change_basis already_reported, but no replication is coded as on the page')
-    if basis == 'confirms_claim' and any(r['result_vs_original'] != 'confirms' for r in relevant):
-        warnings.append('no_change_basis confirms_claim, but a relevant replication does not confirm')
-    if basis in ('listed_only', 'named_without_finding') and use['states_finding'] != 'no':
+    if basis == 'already_reported' and not (on_page and all(r['already_on_page'] != 'no' and r['report_accurate'] for r in rel)):
+        warnings.append('no_change_basis already_reported, but not every relevant replication is reported accurately')
+    if basis in ('confirms_claim', 'history_or_example') and any(r['result_vs_article_claim'] != 'confirms' for r in rel):
+        warnings.append(f'no_change_basis {basis}, but a relevant replication does not confirm')
+    if basis == 'confirms_claim' and draft['article_scope'] not in ADDITIONS_BANNED and not draft['flags']['medrs']:
+        warnings.append('no_change_basis confirms_claim on a page where a confirming replication is an optional_addition')
+    if basis in ('listed_only', 'named_without_finding') and use['states_finding'] in ('as_fact', 'attributed'):
         warnings.append(f"no_change_basis {basis}, but article_use.states_finding is {use['states_finding']}")
     return errors, warnings
 
