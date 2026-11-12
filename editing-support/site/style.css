@@ -481,3 +481,15 @@ table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
 a.oa { display: inline-flex; align-items: center; gap: .25rem; margin-left: .2rem; vertical-align: -.1em; text-decoration: none; font-size: .85em; }
 a.oa svg { flex: none; } a.oa span { text-decoration: underline; text-underline-offset: 2px; }
 a.oa-gold, .oa-gold { color: #8f6500; } a.oa-green, .oa-green { color: #2d7a3e; }
+
+/* Two card sets side by side (?cards=compare). Each column is a container, so the inner comparison stacks when narrow. */
+.cards-switch { background: #33364d; }
+body.cards-compare .detail > .cmp { max-width: none; }
+.cmp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; margin-top: 1rem; }
+.cmp-col { container-type: inline-size; min-width: 0; }
+.cmp-col > * { max-width: none; }
+.cmp-h { position: sticky; top: 0; z-index: 2; margin: 0 0 .4rem; padding: .35rem .7rem; border-radius: 8px; font-weight: 700; font-size: .9rem;
+  background: var(--line); }
+.cmp-new .cmp-h { background: #e3ecfb; color: #1d3f78; }
+@media (min-width: 1101px) { body.cards-compare .layout.has-card { grid-template-columns: 260px 1fr; } }
+@media (max-width: 1100px) { .cmp { grid-template-columns: minmax(0, 1fr); } }

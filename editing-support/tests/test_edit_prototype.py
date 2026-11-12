@@ -259,6 +259,159 @@ class CardText(unittest.TestCase):
         self.assertEqual(len(set(v['label'] for v in labels.values())), len(labels))
 
 
+def v6_suggestion(scope='broad_topic', use='current_empirical_support', states='as_fact', relies=True, reps=()):
+    """A minimal brief-v6 suggestion for the tier rule: reps are (bears, result, on_page, accurate) tuples."""
+    return dict(brief_version='v6', proposed_action='no_change', edit_strength='none', article_scope=scope,
+                citation_function=use, article_use=dict(states_finding=states, relies_as_evidence=relies, note=''),
+                replications_assessed=[dict(doi=f'10.1/{i}', method='replication',
+                                            tested_result='cited_result' if b != 'none' else 'other_result_same_paper',
+                                            bears_on_article_claim=b, result_vs_article_claim=r, already_on_page=o,
+                                            page_quote='' if o == 'no' else 'x' * 40, report_accurate=acc, note='')
+                                       for i, (b, r, o, acc) in enumerate(reps)])
+
+
+class NoChangeTiers(unittest.TestCase):
+    """Brief v6 tier rule (#9): the three calls once made by hand, and the clear cases, follow from coded fields."""
+
+    def tier(self, **kw):
+        from build_site import no_change_tier
+        return no_change_tier(v6_suggestion(**kw))
+
+    def test_former_hand_calls_are_judgement_calls(self):
+        # Functional accounts of emotion: another experiment from the same paper bears indirectly and fails.
+        self.assertEqual(self.tier(use='example', states='attributed', reps=[('indirect', 'fails', 'no', None)] * 3),
+                         'judgement_call')
+        # Jan Eeckhout and Lise Vesterlund: biographies that state the finding; the replication qualifies it.
+        for states in ('as_fact', 'attributed'):
+            self.assertEqual(self.tier(scope='biography_history', use='historical_attribution', states=states, relies=False,
+                                       reps=[('direct', 'qualifies', 'no', None)]), 'judgement_call')
+
+    def test_confirming_replication_of_relied_claim_is_a_judgement_call(self):
+        self.assertEqual(self.tier(scope='list_or_bibliography', reps=[('direct', 'confirms', 'no', None)]), 'judgement_call')
+        # The history shortcut needs relies_as_evidence false.
+        self.assertEqual(self.tier(use='example', relies=True, reps=[('direct', 'confirms', 'no', None)]), 'judgement_call')
+
+    def test_clear_cases_are_likely_no_change(self):
+        # Named without its finding (Deniz Başkent, Heejung Kim), even if the study cannot be identified.
+        self.assertEqual(self.tier(scope='biography_history', use='bibliography_listing', states='no', relies=False,
+                                   reps=[('unclear', 'not_determinable', 'no', None)]), 'likely_no_change')
+        # The replication tested something the article does not rely on (CASS4, Outgroup favoritism).
+        self.assertEqual(self.tier(reps=[('none', 'fails', 'no', None)] * 2), 'likely_no_change')
+        # Cited for history, and the replication confirms (TCF7L2, Timeline of psychology).
+        self.assertEqual(self.tier(use='historical_attribution', states='attributed', relies=False,
+                                   reps=[('direct', 'confirms', 'no', None)]), 'likely_no_change')
+        # The article reports the result only as disputed and does not rely on it.
+        self.assertEqual(self.tier(states='reported_as_disputed', relies=False, reps=[('direct', 'fails', 'no', None)]),
+                         'likely_no_change')
+
+    def test_unclear_relevance_is_not_likely_no_change(self):
+        self.assertEqual(self.tier(reps=[('unclear', 'not_determinable', 'no', None)]), 'judgement_call')
+
+    def test_already_covered(self):
+        self.assertEqual(self.tier(reps=[('direct', 'fails', 'cited', True)]), 'already_covered')
+        self.assertEqual(self.tier(scope='list_or_bibliography', use='historical_attribution', relies=False,
+                                   reps=[('none', 'fails', 'reported_in_prose', True)]), 'already_covered')
+        # Inaccurate or partial coverage is not covered; an inaccurate report is always a judgement call.
+        self.assertEqual(self.tier(reps=[('direct', 'fails', 'cited', False)]), 'judgement_call')
+        self.assertEqual(self.tier(states='no', relies=False, reps=[('none', 'fails', 'reported_in_prose', False)]),
+                         'judgement_call')
+        self.assertEqual(self.tier(reps=[('direct', 'fails', 'cited', True), ('direct', 'fails', 'no', None)]),
+                         'judgement_call')
+
+    def test_rule_ignores_flora_outcome_codes(self):
+        import inspect
+        from build_site import no_change_tier
+        self.assertNotIn('flora_outcome', inspect.getsource(no_change_tier))
+
+
+@unittest.skipUnless(HAVE_RUN, 'prototype run products not present')
+class ValidateV6(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        Grounding.setUpClass()
+        cls.pk = Grounding.pk
+        d = copy.deepcopy(Grounding.good)
+        d.pop('confidence')
+        base = v6_suggestion(reps=[('direct', 'fails', 'no', None)] * len(cls.pk['replications']))
+        for r, pr in zip(base['replications_assessed'], cls.pk['replications']):
+            r['doi'] = pr['doi']
+        d.update(brief_version='v6', article_use=base['article_use'], replications_assessed=base['replications_assessed'],
+                 no_change_basis='not_applicable', existing_acknowledgement={'status': 'no', 'note': ''})
+        cls.good = d
+
+    def test_valid_v6_draft_passes(self):
+        errors, _ = check(self.good, self.pk)
+        self.assertEqual(errors, [])
+
+    def test_v5_shape_without_version_uses_v5_schema(self):
+        errors, _ = check(Grounding.good, self.pk)
+        self.assertEqual(errors, [])
+
+    def test_page_quote_required_when_on_page(self):
+        d = copy.deepcopy(self.good)
+        d['replications_assessed'][0].update(already_on_page='cited', report_accurate=True, page_quote='')
+        errors, _ = check(d, self.pk)
+        self.assertTrue(any('page_quote' in e for e in errors))
+
+    def test_source_quote_must_come_from_the_source(self):
+        d = copy.deepcopy(self.good)
+        quote = self.good['claim_sites'][0]['visible_claim_quote']
+        d['verifications'] = [dict(claim='The original study reports this result.', source=self.pk['original']['doi'],
+                                   result='confirmed', quote=quote, evidence_level='metadata_only')]
+        errors, _ = check(d, self.pk)
+        self.assertTrue(any('not verbatim' in e for e in errors))
+        d['verifications'][0]['claim'] = 'Wikipedia article: states this result.'
+        errors, _ = check(d, self.pk)
+        self.assertFalse(any('not verbatim' in e for e in errors))
+
+    def test_missing_replication_fails(self):
+        d = copy.deepcopy(self.good)
+        d['replications_assessed'][0]['doi'] = '10.9999/other'
+        errors, _ = check(d, self.pk)
+        self.assertTrue(any('replications_assessed must list' in e for e in errors))
+
+    def test_report_accuracy_must_match_on_page(self):
+        d = copy.deepcopy(self.good)
+        d['replications_assessed'][0]['report_accurate'] = True
+        errors, _ = check(d, self.pk)
+        self.assertTrue(any('report_accurate' in e for e in errors))
+
+    def test_no_change_basis_and_alternative_target(self):
+        d = copy.deepcopy(self.good)
+        d['alternatives'] = [dict(type='belongs_elsewhere', action='Add the replication there.', when='', target_article='')]
+        d['no_change_basis'] = 'confirms_claim'
+        errors, _ = check(d, self.pk)
+        self.assertTrue(any('target_article' in e for e in errors))
+        self.assertTrue(any('no_change_basis' in e for e in errors))
+
+    def test_bare_article_wording_warns(self):
+        d = copy.deepcopy(self.good)
+        d['rationale'] = 'The article already reports this replication.'
+        _, warnings = check(d, self.pk)
+        self.assertTrue(any('Wikipedia article' in w for w in warnings))
+        d['rationale'] = "The Wikipedia article already reports this replication, saying 'the article'."
+        _, warnings = check(d, self.pk)
+        self.assertFalse(any('Wikipedia article' in w for w in warnings))
+
+
+class Prefilter(unittest.TestCase):
+    def test_detects_doi_and_title(self):
+        from prefilter import detect
+        text = 'x {{cite journal|title=A Direct Replication of the Classic Door-in-the-Face Study|doi=10.1/ABC}} y'
+        self.assertEqual(detect('10.1/abc', '', text), 'doi')
+        self.assertEqual(detect('10.1/zzz', 'A direct replication of the classic door in the face study', text), 'title')
+        self.assertIsNone(detect('10.1/zzz', 'Registered Replication', text))  # short titles are not matched
+        self.assertIsNone(detect('10.1/ab', '', text))  # a prefix of a longer DOI is not a match
+
+
+class TwoRunTier(unittest.TestCase):
+    def test_draft_tier_only_for_v6_no_change(self):
+        from build_site import draft_tier
+        self.assertEqual(draft_tier(v6_suggestion(reps=[('none', 'fails', 'no', None)])), 'likely_no_change')
+        self.assertIsNone(draft_tier(dict(v6_suggestion(), proposed_action='contextualise', edit_strength='fix')))
+        self.assertIsNone(draft_tier({'proposed_action': 'no_change', 'edit_strength': 'none'}))
+
+
 class NoWritePaths(unittest.TestCase):
     def test_no_wikimedia_write_calls(self):
         forbidden = ['action=edit', "'action': 'edit'", 'action=wbeditentity', 'quickstatements', 'csrf']
