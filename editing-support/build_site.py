@@ -436,6 +436,56 @@ def card_gist(card):
     return o['gist'], rationale
 
 
+def free_copies():
+    """Where a reader can check each paper without a subscription, from what the pipeline recorded.
+
+    kind 'copy' (a free copy we found or OpenAlex lists), 'publisher' (free at the DOI link) or 'none' (no free
+    copy known: closed according to OpenAlex and none found by the source search)."""
+    out = {}
+    for f in sorted((RUN / 'hunt').glob('results_*.jsonl')):
+        for line in f.open():
+            r = json.loads(line)
+            if r.get('found') and r.get('url'):
+                out.setdefault(r['doi'].lower(), dict(kind='copy', url=r['url'],
+                                                      label=f"Free copy ({r.get('version') or 'version not recorded'})"))
+    recs = {}
+    for f in sorted(RUN.glob('evidence*/*/packet.json')):
+        pk = load_json(f)
+        for s in [pk['original']['source'], *(r['source'] for r in pk['replications'])]:
+            recs.setdefault(s['doi'].lower(), s)
+    for doi, s in recs.items():
+        if doi in out:
+            continue
+        pmc = re.search(r'\((PMC\d+)\)', s.get('fulltext_source') or '')
+        oa = s.get('openalex') or {}
+        url = oa.get('oa_pdf') or oa.get('oa_landing')
+        if pmc:
+            out[doi] = dict(kind='copy', url=f'https://europepmc.org/article/PMC/{pmc.group(1)}', label='Free full text (Europe PMC)')
+        elif oa.get('oa_status') and oa['oa_status'] != 'closed' and url:
+            out[doi] = (dict(kind='publisher', url=None, label='Free to read at the publisher') if 'doi.org/' in url
+                        else dict(kind='copy', url=url, label='Open-access copy'))
+        elif oa.get('oa_status') == 'closed':
+            out[doi] = dict(kind='none', url=None, label='No free copy known')
+    return out
+
+
+# Cards use "article" for the Wikipedia article only (#16); the AI's own text says "the article" for it.
+AI_QUOTE_FIELDS = {'excerpt', 'quote', 'visible_claim_quote', 'target_text', 'wording', 'source', 'doi', 'citations',
+                   'paragraph_plain', 'section_plain', 'paragraph_wikitext'}
+WIKI_ARTICLE = re.compile(r'\b([Tt]he|[Tt]his)( live)? article\b')
+
+
+def say_wikipedia_article(o):
+    """Rewrite "the/this article" as "the/this Wikipedia article" in AI-written text, never in quotations."""
+    if isinstance(o, str):
+        return WIKI_ARTICLE.sub(lambda m: f"{m.group(1)}{m.group(2) or ''} Wikipedia article", o)
+    if isinstance(o, list):
+        return [say_wikipedia_article(x) for x in o]
+    if isinstance(o, dict):
+        return {k: v if k in AI_QUOTE_FIELDS else say_wikipedia_article(v) for k, v in o.items()}
+    return o
+
+
 def pandoc(md, html_out, title):
     subprocess.run(['pandoc', str(md), '-s', '--metadata', f'title={title}', '-c', 'style.css',
                     '--template', str(HERE / 'site' / 'page.template.html'), '-o', str(html_out)], check=True)
@@ -459,12 +509,20 @@ def main():
     for c in cards:
         c['suggestion']['draft'].pop('wording', None)
         c['gist'], c['rationale_rest'] = card_gist(c)
+        c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
+        c['suggestion'] = say_wikipedia_article(c['suggestion'])
+        if c['two_run']:
+            c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
     sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
     for c in cards:  # sources the evidence cache has no authors for: use the label cache's details
         for src in [c['original'], *c['replications']]:
             lab = sources.get(src['doi'].lower())
             if src['citation'].startswith('Unknown authors') and lab and not lab['label'].startswith('doi:'):
                 src['citation'], src['short'] = lab['citation'], lab['label'] + src['short'][src['short'].index(':'):]
+    copies = free_copies()
+    for doi, v in sources.items():
+        if doi in copies:
+            v['access'] = copies[doi]
     if unlabelled:
         print(f'{len(unlabelled)} sources have no cached author and year (run with --fetch-labels): {unlabelled}')
     built = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')

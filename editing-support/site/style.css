@@ -435,3 +435,18 @@ blockquote.excerpt .who { display: inline-block; margin-bottom: .1rem; }
 /* Long DOIs, URLs and table runs in quoted passages must wrap, not push the card wider. */
 .detail { overflow-wrap: anywhere; } .detail * { min-width: 0; }
 @media (max-width: 520px) { dl.edit-kv { grid-template-columns: 1fr; } dl.edit-kv dt { margin-top: .3rem; } }
+
+/* ---------- review round 4 (issues #11-#18) ---------- */
+/* "Your reviews" lives in the header (#11); the panel opens towards whichever side has room (app.js) */
+.mine-menu .mine-panel { position: absolute; left: 0; top: 1.8rem; z-index: 6; width: min(20rem, calc(100vw - 2rem)); padding: .7rem .9rem;
+  background: #fff; border-radius: 10px; box-shadow: 0 6px 24px rgba(35, 38, 58, .18); color: var(--ink); font-size: .9rem; }
+.mine-menu.to-left .mine-panel { left: auto; right: 0; }
+.mine-panel p { margin: .15rem 0; }
+.mine-menu .mine-n { font-weight: 700; font-size: .8rem; color: var(--muted); margin-left: .15rem; }
+.mine-menu.unexported summary::before { content: ""; display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+  background: #d98a00; margin-right: .35rem; vertical-align: .08rem; }
+.mine-panel .mine-actions { margin-top: .5rem; }
+.links-l { color: var(--muted); font-weight: 600; }
+.access { font-size: .85em; } span.access.none { color: var(--muted); }
+.why-none { margin: .3rem 0 .1rem; }
+table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
