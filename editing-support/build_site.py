@@ -106,6 +106,19 @@ def merge_occurrences(occs):
     return list(out.values())
 
 
+def section_levels(occs, outline):
+    """Mark each passage's heading as a section or a subsection, with its parent section (from the page outline)."""
+    heads = [(len(h) - len(h.lstrip(' ')), h.strip()) for h in outline]
+    for o in occs:
+        o['section_level'], o['section_parent'] = (1, '') if o['section'] == '(lead)' else (2, '')
+        for i, (ind, name) in enumerate(heads):
+            if name == o['section']:
+                o['section_level'] = ind // 2 + 2
+                o['section_parent'] = next((n for j, n in reversed(heads[:i]) if j < ind), '')
+                break
+    return occs
+
+
 def apply_review(draft, review):
     final = json.loads(json.dumps(draft))
     for k, v in (review or {}).get('overrides', {}).items():
@@ -179,7 +192,7 @@ def build_items():
                                                     'live_url', 'talk_url']},
                       diff_url=f"https://en.wikipedia.org/w/index.php?diff=cur&oldid={pk['page']['frozen_revid']}"),
             live_check=pk['live_check'],
-            occurrences=merge_occurrences(pk['occurrences']),
+            occurrences=section_levels(merge_occurrences(pk['occurrences']), pk['page'].get('outline', [])),
             original=src_view(pk['original']['source']),
             replications=[dict(**src_view(r['source']), flora_outcome=r['flora_outcome'],
                                doi_detected_on_page=r['doi_detected_on_page']) for r in pk['replications']],
@@ -478,6 +491,7 @@ WIKI_ARTICLE = re.compile(r'\b([Tt]he|[Tt]his)( live)? article\b')
 def say_wikipedia_article(o):
     """Rewrite "the/this article" as "the/this Wikipedia article" in AI-written text, never in quotations."""
     if isinstance(o, str):
+        o = re.sub(r'^Article:', 'Wikipedia article:', o)  # the AI's checks label the page's own wording "Article:"
         return WIKI_ARTICLE.sub(lambda m: f"{m.group(1)}{m.group(2) or ''} Wikipedia article", o)
     if isinstance(o, list):
         return [say_wikipedia_article(x) for x in o]
