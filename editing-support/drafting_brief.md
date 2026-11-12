@@ -168,6 +168,10 @@ The schema:
 {schema_summary}
 ```
 
+Use fixed terms in everything you write: "the Wikipedia article" (or "the article") only for the Wikipedia
+page, "the original study" or "the original paper" for the cited study, and "the replication" or "the
+replication paper" for a replication. Never call a paper "the article".
+
 Keep `assessment` to 2–5 sentences and `rationale` to 1–3 plain sentences that a
 non-specialist can follow. In `draft.wording`, mark citations as `[cite: DOI]`. Use
 `draft.status` `provided` when the verified sources support the wording, and

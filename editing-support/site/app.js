@@ -32,9 +32,9 @@ const DECISIONS = {
 const DECISION_QUEUE = {edit: 'retain', talk: 'retain', no_change: 'drop', later: 'defer', skip: 'defer'};
 const KIND = {edit: ['Edit suggested', 'edit'], judgement: ['Judgement call', 'warn'], optional: ['Optional addition', 'info'],
   other: ['No change needed', 'none'], none: ['No change needed', 'none']};
-const STRENGTH = {fix: 'Fix: the article says something the source does not support',
+const STRENGTH = {fix: 'Fix: the Wikipedia article says something the source does not support',
   recommended_addition: 'Add missing evidence: a replication that bears on this claim is not mentioned',
-  optional_addition: 'Optional: the article is accurate; this would only add to it', none: 'Nothing to change'};
+  optional_addition: 'Optional: the Wikipedia article is accurate; this would only add to it', none: 'Nothing to change'};
 
 let DATA = null, PAGES = [], ACTIVE = null, SEGMENT = 'repl', SOURCES = {};
 const filters = {};
@@ -47,6 +47,15 @@ function srcLink(d) {
   d = d.replace(/^doi:/i, '').trim();
   const s = SOURCES[d.toLowerCase()];
   return s ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener" title="${esc(s.citation)}">${esc(s.label)}</a>` : doiLink(d);
+}
+// Where a reader can check a paper without a subscription (#17): a free copy, open access at the
+// publisher, or a note that none is known, so reviewers know when they need library access.
+function accessLink(d, short) {
+  const a = SOURCES[(d || '').replace(/^doi:/i, '').trim().toLowerCase()]?.access;
+  if (!a) return '';
+  if (a.url) return `<a class="access" href="${esc(a.url)}" target="_blank" rel="noopener">${esc(short ? 'Free copy' : a.label)} ↗</a>`;
+  if (a.kind === 'publisher') return `<span class="access">${short ? 'Free at the publisher' : 'Free to read at the publisher (DOI link)'}</span>`;
+  return `<span class="access none">${short ? 'No free copy known' : 'No free copy known: checking it may need library access'}</span>`;
 }
 // What the model read. In lists, full text is the default and stays unmarked; anything less is named.
 const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="lvl ${l === 'full_text' ? '' : l === 'abstract' ? 'abs' : 'thin'}">${esc(LEVEL[l] || l)}</span>`;
@@ -85,7 +94,7 @@ const SEGMENTS = [
 const FACETS = [
   ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : hasDraft(p) ? 'Draft, not saved' : 'Not reviewed yet', true],
   ['scope', 'Kind of article', p => SCOPE[p.items[0].suggestion.article_scope] || p.items[0].suggestion.article_scope, true],
-  ['many', 'Studies on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
+  ['many', 'Publications on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
   ['care', 'Extra care', p => [flags(p).blp && 'Living person (BLP)', flags(p).medrs && 'Health / medical (MEDRS)',
     p.live_check.changed_since_frozen && 'Article edited since'].filter(Boolean), true],
   ['evidence', 'What we could read', p => [...new Set(p.items.map(i => LEVEL[i.best_evidence]))], false],
@@ -146,7 +155,7 @@ function renderList() {
   document.getElementById('summary-clear')?.addEventListener('click', clearFilters);
   document.getElementById('cards').innerHTML = list.map(p => {
     const [label, cls] = KIND[pageKind(p)], fl = flags(p);
-    const studies = p.items.length > 1 ? `${p.items.length} studies: ${p.items.map(i => i.original.short.split(':')[0]).join('; ')}` : p.items[0].original.short;
+    const studies = p.items.length > 1 ? `${p.items.length} publications: ${p.items.map(i => i.original.short.split(':')[0]).join('; ')}` : p.items[0].original.short;
     return `<li><button type="button" class="card-btn${ACTIVE === p.page_id ? ' active' : ''}" data-id="${p.page_id}" aria-current="${ACTIVE === p.page_id}">
       <span class="t">${esc(p.page.title)}</span>
       <span class="m">${esc(studies)}</span>
@@ -216,7 +225,7 @@ function issueBlock(it) {
   const lead = target || claims[0] || '';
   const others = claims.filter(q => !normT(lead).includes(normT(q)) && !normT(q).includes(normT(lead)));
   const label = target ? (d.operation === 'insert_after' ? 'The suggestion adds something after this sentence' : 'The sentence at issue')
-    : claims.length ? 'Where the article relies on the study' : 'The study is not used for a visible claim';
+    : claims.length ? 'Where the Wikipedia article relies on the study' : 'The study is not used for a visible claim';
   return `<h4>${esc(label)}</h4>
     ${lead ? `<blockquote class="target">${withRefs(lead, it.occurrences)}</blockquote>` : `<p>${esc(s.claim_sites[0]?.note || 'It only appears in a list or reference section.')}</p>`}
     ${others.length ? `<p class="small">Also cited for: ${others.map(q => `“${esc(q.length > 160 ? q.slice(0, 157) + '…' : q)}”`).join(' · ')}</p>` : ''}`;
@@ -258,7 +267,7 @@ function evidenceBlock(it) {
   const excerpts = doi => used.filter(e => e.doi.toLowerCase() === doi.toLowerCase() && e.excerpt);
   const row = (role, s, extra) => {
     const ex = excerpts(s.doi);
-    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${doiLink(s.doi)}${extra || ''}
+    return `<tr><th scope="row">${role}</th><td>${esc(s.citation)}<br>${[doiLink(s.doi), accessLink(s.doi)].filter(Boolean).join(' · ')}${extra || ''}
       ${ex.length ? `<details><summary>Passages quoted from this paper (${ex.length})</summary>${ex.map(e => `<blockquote class="excerpt">“${esc(e.excerpt)}”<br><span class="small"><span class="who">AI's note:</span> ${esc(e.what_it_supports)}</span></blockquote>`).join('')}</details>` : ''}</td>
       <td>${lvlBadge(s.evidence_level)}</td></tr>`;
   };
@@ -266,10 +275,10 @@ function evidenceBlock(it) {
   const extra = used.filter(e => !known.includes(e.doi.toLowerCase()));
   const revs = it.reviews_checked || [];
   const found = revs.filter(r => r.mentions);
-  return `<h5>The studies</h5>
-    <table class="evidence"><thead><tr><th>Role</th><th>Study</th><th>What we could read</th></tr></thead><tbody>
-    ${row('This study', it.original)}
-    ${it.replications.map(r => row('Replication', r, `<br><span class="small">Database label: ${esc(r.flora_outcome)} (screening label, not citable)${r.doi_detected_on_page ? ' · already cited in the article' : ''}</span>`)).join('')}
+  return `<h5>The papers</h5>
+    <table class="evidence"><thead><tr><th>Role</th><th>Paper</th><th>What we could read</th></tr></thead><tbody>
+    ${row('Original', it.original)}
+    ${it.replications.map(r => row('Replication', r, `<br><span class="small">Database label: ${esc(r.flora_outcome)} (screening label, not citable)${r.doi_detected_on_page ? ' · already cited in the Wikipedia article' : ''}</span>`)).join('')}
     </tbody></table>
     ${extra.length ? `<details><summary>Other sources used for this card (${extra.length})</summary><ul class="tight">${extra.map(e => `<li>${srcLink(e.doi)} ${lvlBadge(e.evidence_level, true)} ${esc(e.what_it_supports)}${e.excerpt ? `<blockquote class="excerpt">“${esc(e.excerpt)}”</blockquote>` : ''}</li>`).join('')}</ul></details>` : ''}
     ${revs.length ? `<details><summary>Review articles we checked for the replication: ${found.length} of ${revs.length} cite or mention it</summary><ul class="tight">${revs.map(r => `<li>${esc(r.title)} · ${srcLink(r.doi)} ${lvlBadge(r.evidence_level, true)} · ${!r.mentions ? 'no mention found'
@@ -306,7 +315,7 @@ function writingBlock(it) {
 
 function contextBlock(it) {
   const quotes = it.suggestion.claim_sites.map(x => x.visible_claim_quote);
-  return `<details><summary>Where this study appears in the article (${it.occurrences.length})</summary>
+  return `<details><summary>Where this study appears in the Wikipedia article (${it.occurrences.length})</summary>
     <p class="small"><mark class="focal">[this study]</mark> marks its citation, <mark class="paired">[replication]</mark> a replication's; <mark class="claim">underlined</mark> text is what the citation supports. Rendering is approximate; check the live page.</p>
     ${it.occurrences.map(o => `<h6>Section “${esc(o.section)}”${o.in_comment ? ' (hidden comment, not visible to readers)' : ''}</h6>
       <div class="passage">${highlight(o.paragraph_plain, quotes)}</div>
@@ -320,7 +329,7 @@ function provenanceBlock(it) {
   return `<details class="provenance"><summary>How this suggestion was made</summary><dl class="kv">
     <dt>AI assessment</dt><dd>${esc(it.suggestion.assessment)}</dd>
     <dt>Does the replication test this claim?</dt><dd>${esc(match[it.suggestion.specific_study_match.status] || 'Uncertain')}: ${esc(it.suggestion.specific_study_match.note)}</dd>
-    <dt>Does the article already cover it?</dt><dd>${esc(covered[it.suggestion.existing_acknowledgement.status] || 'Unclear')}: ${esc(it.suggestion.existing_acknowledgement.note)}</dd>
+    <dt>Does the Wikipedia article already cover it?</dt><dd>${esc(covered[it.suggestion.existing_acknowledgement.status] || 'Unclear')}: ${esc(it.suggestion.existing_acknowledgement.note)}</dd>
     <dt>Automatic checks</dt><dd>${v.errors.length ? `<span class="bad">${esc(v.errors.join('; '))}</span>` : 'Quotes, sources and numbers match the saved texts. This does not show that the suggestion is right.'}</dd>
     <dt>Status</dt><dd>Prepared with AI${p.finished_at ? ' on ' + esc(p.finished_at.slice(0, 10)) : ''}; not yet checked by people.</dd></dl></details>`;
 }
@@ -331,9 +340,14 @@ const studyName = it => SOURCES[it.original.doi.toLowerCase()]?.label || it.orig
 // material for checking the AI's work, set apart and quieter.
 function itemSection(it, i, n) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
-  const head = `${n > 1 ? `Study ${i + 1} of ${n}: ` : ''}${it.original.short}`;
-  const more = [it.rationale_rest ? `<p>${esc(it.rationale_rest)}</p>` : '',
-    it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this article does not cite yet.</p>' : '',
+  const head = `${n > 1 ? `Publication ${i + 1} of ${n}: ` : ''}${it.original.short}`;
+  // No-change cards say why up front (#9), so a reader can disagree on sight rather than take the label on trust.
+  const whyNone = k === 'none' || k === 'other' ? `<p class="why-none"><span class="who">Why the AI suggests no change:</span></p><ul class="tight">
+      <li><strong>Does the replication test this sentence?</strong> ${esc(s.specific_study_match.note)}</li>
+      <li><strong>Does the Wikipedia article already cover it?</strong> ${esc(s.existing_acknowledgement.note)}</li></ul>
+      <p class="small">This is the AI's reading. If you think the replication does bear on the sentence, record your own decision below.</p>` : '';
+  const more = [whyNone, it.rationale_rest ? `<p>${esc(it.rationale_rest)}</p>` : '',
+    it.adds_replication ? '<p class="small">Adds a replication: the suggested edit cites a replication that this Wikipedia article does not cite yet.</p>' : '',
     it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>Judgement call: two independent AI assessments disagree.</strong> This one suggests “${esc(ACTION[it.two_run.shown.action])}”; the other suggests “${esc(ACTION[it.two_run.other.action])}”: ${esc(it.two_run.other.rationale)}</p>` : '',
     `<p class="small">${esc(SCOPE[s.article_scope] || s.article_scope)}, ${esc(USE[s.citation_function] || s.citation_function)}.${s.edit_strength && s.edit_strength !== 'none' ? ' ' + esc(STRENGTH[s.edit_strength]) + '.' : ''}</p>`].join('');
   const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
@@ -349,8 +363,9 @@ function itemSection(it, i, n) {
 }
 
 function overview(p) {
-  if (p.items.length < 2) return `<p class="overview one"><strong>1 study to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(ACTION[p.items[0].suggestion.proposed_action])}</p>`;
-  return `<section class="overview"><h3>${p.items.length} studies to review on this page</h3>
+  if (p.items.length < 2) return `<p class="overview one"><strong>1 publication to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(ACTION[p.items[0].suggestion.proposed_action])}</p>`;
+  return `<section class="overview"><h3>${p.items.length} publications to review on this page</h3>
+    <p class="small">Each is a paper the Wikipedia article cites that others have tried to replicate. One paper can report several studies; a replication may test only some of them.</p>
     <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(ACTION[it.suggestion.proposed_action])}</li>`).join('')}</ol></section>`;
 }
 
@@ -368,7 +383,7 @@ function decisionBlock(p, rec, draft) {
     <p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
-    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Study ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
+    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
       ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
     ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
     <label for="l-useful">Was this card useful?</label>
@@ -389,8 +404,8 @@ const baseRec = p => ({page_id: p.page_id, page_title: p.page.title, reviewed_re
 
 // Sticky bar: the card title (once the heading has scrolled away) and jump links to the parts of the card.
 function cardBar(p) {
-  const links = p.items.length > 1
-    ? p.items.map(it => [`item-${it.card_id}`, studyName(it)])
+  // Several publications: the overview box below the title links to each, so the bar does not repeat them.
+  const links = p.items.length > 1 ? []
     : [[`edit-${p.items[0].card_id}`, 'Suggested edit'], [`call-${p.items[0].card_id}`, 'Your call']]
       .filter(([id]) => p.items[0].suggestion && (id.startsWith('edit-') ? ['provided', 'conditional'].includes(p.items[0].suggestion.draft.status)
         : (p.items[0].suggestion.required_checks || []).length));
@@ -418,7 +433,7 @@ function show(id, focus) {
   detail.innerHTML = `
     ${cardBar(p)}
     <h2 id="card-title" tabindex="-1">${esc(pg.title)}</h2>
-    <div class="links"><a href="${esc(pg.live_url)}" target="_blank" rel="noopener">Open article</a>
+    <div class="links"><span class="links-l">Wikipedia:</span> <a href="${esc(pg.live_url)}" target="_blank" rel="noopener">Open article</a>
       <a href="${esc(pg.talk_url)}" target="_blank" rel="noopener">Talk page</a>
       <a href="${esc(pg.diff_url)}" target="_blank" rel="noopener">Changes since this snapshot</a>
       <a href="${esc(pg.frozen_url)}" target="_blank" rel="noopener">Snapshot version</a></div>
@@ -477,7 +492,7 @@ function show(id, focus) {
     draftPut(id, null);
     const missingItems = p.items.filter(it => !f.items[it.card_id]).length;
     document.getElementById('l-status').textContent = missingItems
-      ? `Saved. Choose a decision for ${missingItems === 1 ? 'the remaining study' : `all ${missingItems} remaining studies`} to mark the card as reviewed.`
+      ? `Saved. Choose a decision for ${missingItems === 1 ? 'the remaining publication' : `all ${missingItems} remaining publications`} to mark the card as reviewed.`
       : 'Saved: the card counts as reviewed.';
     renderList();
   };
@@ -502,13 +517,16 @@ function show(id, focus) {
 const EXPORT_KEY = 'flora-en-edit-proto:last-export';
 function updateLedgerCount() {
   const drafts = PAGES.filter(hasDraft).length;
-  document.getElementById('ledger-count').innerHTML = `<strong>${PAGES.filter(reviewed).length} of ${PAGES.length}</strong> articles reviewed` +
+  const done = PAGES.filter(reviewed).length;
+  document.getElementById('mine-n').textContent = `${done} of ${PAGES.length}`;
+  document.getElementById('ledger-count').innerHTML = `<strong>${done} of ${PAGES.length}</strong> articles reviewed` +
     (drafts ? ` · <span class="badge draft">${drafts} with a draft</span>` : '');
   // Remind people to export once they have saved work that no export contains yet.
   const last = lsGet(EXPORT_KEY) || '';
   const fresh = PAGES.map(p => ledgerGet(p.page_id)).filter(r => r?.updated_at && r.updated_at > last).length;
   const el = document.getElementById('export-reminder');
   el.hidden = !fresh;
+  document.getElementById('mine-menu').classList.toggle('unexported', !!fresh);
   el.textContent = `${fresh} saved review${fresh > 1 ? 's are' : ' is'} not in an export yet. Reviews stay only in this browser: export them to keep a copy or share them.`;
 }
 function markExported() { lsSet(EXPORT_KEY, new Date().toISOString()); updateLedgerCount(); }
@@ -657,9 +675,13 @@ async function init() {
   });
   document.getElementById('help-panel').addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
   document.querySelectorAll('[data-open-help]').forEach(b => b.onclick = () => openHelp(b.dataset.openHelp || 'how', b.dataset.anchor || ''));
-  const menu = document.getElementById('about-menu');
-  document.addEventListener('click', e => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
-  menu.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
+  const mine = document.getElementById('mine-menu');
+  mine.addEventListener('toggle', () => mine.classList.toggle('to-left',
+    mine.getBoundingClientRect().left + mine.querySelector('.mine-panel').offsetWidth > document.documentElement.clientWidth - 8));
+  document.querySelectorAll('.top .menu').forEach(menu => {
+    document.addEventListener('click', e => { if (menu.open && !menu.contains(e.target)) menu.open = false; });
+    menu.addEventListener('keydown', e => { if (e.key === 'Escape') { menu.open = false; menu.querySelector('summary').focus(); } });
+  });
   document.getElementById('welcome-close').onclick = closeWelcome;
   document.getElementById('step-back').onclick = () => showStep(STEP - 1);
   document.getElementById('step-next').onclick = () => STEP === document.querySelectorAll('#welcome .step').length - 1 ? closeWelcome() : showStep(STEP + 1);

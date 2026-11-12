@@ -19,6 +19,17 @@
       A private prototype, prepared with AI help and not yet checked by people; nothing is posted to Wikipedia.</p>
   </div>
   <nav aria-label="Help and background">
+    <details class="menu mine-menu" id="mine-menu"><summary>Your reviews <span class="mine-n" id="mine-n"></span></summary>
+      <div class="mine-panel" aria-label="Your reviews">
+        <p class="small" id="ledger-count"></p>
+        <p class="small warntext" id="export-reminder" hidden></p>
+        <div class="mine-actions">
+          <label class="small">Initials <input id="reviewer" size="5" maxlength="12"></label>
+          <button type="button" id="export-csv">Export CSV</button>
+          <button type="button" id="export-json">Export JSON</button>
+          <label class="btn">Import<input id="import-json" type="file" accept="application/json" hidden></label>
+        </div>
+      </div></details>
     <button id="open-help" type="button" aria-expanded="false" aria-controls="help-panel">Help</button>
     <details class="menu" id="about-menu"><summary>About this prototype</summary>
       <ul>
@@ -83,8 +94,9 @@
     </section>
     <section class="step" hidden>
       <h2>Reading a card</h2>
-      <p>A card has one section per study. The bar at the top of the card jumps to its parts and to the form for
-        recording your review. Each section starts with what you need to decide:</p>
+      <p>A card has one section per publication (a paper the article cites; one paper can report several studies).
+        The bar at the top of the card stays in view and jumps to the form for recording your review. Each section
+        starts with what you need to decide:</p>
       <dl class="legend">
         <dt>Papers</dt><dd>The original study and its replications, named by author and year. Hover for the full
           reference, click for the paper.</dd>
@@ -145,7 +157,7 @@
           people (<a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a>); health claims need reviews, not single studies (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</li>
         <li><strong>If you are unsure,</strong> raise it on the article's talk page or record "Needs more checking first".</li>
         <li><strong>Your records stay in this browser</strong> (a limitation of this prototype; shared storage is planned). What you type is kept as a draft as you go; a card counts as
-          reviewed only once you click "Save review". Under "Your reviews", below the list, add your initials and use
+          reviewed only once you click "Save review". Under "Your reviews", at the top right of the page, add your initials and use
           Export CSV or Export JSON to keep or share your records.</li>
       </ul>
       <p class="small">This guide and the full contributor workflow stay available from the <strong>Help</strong>
@@ -180,17 +192,6 @@
     </div>
     <div id="summary" class="small" aria-live="polite"></div>
     <ol id="cards"></ol>
-    <section class="mine" aria-labelledby="mine-h">
-      <h2 id="mine-h" class="side-h">Your reviews</h2>
-      <p class="small" id="ledger-count"></p>
-      <p class="small warntext" id="export-reminder" hidden></p>
-      <div class="mine-actions">
-        <label class="small">Initials <input id="reviewer" size="5" maxlength="12"></label>
-        <button type="button" id="export-csv">Export CSV</button>
-        <button type="button" id="export-json">Export JSON</button>
-        <label class="btn">Import<input id="import-json" type="file" accept="application/json" hidden></label>
-      </div>
-    </section>
   </section>
   <article id="detail" class="detail" tabindex="-1">
     <div class="placeholder">
