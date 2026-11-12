@@ -545,7 +545,7 @@ def main():
                 counts=counts(cards, pages), missing_drafts=missing, sources=sources, pages=pages)
     (out / 'data').mkdir(parents=True, exist_ok=True)
     (out / 'downloads').mkdir(exist_ok=True)
-    for f in ['index.html', 'app.js', 'style.css']:
+    for f in ['index.html', 'app.js', 'layouts.js', 'style.css']:
         shutil.copy2(HERE / 'site' / f, out / f)
     dump_json(out / 'data' / 'suggestions.json', data)
     (RUN / 'about.md').write_text(about_md(dict(data, cards=cards)))
