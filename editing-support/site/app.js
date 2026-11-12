@@ -516,7 +516,12 @@ function show(id, focus) {
   document.getElementById('back').onclick = () => { document.getElementById('layout').classList.remove('has-card'); document.querySelector(`.card-btn[data-id="${id}"]`)?.focus(); };
   // Autosave: every change to the form is kept as a draft; a draft equal to the saved record is dropped.
   let timer = null;
+  // The form belongs to the reviewer ID it was drawn for. If the ID changed since (another tab), redraw
+  // instead of keeping a draft or saving, so one person's form is never stored or sent as another's.
+  const drawnFor = LS;
+  const stale = () => { if (drawnFor === Store.ns() + 'page:') return false; setNamespace(); paintIdentity(); reshow(); return true; };
   const keepDraft = () => {
+    if (stale()) return;
     const f = formState(p), saved = ledgerGet(id) || baseRec(p);
     const same = sameForm(f, saved);
     draftPut(id, same ? null : {...f, saved_at: new Date().toISOString()});
@@ -528,8 +533,7 @@ function show(id, focus) {
   document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(keepDraft, 600); });
   document.getElementById('l-save').onclick = async () => {
     clearTimeout(timer);
-    // Signed in or out in another tab since this card was drawn: redraw it for the current ID first.
-    if (LS !== Store.ns() + 'page:') { setNamespace(); paintIdentity(); reshow(); return; }
+    if (stale()) return;
     const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
     const disagrees = p.items.some(it => {
@@ -781,7 +785,8 @@ function reshow() {
 // Signing in or out in another tab changes the ID here too: switch records and redraw.
 window.addEventListener('storage', e => {
   if (!Store.shared || e.key !== Store.meKey) return;
-  setNamespace(); paintIdentity(); Store.refresh().then(reshow);
+  setNamespace(); paintIdentity(); reshow();
+  Store.refresh().then(renderAll);
 });
 async function syncNow() {
   if (Store.shared) { await Store.flush(ledgerGet); await Store.refresh(); }
