@@ -450,3 +450,30 @@ blockquote.excerpt .who { display: inline-block; margin-bottom: .1rem; }
 .access { font-size: .85em; } span.access.none { color: var(--muted); }
 .why-none { margin: .3rem 0 .1rem; }
 table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
+
+/* ---------- card layouts, review round 4 (#12-#15, #4 combined layout) ---------- */
+@media (min-width: 1101px) {
+  body.layout-combo .layout.has-card { grid-template-columns: 300px 1fr; }
+  /* opening Filters with a card open keeps three columns: filters, list, card (#12) */
+  body.layout-desk .layout.has-card.show-filters, body.layout-combo .layout.has-card.show-filters { grid-template-columns: 205px 300px 1fr; }
+  body.layout-desk.help-open .layout.has-card.show-filters, body.layout-combo.help-open .layout.has-card.show-filters { grid-template-columns: 170px 260px 1fr; }
+}
+.layout-combo .detail > *, .layout-combo .detail .item > details > * { max-width: 62rem; }
+/* fold arrows inside a study sit with their text, not on the box edge (#14); headings in folds match the text (#13) */
+.item details details > summary, .item .lpanel summary, .item .reason summary { list-style-position: inside; }
+.item h6 { font-size: .95rem; font-weight: 700; margin: .8rem 0 .3rem; color: var(--ink); }
+.origin a { color: inherit; text-underline-offset: 2px; }
+.paper-role .src-meta { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--muted); }
+.paper-role .access { font-size: inherit; }
+.combo-box { border: 1px solid var(--line); border-radius: 12px; padding: .2rem 1rem .9rem; margin: .6rem 0 1rem; }
+.combo-box .ltabs { margin-top: .5rem; }
+.paper-wide { margin: .6rem 0; }
+.split-src { margin: .8rem 0 1.1rem; }
+.split-h, .split-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; }
+.split-h { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: .2rem 0; }
+.split-h span:first-child { color: #6741a1; }
+.split-row { border-top: 1px solid var(--line); padding: .4rem 0; }
+.split-ai p { margin: .1rem 0; font-size: .9rem; color: #4b4f66; }
+.split-q blockquote.excerpt { margin: 0; }
+@container (max-width: 760px) { .split-h { display: none; } .split-row { grid-template-columns: minmax(0, 1fr); gap: .2rem; } }
+@container (max-width: 500px) { .combo-box { padding: .1rem .6rem .7rem; } }

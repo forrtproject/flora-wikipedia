@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Rendered check: no card content spills past the card or is clipped, in any layout.
 
-Opens every card with all folds and tabs open and reports elements whose right edge passes
+Opens every card with all folds open and every tab panel shown and reports elements whose right edge passes
 the card, elements that clip their own content, and horizontal page scroll.
 
     uv run -q --with playwright python editing-support/tests/check_overflow.py http://HOST:PORT/ [--widths 1500,1150,400] [--layouts current]
@@ -18,6 +18,7 @@ from playwright.async_api import async_playwright
 
 PROBE = r"""() => {
   document.querySelectorAll('#detail details').forEach(d => d.open = true);
+  document.querySelectorAll('#detail .lpanel[hidden]').forEach(p => p.hidden = false);  // every tab's content, not just the open tab
   const det = document.getElementById('detail'), R = det.getBoundingClientRect(), out = [];
   for (const el of det.querySelectorAll('*')) {
     if (el.closest('[hidden]')) continue;
@@ -63,6 +64,6 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('base')
     ap.add_argument('--widths', default='1500,1150,400')
-    ap.add_argument('--layouts', default='current,brief,tabs,desk')
+    ap.add_argument('--layouts', default='current,brief,tabs,desk,combo')
     a = ap.parse_args()
     sys.exit(asyncio.run(main(a.base.rstrip('/') + '/', [int(x) for x in a.widths.split(',')], a.layouts.split(','))))
