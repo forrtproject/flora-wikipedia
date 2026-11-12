@@ -41,12 +41,15 @@ function articleQuote(it) {
     </details>`;
 }
 
+// A no-change suggestion flagged for people (#9): say why it is a judgement call.
+const bearsNote = it => it.judgement_basis === 'replication_bears_on_claim' ? '<p class="twoRun"><strong>Judgement call: a replication bears on a claim this Wikipedia article relies on.</strong> The AI suggests no change; weigh its reasons and decide.</p>' : '';
+
 // The AI's reason in one place: gist, plus disagreement and (for no change) why the replication does not bear on it.
 function aiReason(it) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
   return `${ORIGIN.ai()}<div class="reason">
-    <p><strong>${esc(ACTION[s.proposed_action])}</strong>${label === ACTION[s.proposed_action] ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
-    <p>${esc(it.gist || s.rationale)}</p>
+    <p><strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
+    ${bearsNote(it)}<p>${esc(it.gist || s.rationale)}</p>
     ${it.rationale_rest ? `<details class="fold"><summary>More of the AI's reasoning</summary><p>${esc(it.rationale_rest)}</p></details>` : ''}
     ${it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>A second AI assessment disagrees:</strong> it suggests “${esc(ACTION[it.two_run.other.action])}”. ${esc(it.two_run.other.rationale)}</p>` : ''}
   </div>`;
@@ -164,12 +167,12 @@ function itemBrief(it, i, n) {
 // ---------- layout 2: source-first tabs ----------
 function itemTabs(it, i, n) {
   const id = it.card_id, sg = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
-  const noChange = k === 'none' || k === 'other';
+  const noChange = k === 'none' || k === 'other' || !!it.judgement_basis;
   const q = (sg.required_checks || []).length;
   const tab = (t, text, on) => `<button type="button" role="tab" class="ltab" id="tab-${id}-${t}" aria-controls="panel-${id}-${t}" data-tabs="${id}" data-tab="${t}" aria-selected="${on}" tabindex="${on ? 0 : -1}">${text}</button>`;
   const panel = (t, body, on) => `<div class="lpanel" role="tabpanel" id="panel-${id}-${t}" aria-labelledby="tab-${id}-${t}" data-panel="${id}:${t}" ${on ? '' : 'hidden'}>${body}</div>`;
   return wrap(it, i, n, `${papersLine(it)}
-    <p class="tabs-rec">${origin('ai', 'AI recommendation · not yet checked by people')}<strong>${esc(ACTION[sg.proposed_action])}</strong>${label === ACTION[sg.proposed_action] ? '' : ` <span class="badge ${cls}">${label}</span>`}</p>
+    <p class="tabs-rec">${origin('ai', 'AI recommendation · not yet checked by people')}<strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}</p>
     <p class="small task">Compare how the article uses the study with what the papers found, then read the AI's ${noChange ? 'reasons' : 'change plan'}.</p>
     <div class="ltabs" role="tablist" aria-label="Study material">${tab('papers', 'Papers', true)}${tab('article', 'Article', false)}${tab('plan', `${noChange ? 'Why no change?' : 'Change plan'}${q ? ` <span class="n">${q} question${q > 1 ? 's' : ''}</span>` : ''}`, false)}</div>
     ${panel('papers', `${papersGrid(it)}${checksFold(it)}${reviewsFold(it)}${methodFold(it)}<p><button type="button" class="linklike" data-goto="${id}:article">Next: the article →</button></p>`, true)}
@@ -276,8 +279,8 @@ function comboPlan(it) {  // the AI interpretation box: reason, then What / Wher
   const s = it.suggestion, d = s.draft, k = itemKind(it), [label, cls] = KIND[k];
   const isPlan = s.proposed_action !== 'defer' && ['provided', 'conditional'].includes(d.status) && k !== 'none' && k !== 'other';
   return `${ORIGIN.ai()}<div class="reason" id="edit-${it.card_id}">
-    <p><strong>${esc(ACTION[s.proposed_action])}</strong>${label === ACTION[s.proposed_action] ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
-    <p>${esc(it.gist || s.rationale)}</p>
+    <p><strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
+    ${bearsNote(it)}<p>${esc(it.gist || s.rationale)}</p>
     ${isPlan ? pointerBlock(it) : `<p><span class="who">Does the replication test this sentence?</span> ${esc(s.specific_study_match.note)}</p>
       <p><span class="who">Does the Wikipedia article already cover it?</span> ${esc(s.existing_acknowledgement.note)}</p>`}
     ${it.rationale_rest ? `<details class="fold"><summary>More of the AI's reasoning</summary><p>${esc(it.rationale_rest)}</p></details>` : ''}
@@ -298,7 +301,7 @@ function itemCombo(it, i, n) {
       <p class="small">First passage quoted from each paper, not selected for this comparison; all passages are under “Papers”.</p>
       ${decideBlock(it)}</div></div>`;
   return wrap(it, i, n, `${papersLine(it)}
-    <p class="tabs-rec">${origin('ai', 'AI recommendation · not yet checked by people')}<strong>${esc(ACTION[sg.proposed_action])}</strong>${label === ACTION[sg.proposed_action] ? '' : ` <span class="badge ${cls}">${label}</span>`}</p>
+    <p class="tabs-rec">${origin('ai', 'AI recommendation · not yet checked by people')}<strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}</p>
     <div class="combo-box"><div class="ltabs" role="tablist" aria-label="Study material">${tab('cmp', 'Comparison', true)}${tab('papers', 'Papers', false)}${tab('details', 'Details &amp; AI review', false)}</div>
       ${panel('cmp', comparison, true)}${panel('papers', comboPapers(it), false)}${panel('details', comboDetails(it), false)}</div>
     ${comboPlan(it)}${methodFold(it)}`);
