@@ -154,11 +154,11 @@ def adds_replication(draft, pk):
     return dict(dois=new, level='optional' if draft.get('edit_strength') == 'optional_addition' else 'recommended')
 
 
-def build_items():
+def build_items(assignment=None):
     """One item per (page, FLoRA original) on the selected pages."""
     from evidence import page_packets
     sel = load_json(RUN / 'selection.json')['pages']
-    assignment = load_json(RUN / 'route_assignment.json', {})
+    assignment = assignment if assignment is not None else load_json(RUN / 'route_assignment.json', {})
     packets = {p['packet_id']: p for p in json.loads(PACKETS.read_text())}
     review_dir = RUN / assignment.get('review_dir', 'review')
     items, missing = [], []
@@ -340,7 +340,7 @@ def apply_text_overrides(cards):
         target[keys[-1]] = o['new']
 
 
-def build_pages(items):
+def build_pages(items, assignment=None):
     """Group items into one card per Wikipedia page; carry over page-level verified problems."""
     pages = {}
     for it in items:
@@ -350,7 +350,8 @@ def build_pages(items):
     for pg in pages.values():
         seen = set()
         for it in pg['items']:  # verified adjacent problems from the orchestrator's earlier page review
-            review_dir = RUN / (load_json(RUN / 'route_assignment.json', {}) or {}).get('review_dir', 'review')
+            review_dir = RUN / (assignment if assignment is not None else load_json(RUN / 'route_assignment.json', {})
+                                or {}).get('review_dir', 'review')
             for a in (load_json(review_dir / f"{it['card_id']}.json") or {}).get('adjacent_opportunities', []):
                 if a['sentence'] not in seen:
                     seen.add(a['sentence'])
@@ -593,6 +594,18 @@ def say_wikipedia_article(o):
     return o
 
 
+def prepare_cards(cards):
+    """Display preparation: drop draft wording, set the one-line gist, say "Wikipedia article" in pre-v6 text."""
+    for c in cards:
+        c['suggestion']['draft'].pop('wording', None)
+        c['gist'], c['rationale_rest'] = card_gist(c)
+        if 'brief_version' not in c['suggestion']:  # v6 drafts say "the Wikipedia article" themselves (validated)
+            c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
+            c['suggestion'] = say_wikipedia_article(c['suggestion'])
+        if c['two_run']:
+            c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
+
+
 def pandoc(md, html_out, title):
     subprocess.run(['pandoc', str(md), '-s', '--metadata', f'title={title}', '-c', 'style.css',
                     '--template', str(HERE / 'site' / 'page.template.html'), '-o', str(html_out)], check=True)
@@ -603,6 +616,10 @@ def main():
     ap.add_argument('--output-dir', required=True, type=pathlib.Path)
     ap.add_argument('--fetch-labels', action='store_true',
                     help='fetch Crossref details for sources that have no cached author and year')
+    ap.add_argument('--compare-assignment', type=pathlib.Path,
+                    help='route assignment for a second card set, shown in the app as a toggle and side by side')
+    ap.add_argument('--compare-label', default='Brief v6 pilot')
+    ap.add_argument('--base-label', default='Current cards (brief v5)')
     a = ap.parse_args()
     out = a.output_dir.resolve()
     if out == ROOT.parent or ROOT.parent in out.parents:
@@ -613,16 +630,19 @@ def main():
     archive = RUN / 'archive'
     archive.mkdir(exist_ok=True)
     dump_json(archive / 'suggestions-with-draft-wording.json', cards)
-    for c in cards:
-        c['suggestion']['draft'].pop('wording', None)
-        c['gist'], c['rationale_rest'] = card_gist(c)
-        if 'brief_version' not in c['suggestion']:  # v6 drafts say "the Wikipedia article" themselves (validated)
-            c['gist'], c['rationale_rest'] = say_wikipedia_article([c['gist'], c['rationale_rest']])
-            c['suggestion'] = say_wikipedia_article(c['suggestion'])
-        if c['two_run']:
-            c['two_run']['other']['rationale'] = say_wikipedia_article(c['two_run']['other']['rationale'])
-    sources, unlabelled = source_labels(cards, fetch=a.fetch_labels)
-    for c in cards:  # sources the evidence cache has no authors for: use the label cache's details
+    prepare_cards(cards)
+    compare = None
+    if a.compare_assignment:  # a second card set (e.g. a new brief's pilot) for the app's side-by-side view
+        ca = load_json(a.compare_assignment)
+        ccards, _ = build_items(ca)
+        prepare_cards(ccards)
+        new_routes = set(ca.get('cards', {}).values()) | set(ca.get('second_runs', {}).values())
+        keep = {c['pageid'] for c in ccards if c['provenance']['route'] in new_routes}
+        ccards = [c for c in ccards if c['pageid'] in keep]
+        compare = dict(label=a.compare_label, base_label=a.base_label, pages=build_pages(ccards, ca),
+                       counts=counts(ccards, build_pages(ccards, ca)))
+    sources, unlabelled = source_labels(cards + (ccards if compare else []), fetch=a.fetch_labels)
+    for c in cards + (ccards if compare else []):  # sources the evidence cache has no authors for: use the label cache
         for src in [c['original'], *c['replications']]:
             lab = sources.get(src['doi'].lower())
             if src['citation'].startswith('Unknown authors') and lab and not lab['label'].startswith('doi:'):
@@ -642,6 +662,8 @@ def main():
     for f in ['index.html', 'app.js', 'layouts.js', 'style.css']:
         shutil.copy2(HERE / 'site' / f, out / f)
     dump_json(out / 'data' / 'suggestions.json', data)
+    if compare:
+        dump_json(out / 'data' / 'suggestions-compare.json', compare)
     (RUN / 'about.md').write_text(about_md(dict(data, cards=cards)))
     pandoc(HERE / 'docs' / 'contributor-workflow.md', out / 'guide.html', 'Contributor workflow')
     pandoc(RUN / 'about.md', out / 'about.html', 'Method & coverage')

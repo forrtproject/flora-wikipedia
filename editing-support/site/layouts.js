@@ -46,7 +46,7 @@ const bearsNote = it => it.judgement_basis === 'replication_bears_on_claim' ? '<
 
 // The AI's reason in one place: gist, plus disagreement and (for no change) why the replication does not bear on it.
 function aiReason(it) {
-  const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
+  const s = it.suggestion, k = itemKind(it), [label, cls] = kindOf(it);
   return `${ORIGIN.ai()}<div class="reason">
     <p><strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
     ${bearsNote(it)}<p>${esc(it.gist || s.rationale)}</p>
@@ -166,7 +166,7 @@ function itemBrief(it, i, n) {
 
 // ---------- layout 2: source-first tabs ----------
 function itemTabs(it, i, n) {
-  const id = it.card_id, sg = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
+  const id = it.card_id, sg = it.suggestion, k = itemKind(it), [label, cls] = kindOf(it);
   const noChange = k === 'none' || k === 'other' || !!it.judgement_basis;
   const q = (sg.required_checks || []).length;
   const tab = (t, text, on) => `<button type="button" role="tab" class="ltab" id="tab-${id}-${t}" aria-controls="panel-${id}-${t}" data-tabs="${id}" data-tab="${t}" aria-selected="${on}" tabindex="${on ? 0 : -1}">${text}</button>`;
@@ -276,7 +276,7 @@ function pointsBySourcePlain(it, points) {
     <ul class="tight">${ps.map(p => `<li>${esc(p.point)}</li>`).join('')}</ul></div>`).join('');
 }
 function comboPlan(it) {  // the AI interpretation box: reason, then What / Where / Cite or why no change
-  const s = it.suggestion, d = s.draft, k = itemKind(it), [label, cls] = KIND[k];
+  const s = it.suggestion, d = s.draft, k = itemKind(it), [label, cls] = kindOf(it);
   const isPlan = s.proposed_action !== 'defer' && ['provided', 'conditional'].includes(d.status) && k !== 'none' && k !== 'other';
   return `${ORIGIN.ai()}<div class="reason" id="edit-${it.card_id}">
     <p><strong>${esc(actionLabel(it))}</strong>${label === actionLabel(it) ? '' : ` <span class="badge ${cls}">${label}</span>`}${it.adds_replication ? ' <span class="badge repl">Adds a replication</span>' : ''}</p>
@@ -285,10 +285,11 @@ function comboPlan(it) {  // the AI interpretation box: reason, then What / Wher
       <p><span class="who">Does the Wikipedia article already cover it?</span> ${esc(s.existing_acknowledgement.note)}</p>`}
     ${it.rationale_rest ? `<details class="fold"><summary>More of the AI's reasoning</summary><p>${esc(it.rationale_rest)}</p></details>` : ''}
     ${it.two_run && !it.two_run.agree ? `<p class="twoRun"><strong>A second AI assessment disagrees:</strong> it suggests “${esc(ACTION[it.two_run.other.action])}”. ${esc(it.two_run.other.rationale)}</p>` : ''}
+    ${it.two_run && it.two_run.tier_agree === false ? `<p class="twoRun"><strong>A second AI assessment places this differently:</strong> ${esc((TIER[it.two_run.other_tier] || ['Judgement call'])[0])}. This card shows the more cautious of the two. ${esc(it.two_run.other.rationale)}</p>` : ''}
     ${isPlan && s.content_points.length ? `<p class="small">The points to cover are under “Details &amp; AI review” above.</p>` : ''}</div>`;
 }
 function itemCombo(it, i, n) {
-  const id = it.card_id, sg = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
+  const id = it.card_id, sg = it.suggestion, k = itemKind(it), [label, cls] = kindOf(it);
   const tab = (t, text, on) => `<button type="button" role="tab" class="ltab" id="tab-${id}-${t}" aria-controls="panel-${id}-${t}" data-tabs="${id}" data-tab="${t}" aria-selected="${on}" tabindex="${on ? 0 : -1}">${text}</button>`;
   const panel = (t, body, on) => `<div class="lpanel" role="tabpanel" id="panel-${id}-${t}" aria-labelledby="tab-${id}-${t}" data-panel="${id}:${t}" ${on ? '' : 'hidden'}>${body}</div>`;
   const first = doi => sg.evidence_used.find(e => e.doi.toLowerCase() === doi.toLowerCase() && e.excerpt);
@@ -321,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bar = document.createElement('nav');
   bar.className = 'layout-switch';
   bar.setAttribute('aria-label', 'Card layout options');
-  bar.innerHTML = '<span>Card layout:</span>' + Object.entries(LAYOUTS).map(([k, l]) => `<a href="?layout=${k}&welcome=0${location.hash}" ${k === LAYOUT ? 'aria-current="true"' : ''}>${l}</a>`).join('');
+  bar.innerHTML = '<span>Card layout:</span>' + Object.entries(LAYOUTS).map(([k, l]) => `<a href="?layout=${k}&welcome=0${CARDS !== 'current' ? '&cards=' + CARDS : ''}${location.hash}" ${k === LAYOUT ? 'aria-current="true"' : ''}>${l}</a>`).join('');
   bar.addEventListener('click', e => { const a = e.target.closest('a'); if (a) { e.preventDefault(); location.href = a.getAttribute('href').replace(/#.*/, '') + location.hash; } });
   document.body.prepend(bar);
 });
