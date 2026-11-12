@@ -477,3 +477,4 @@ table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
 .split-q blockquote.excerpt { margin: 0; }
 @container (max-width: 760px) { .split-h { display: none; } .split-row { grid-template-columns: minmax(0, 1fr); gap: .2rem; } }
 @container (max-width: 500px) { .combo-box { padding: .1rem .6rem .7rem; } }
+.badge.lib { background: #eef0f3; color: #4b5360; }

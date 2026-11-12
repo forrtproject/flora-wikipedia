@@ -89,6 +89,7 @@
         the edit would add a replication.</p>
       <p>Other labels on the list: <span class="badge care">Living person</span> and <span class="badge care">Health</span>
         (extra care, see later), <span class="badge warn">Edited since</span> (the article changed after our snapshot),
+        <span class="badge lib">Library access</span> (at least one paper has no known free copy; the “Reading the papers” filter hides these),
         <span class="badge done">✓ reviewed</span> (you have saved a decision) and <span class="badge draft">Draft</span>
         (you have started a review but not saved it).</p>
     </section>
@@ -96,32 +97,25 @@
       <h2>Reading a card</h2>
       <p>A card has one section per publication (a paper the article cites; one paper can report several studies).
         The bar at the top of the card stays in view and jumps to the form for recording your review. Each section
-        starts with what you need to decide:</p>
+        has three parts:</p>
       <dl class="legend">
-        <dt>Papers</dt><dd>The original study and its replications, named by author and year. Hover for the full
-          reference, click for the paper.</dd>
-        <dt>The sentence at issue</dt><dd>Quoted from the article snapshot with its citations:
+        <dt>Papers line and AI recommendation</dt><dd>The original study and its replications, named by author and year
+          (hover for the full reference), and what the AI suggests.</dd>
+        <dt>A box with three tabs</dt><dd><strong>Comparison</strong>: the Wikipedia sentence beside the evidence from
+          the papers, with any questions to decide before acting. Citations are marked
           <span class="cite focal">[this study]</span>, <span class="cite paired">[replication]</span> and
-          <span class="cite other">[other source]</span>. Hover over a citation to see the full reference. Some
-          suggestions are about a claim the cited study does not support rather than about a replication.</dd>
-        <dt>Suggestion</dt><dd>What to do, and why, in one line.</dd>
-        <dt>Suggested edit</dt><dd>Where an edit could go, which sources it could cite, and facts from those sources it
-          could draw on. We deliberately give no ready-made wording: the text is yours to write.</dd>
-        <dt>Your call on this edit</dt><dd>Questions about the same edit that the AI could not settle, such as how much
-          weight a replication deserves in a broad article. They are not separate problems.</dd>
+          <span class="cite other">[other source]</span>.
+          <strong>Papers</strong>: each paper, what the AI read of it, where to read it for free (or that you may need
+          library access), and the passages quoted from it.
+          <strong>Details &amp; AI review</strong>: the points an edit could cover, then each AI statement beside the
+          passage it relied on, and the search of review articles. Papers were read in full unless marked
+          <span class="lvl abs">Abstract only</span> or <span class="lvl thin">Title and details only</span>; checks
+          marked <span class="badge bad">✗ Not in the source</span> need your attention.</dd>
+        <dt>AI interpretation</dt><dd>Below the box: the AI's reason, and for an edit <strong>What</strong>,
+          <strong>Where</strong> and <strong>Cite</strong>. We deliberately give no ready-made wording: the text is
+          yours to write. For “No change needed”, it says why.</dd>
       </dl>
-      <p>Below that, under <strong>Checking the AI's work</strong>:</p>
-      <dl class="legend">
-        <dt>What we checked</dt><dd>The facts the suggestion relies on, each as the AI's statement (marked “AI:”)
-          followed by the passage quoted from the paper it names, and a count
-          such as “9 checks: 8 confirmed, 1 contradicted”. Points marked <span class="badge bad">✗ Contradicted</span>,
-          <span class="badge bad">✗ Not in the source</span> or <span class="badge warn">? Source not obtained</span>
-          are shown; confirmed points are folded away. Papers were read in full unless marked
-          <span class="lvl abs">Abstract only</span> or <span class="lvl thin">Title and details only</span>.</dd>
-        <dt>The studies</dt><dd>The original study and its replications, with links and what the AI read of each.</dd>
-        <dt>Where the study appears and how the suggestion was made</dt><dd>The full passages from the article, and the
-          AI's reasoning about whether the replication tests the claim.</dd>
-      </dl>
+      <p class="small">The bar at the very top switches to earlier layouts of the same card, kept for comparison.</p>
     </section>
     <section class="step" hidden>
       <h2>Reading a replication</h2>

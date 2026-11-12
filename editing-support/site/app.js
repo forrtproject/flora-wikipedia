@@ -72,6 +72,8 @@ function pageKind(p) {
 // Our main scope: edits that bring in a replication the page does not yet cite. Whether that edit is
 // recommended or optional is already carried by the kind label, so this is a plain yes/no marker.
 const pageRepl = p => p.items.some(it => it.adds_replication);
+// Whether every original and replication on the page can be read without a library subscription (#17).
+const needsLibrary = p => p.items.some(it => [it.original, ...it.replications].some(s => SOURCES[s.doi.toLowerCase()]?.access?.kind === 'none'));
 const flags = p => ({blp: p.items.some(i => i.suggestion.flags.blp), medrs: p.items.some(i => i.suggestion.flags.medrs)});
 
 // Browser storage can be missing or blocked (private windows, previews): never let that break the page.
@@ -93,6 +95,7 @@ const SEGMENTS = [
   ['none', 'No change needed', p => ['other', 'none'].includes(pageKind(p))], ['all', 'All articles', () => true]];
 const FACETS = [
   ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : hasDraft(p) ? 'Draft, not saved' : 'Not reviewed yet', true],
+  ['access', 'Reading the papers', p => needsLibrary(p) ? 'Some need library access' : 'All free to read', true],
   ['scope', 'Kind of article', p => SCOPE[p.items[0].suggestion.article_scope] || p.items[0].suggestion.article_scope, true],
   ['many', 'Publications on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
   ['care', 'Extra care', p => [flags(p).blp && 'Living person (BLP)', flags(p).medrs && 'Health / medical (MEDRS)',
@@ -162,7 +165,7 @@ function renderList() {
       <span class="badges"><span class="badge ${cls}">${label}</span>
       ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${pageKind(p) === 'other' ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
-      ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}
+      ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}${needsLibrary(p) ? '<span class="badge lib" title="At least one paper has no known free copy">Library access</span>' : ''}
       ${reviewed(p) ? '<span class="badge done">✓ reviewed</span>' : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}</span></button></li>`;
   }).join('') || '<li class="small">No articles match. Try "All articles" or clear some filters.</li>';
   document.querySelectorAll('.card-btn').forEach(b => b.addEventListener('click', () => show(b.dataset.id, true)));
