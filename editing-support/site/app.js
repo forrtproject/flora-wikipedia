@@ -499,7 +499,7 @@ function formState(p) {
 const sameForm = (a, b) => JSON.stringify(a.items || {}) === JSON.stringify(b.items || {}) && !!a.other_fix_done === !!b.other_fix_done
   && (a.draft_usefulness || '') === (b.draft_usefulness || '') && (a.notes || '') === (b.notes || '');
 
-let NOTES_TIMER = null;
+let NOTES_TIMER = null, BOARD_READY = Promise.resolve();
 function show(id, focus) {
   ACTIVE = id;
   const p = PAGES.find(x => x.page_id === id), pg = p.page, lc = p.live_check, rec = ledgerGet(id) || baseRec(p), fl = flags(p);
@@ -614,7 +614,7 @@ function show(id, focus) {
   paintGroup(p);
   renderList();
   if (focus) document.getElementById('card-title').focus({preventScroll: true});
-  checkLive().then(changed => { if (ACTIVE === id) maybeAuditPrompt(p, changed ?? !!lc.changed_since_frozen); });
+  Promise.all([checkLive(), BOARD_READY]).then(([changed]) => { if (ACTIVE === id) maybeAuditPrompt(p, changed ?? !!lc.changed_since_frozen); });
 }
 
 // ---------- group progress on a card ----------
@@ -1028,8 +1028,9 @@ async function init() {
   };
   if (Store.shared) {
     paintIdentity();
-    await Store.refresh();
-    if (Store.me()) Store.flush().then(() => Store.refresh()).then(renderAll);
+    // Draw the page at once; group status fills in when the shared store answers (a paused or slow
+    // project must not hold up the cards).
+    BOARD_READY = Store.refresh().then(() => Store.me() && Store.flush()).then(() => Store.refresh()).then(renderAll);
     setInterval(() => { if (document.visibilityState === 'visible') Store.refresh().then(renderAll); }, 60000);
   }
   buildSegments(); buildFilters(); renderList();

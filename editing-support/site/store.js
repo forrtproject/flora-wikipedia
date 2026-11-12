@@ -23,7 +23,8 @@ const Store = (() => {
     if (demo) return Demo.call(name, args);
     const headers = {apikey: cfg.anonKey, 'Content-Type': 'application/json'};
     if (/^eyJ/.test(cfg.anonKey)) headers.Authorization = 'Bearer ' + cfg.anonKey;  // legacy JWT-style anon key
-    const r = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/rpc/${name}`, {method: 'POST', headers, body: JSON.stringify(args)});
+    const r = await fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/rpc/${name}`, {method: 'POST', headers, body: JSON.stringify(args),
+      signal: AbortSignal.timeout?.(15000)});  // a paused project answers slowly or not at all
     const body = await r.json().catch(() => null);
     if (!r.ok) throw new Error(body?.message || `${r.status} ${r.statusText}`);
     return body;
@@ -33,7 +34,7 @@ const Store = (() => {
     try { const v = await fn(); online = true; lastError = ''; return {ok: true, v}; }
     catch (e) {
       online = false;
-      lastError = e instanceof TypeError ? 'no connection to the shared store' : String(e.message || e);
+      lastError = e instanceof TypeError || e?.name === 'TimeoutError' ? 'no connection to the shared store' : String(e.message || e);
       return {ok: false, error: lastError};
     }
   }
