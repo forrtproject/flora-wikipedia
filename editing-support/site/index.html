@@ -23,8 +23,9 @@
       <div class="mine-panel" aria-label="Your reviews">
         <p class="small" id="ledger-count"></p>
         <p class="small warntext" id="export-reminder" hidden></p>
+        <div id="mine-id" class="mine-id" hidden></div>
         <div class="mine-actions">
-          <label class="small">Initials <input id="reviewer" size="5" maxlength="12"></label>
+          <label class="small" id="initials-label">Initials <input id="reviewer" size="5" maxlength="12"></label>
           <button type="button" id="export-csv">Export CSV</button>
           <button type="button" id="export-json">Export JSON</button>
           <label class="btn">Import<input id="import-json" type="file" accept="application/json" hidden></label>
@@ -156,7 +157,7 @@
         <li><strong>Take extra care with living people and health topics.</strong> Findings are about studies, not
           people (<a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a>); health claims need reviews, not single studies (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</li>
         <li><strong>If you are unsure,</strong> raise it on the article's talk page or record "Needs more checking first".</li>
-        <li><strong>Your records stay in this browser</strong> (a limitation of this prototype; shared storage is planned). What you type is kept as a draft as you go; a card counts as
+        <li id="welcome-storage"><strong>Your records stay in this browser</strong> (a limitation of this prototype; shared storage is planned). What you type is kept as a draft as you go; a card counts as
           reviewed only once you click "Save review". Under "Your reviews", at the top right of the page, add your initials and use
           Export CSV or Export JSON to keep or share your records.</li>
       </ul>
@@ -216,6 +217,11 @@
   <div id="help-how" role="tabpanel" aria-labelledby="tab-how" class="help-body"></div>
   <div id="help-guide" role="tabpanel" aria-labelledby="tab-guide" class="help-body" hidden><p class="small">Loading…</p></div>
 </aside>
+<div id="audit-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="audit-title" hidden>
+  <div class="modal-box" id="audit-box"></div>
+</div>
+<script src="config.js"></script>
+<script src="store.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

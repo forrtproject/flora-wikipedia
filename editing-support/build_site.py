@@ -30,6 +30,30 @@ ROUTE_LABEL.update(codex='Codex', agy='Gemini', orchestrator='Claude')
 LEVEL = {'metadata_only': 0, 'abstract': 1, 'full_text': 2}
 
 
+STORE_ENV = pathlib.Path.home() / '.config' / 'flora-wikipedia' / 'supabase.env'
+
+
+def store_config():
+    """config.js for the site: the shared review store (issue #10) when configured, else local-only storage.
+
+    Values come from FLORA_SUPABASE_URL and FLORA_SUPABASE_ANON_KEY, or from the private file
+    ~/.config/flora-wikipedia/supabase.env (KEY=value lines). The anon key is public by design (every
+    visitor's browser receives it), but it is kept out of the repository; see supabase/README.md.
+    """
+    import os
+    vals = {}
+    if STORE_ENV.exists():
+        for line in STORE_ENV.read_text().splitlines():
+            k, _, v = line.partition('=')
+            if v and not k.strip().startswith('#'):
+                vals[k.strip()] = v.strip().strip('"\'')
+    vals.update({k: v for k, v in os.environ.items() if k.startswith('FLORA_SUPABASE_')})
+    url, key = vals.get('FLORA_SUPABASE_URL'), vals.get('FLORA_SUPABASE_ANON_KEY')
+    if not (url and key):
+        return '// Shared review storage is not configured: reviews stay in each browser.\nwindow.FLORA_STORE = null;\n'
+    return f'// Shared review storage (Supabase); see editing-support/supabase/README.md.\nwindow.FLORA_STORE = {json.dumps(dict(url=url, anonKey=key))};\n'
+
+
 def _clean(t):
     return re.sub(r'<[^>]+>', '', html.unescape(t or '')).strip()
 
@@ -545,8 +569,9 @@ def main():
                 counts=counts(cards, pages), missing_drafts=missing, sources=sources, pages=pages)
     (out / 'data').mkdir(parents=True, exist_ok=True)
     (out / 'downloads').mkdir(exist_ok=True)
-    for f in ['index.html', 'app.js', 'style.css']:
+    for f in ['index.html', 'store.js', 'app.js', 'style.css']:
         shutil.copy2(HERE / 'site' / f, out / f)
+    (out / 'config.js').write_text(store_config())
     dump_json(out / 'data' / 'suggestions.json', data)
     (RUN / 'about.md').write_text(about_md(dict(data, cards=cards)))
     pandoc(HERE / 'docs' / 'contributor-workflow.md', out / 'guide.html', 'Contributor workflow')

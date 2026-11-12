@@ -416,3 +416,24 @@ dl.edit-kv dt { color: var(--muted); font-weight: 600; font-size: .85rem; paddin
 .access { font-size: .85em; } span.access.none { color: var(--muted); }
 .why-none { margin: .3rem 0 .1rem; }
 table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
+
+/* Shared reviews (issue #10): group status badges, the "reviewing now" toggle, group progress, sign-in. */
+.badge.review { background: #ece6f7; color: #4d2f86; }
+.badge.audit { background: var(--warn-soft); color: var(--warn); border: 1px solid #ecd3a5; }
+.badge.audited { background: var(--ok); color: #fff; }
+.claimbar { display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center; margin: .6rem 0 .2rem; }
+.claimbar button { font-size: .85rem; }
+.claimbar button.on { background: #ece6f7; border-color: #b9a6dd; color: #4d2f86; font-weight: 600; }
+.claimbar .small { color: var(--muted); }
+.group { border: 1px solid var(--line); border-radius: 12px; padding: .8rem 1rem; margin: 1rem 0; }
+.group h3 { margin-top: 0; } .group h4 { margin: .6rem 0 .2rem; font-size: .9rem; }
+.group-reviews blockquote, .modal-box blockquote { margin: .2rem 0 .3rem; }
+.audit-form { margin-top: .6rem; } .audit-form textarea { width: 100%; font: inherit; font-size: .9rem; border: 1px solid #d5d7e6; border-radius: 8px; padding: .3rem .5rem; }
+.audit-form .row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .4rem; }
+.mine-id .row { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }
+.mine-id input { padding: .15rem .3rem; border: 1px solid #d5d7e6; border-radius: 6px; }
+.mine-id #sid-id { width: 7rem; } .mine-id #reg-email { width: 100%; box-sizing: border-box; }
+.mine-id .id-form { margin: .3rem 0; } .mine-id .id-form label[for] { display: block; margin-top: .3rem; }
+.mine-id .new-id summary { cursor: pointer; color: var(--accent); }
+.mine-id .rid { font-family: ui-monospace, monospace; }
+.mine-id #id-msg:empty { display: none; }

@@ -1,8 +1,8 @@
 'use strict';
 // Private review UI: one card per Wikipedia page, one item per database study cited on it.
-// Read-only with respect to Wikipedia: the only network call is an optional,
-// user-triggered revision-ID lookup (MediaWiki read API).
-const LS = 'flora-en-edit-proto:page:';
+// Read-only with respect to Wikipedia: the only Wikipedia call is a revision-ID lookup (MediaWiki read API)
+// when a card is opened. Reviews are kept in this browser and, when configured, in a shared store (store.js).
+const LS = Store.prefix + 'page:';
 const WELCOME_KEY = 'flora-en-edit-proto:welcome-hidden';
 
 // Plain-language labels for the model's controlled vocabulary.
@@ -85,6 +85,33 @@ function draftPut(id, d) { lsSet(LS + id + ':draft', d ? JSON.stringify(d) : nul
 const reviewed = p => { const r = ledgerGet(p.page_id); return !!r && p.items.every(it => r.items?.[it.card_id]); };
 const hasDraft = p => !!draftGet(p.page_id);
 
+// ---------- group progress (shared store only) ----------
+// A review counts for the group once every publication on the card has a decision and at least one is
+// "edited", "talk page" or "no change needed". It then waits for an audit: two people other than its
+// reviewers confirming the work is finished.
+const SETTLED = ['edit', 'talk', 'no_change'], ACTED = ['edit', 'talk'], AUDITS_NEEDED = 2;
+const GROUP = {open: 'Nobody yet', under_review: 'Under review', to_audit: 'To be audited', audited: 'Audited'};
+function groupState(p) {
+  const s = Store.forPage(p.page_id), mine = Store.me()?.public_id;
+  const complete = s.reviews.filter(r => p.items.every(it => r.record.items?.[it.card_id])
+    && Object.values(r.record.items).some(d => SETTLED.includes(d)));
+  const reviewers = new Set(complete.map(r => r.public_id));
+  const confirmed = s.audits.filter(a => a.finished && !reviewers.has(a.public_id));
+  const state = confirmed.length >= AUDITS_NEEDED ? 'audited' : complete.length ? 'to_audit' : s.claims.length ? 'under_review' : 'open';
+  return {...s, complete, confirmed, state, acted: complete.some(r => Object.values(r.record.items).some(d => ACTED.includes(d))),
+    mine, claimedByMe: !!mine && s.claims.some(c => c.public_id === mine), reviewedByMe: !!mine && s.reviews.some(r => r.public_id === mine),
+    myAudit: mine ? s.audits.find(a => a.public_id === mine) : null};
+}
+const names = rows => [...new Set(rows.map(r => r.initials))].join(', ');
+function groupBadges(p) {
+  if (!Store.shared) return '';
+  const g = groupState(p);
+  const claim = g.claims.length ? `<span class="badge review" title="Someone has marked this article as under review">Under review: ${esc(names(g.claims))}</span>` : '';
+  if (g.state === 'audited') return claim + ' <span class="badge audited">✓ Audited</span>';
+  if (g.state === 'to_audit') return claim + ` <span class="badge audit" title="Reviewed by ${esc(names(g.complete))}">To be audited ${g.confirmed.length}/${AUDITS_NEEDED}</span>`;
+  return claim;
+}
+
 // ---------- list and filters ----------
 const SEGMENTS = [
   ['repl', 'Adds a replication', p => !!pageRepl(p)],
@@ -93,6 +120,8 @@ const SEGMENTS = [
   ['none', 'No change needed', p => ['other', 'none'].includes(pageKind(p))], ['all', 'All articles', () => true]];
 const FACETS = [
   ['mine', 'My progress', p => reviewed(p) ? 'Reviewed' : hasDraft(p) ? 'Draft, not saved' : 'Not reviewed yet', true],
+  ...(Store.shared ? [['group', 'Group progress', p => { const g = groupState(p);
+    return [GROUP[g.state], g.claims.length && g.state !== 'under_review' && GROUP.under_review].filter(Boolean); }, true, Object.values(GROUP)]] : []),
   ['scope', 'Kind of article', p => SCOPE[p.items[0].suggestion.article_scope] || p.items[0].suggestion.article_scope, true],
   ['many', 'Publications on the page', p => p.items.length > 1 ? 'Several' : 'One', true],
   ['care', 'Extra care', p => [flags(p).blp && 'Living person (BLP)', flags(p).medrs && 'Health / medical (MEDRS)',
@@ -105,7 +134,8 @@ function buildFilters() {
   const group = f => {
     const counts = {};
     PAGES.forEach(p => facetVals(p, f).forEach(v => counts[v] = (counts[v] || 0) + 1));
-    return `<fieldset class="fgroup"><legend>${esc(f[1])}</legend>` + Object.keys(counts).sort().map(v =>
+    const keys = f[4] ? f[4].filter(v => counts[v]) : Object.keys(counts).sort();  // f[4]: a fixed order (workflow stages)
+    return `<fieldset class="fgroup"><legend>${esc(f[1])}</legend>` + keys.map(v =>
       `<label><input type="checkbox" data-f="${f[0]}" value="${esc(v)}" ${filters[f[0]]?.has(v) ? 'checked' : ''}> <span>${esc(v)}</span><span class="n">${counts[v]}</span></label>`).join('') + '</fieldset>';
   };
   document.getElementById('filter-groups').innerHTML = FACETS.filter(f => f[3]).map(group).join('') +
@@ -116,10 +146,11 @@ function buildFilters() {
     renderList();
   }));
 }
-// "My progress" changes as you review: rebuild the filters when its values change, keeping ticks.
+// "My progress" and "Group progress" change as people review: rebuild the filters when they change, keeping ticks.
 let PROGRESS_SIG = '';
 function refreshProgressFacet() {
-  const sig = PAGES.map(p => facetVals(p, FACETS[0])[0]).join('|');
+  const live = FACETS.filter(f => ['mine', 'group'].includes(f[0]));
+  const sig = PAGES.map(p => live.map(f => facetVals(p, f).join('+')).join('/')).join('|');
   if (sig !== PROGRESS_SIG) { PROGRESS_SIG = sig; buildFilters(); }
 }
 const activeFilters = () => Object.values(filters).reduce((n, s) => n + s.size, 0);
@@ -163,7 +194,8 @@ function renderList() {
       ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${pageKind(p) === 'other' ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
       ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}
-      ${reviewed(p) ? '<span class="badge done">✓ reviewed</span>' : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}</span></button></li>`;
+      ${reviewed(p) ? `<span class="badge done">✓ ${Store.shared ? 'you reviewed' : 'reviewed'}</span>` : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}
+      ${groupBadges(p)}</span></button></li>`;
   }).join('') || '<li class="small">No articles match. Try "All articles" or clear some filters.</li>';
   document.querySelectorAll('.card-btn').forEach(b => b.addEventListener('click', () => show(b.dataset.id, true)));
   updateLedgerCount();
@@ -380,7 +412,8 @@ function otherFixesBlock(p) {
 function decisionBlock(p, rec, draft) {
   const f = draft || rec;
   return `<section class="ledger" id="record" aria-labelledby="record-h"><h3 id="record-h">Record your review</h3>
-    <p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>
+    ${Store.shared ? `<p class="small">Your review is kept in this browser and shared with the group when you save it${Store.me() ? '' : ' (sign in under “Your reviews” first)'}.</p>`
+    : '<p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>'}
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
     ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
@@ -437,13 +470,14 @@ function show(id, focus) {
       <a href="${esc(pg.talk_url)}" target="_blank" rel="noopener">Talk page</a>
       <a href="${esc(pg.diff_url)}" target="_blank" rel="noopener">Changes since this snapshot</a>
       <a href="${esc(pg.frozen_url)}" target="_blank" rel="noopener">Snapshot version</a></div>
+    ${Store.shared ? '<div class="claimbar" id="claimbar"></div>' : ''}
     <div class="revbar ${lc.changed_since_frozen ? 'warn' : ''}" id="revbar">
       <span id="rev-msg">${lc.changed_since_frozen ? `⚠ The article has been edited since this snapshot (${esc(pg.frozen_timestamp.slice(0, 10))}). Check the changes before acting.`
         : `Snapshot from ${esc(pg.frozen_timestamp.slice(0, 10))}; unchanged when last checked (${esc((lc.checked_at || '').slice(0, 10))}).`}</span>
       <button type="button" id="l-check">Check now</button></div>
     ${fl.blp ? '<p class="care-note">Living person: findings are about studies, not people. Follow <a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a> and do not imply misconduct.</p>' : ''}
     ${fl.medrs ? '<p class="care-note">Health or medical content: single studies and replications are usually not enough (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</p>' : ''}
-    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length)).join('')}${otherFixesBlock(p)}${decisionBlock(p, rec, draftGet(id))}`;
+    ${overview(p)}${p.items.map((it, i) => itemSection(it, i, p.items.length)).join('')}${otherFixesBlock(p)}${Store.shared ? '<section class="group" id="group" aria-labelledby="group-h"></section>' : ''}${decisionBlock(p, rec, draftGet(id))}`;
   // Scroll within the card pane on desktop, the page on mobile; open a folded study before jumping into it.
   detail.scrollTop = 0;
   const jump = target => {
@@ -474,7 +508,7 @@ function show(id, focus) {
   const form = document.getElementById('record');
   form.addEventListener('change', e => { if (e.target.id !== 'l-save') keepDraft(); });
   document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(keepDraft, 600); });
-  document.getElementById('l-save').onclick = () => {
+  document.getElementById('l-save').onclick = async () => {
     clearTimeout(timer);
     const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
@@ -487,30 +521,143 @@ function show(id, focus) {
     const hint = document.getElementById('l-hint');
     hint.hidden = !(disagrees && !notes.trim());
     if (!hint.hidden) { keepDraft(); document.getElementById('l-notes').focus(); return; }
-    const r = {...(ledgerGet(id) || baseRec(p)), ...f, reviewer: document.getElementById('reviewer').value, updated_at: new Date().toISOString()};
+    const r = {...(ledgerGet(id) || baseRec(p)), ...f, reviewer: Store.me()?.initials || document.getElementById('reviewer').value, updated_at: new Date().toISOString()};
     ledgerPut(id, r);
     draftPut(id, null);
     const missingItems = p.items.filter(it => !f.items[it.card_id]).length;
-    document.getElementById('l-status').textContent = missingItems
+    const said = missingItems
       ? `Saved. Choose a decision for ${missingItems === 1 ? 'the remaining publication' : `all ${missingItems} remaining publications`} to mark the card as reviewed.`
       : 'Saved: the card counts as reviewed.';
+    const status = document.getElementById('l-status');
+    status.textContent = said;
     renderList();
+    if (!Store.shared) return;
+    status.textContent = said + ' Sharing…';
+    const sent = await Store.push(id, r);
+    await Store.refresh();
+    if (ACTIVE !== id) return;
+    status.textContent = said + (sent.ok ? ' Shared with the group.'
+      : !Store.me() ? ' Kept in this browser: sign in under “Your reviews” to share it.'
+      : ` Kept in this browser; not shared yet (${sent.error}). It will be sent next time.`);
+    renderAll();
   };
-  document.getElementById('l-check').onclick = async () => {
+  // The snapshot check runs whenever a card is opened; the button repeats it. The result is kept with a
+  // saved review (not a new record) so exports show which version the reviewer last saw.
+  const checkLive = async () => {
     const msg = document.getElementById('rev-msg');
-    msg.textContent = 'Checking Wikipedia…';
+    msg.textContent = 'Checking Wikipedia for changes since this snapshot…';
     try {
       const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=revisions&pageids=${pg.pageid}&rvprop=ids|timestamp&format=json&formatversion=2&origin=*`);
       const rev = (await resp.json()).query.pages[0].revisions[0];
       const same = String(rev.revid) === String(pg.frozen_revid);
-      ledgerPut(id, {...(ledgerGet(id) || baseRec(p)), live_revision_checked: rev.revid, live_checked_at: new Date().toISOString()});
+      if (ACTIVE !== id) return null;
+      if (ledgerGet(id)) ledgerPut(id, {...ledgerGet(id), live_revision_checked: rev.revid, live_checked_at: new Date().toISOString()});
       document.getElementById('revbar').className = 'revbar ' + (same ? 'okbar' : 'warn');
       msg.textContent = same ? '✓ Unchanged: the live article is the version this card describes.'
         : `⚠ Edited on ${rev.timestamp.slice(0, 10)}. Open "Changes since this snapshot" to see whether the issue is still there.`;
-    } catch (e) { msg.textContent = 'Could not reach Wikipedia: ' + e; }
+      return !same;
+    } catch (e) {
+      if (ACTIVE === id) msg.textContent = 'Could not reach Wikipedia: ' + e;
+      return null;
+    }
   };
+  document.getElementById('l-check').onclick = checkLive;
+  paintGroup(p);
   renderList();
   if (focus) document.getElementById('card-title').focus({preventScroll: true});
+  checkLive().then(changed => { if (ACTIVE === id) maybeAuditPrompt(p, changed ?? !!lc.changed_since_frozen); });
+}
+
+// ---------- group progress on a card ----------
+const ago = t => { const m = Math.round((Date.now() - Date.parse(t)) / 60000);
+  return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `on ${t.slice(0, 10)}`; };
+const decisionsText = (p, r) => p.items.map(it => (p.items.length > 1 ? `${studyName(it)}: ` : '') + (DECISIONS[r.record.items?.[it.card_id]] || 'no decision yet')).join('; ');
+function openMine(focusId) {
+  const m = document.getElementById('mine-menu');
+  // After this click has finished bubbling, so the close-on-outside-click handler does not shut it again.
+  setTimeout(() => { m.open = true; document.getElementById(focusId || 'sid-id')?.focus(); }, 0);
+}
+// The "I'm reviewing this now" toggle and the group section; repainted when the shared store changes.
+function paintGroup(p) {
+  if (!Store.shared || ACTIVE !== p.page_id) return;
+  const g = groupState(p), bar = document.getElementById('claimbar'), sec = document.getElementById('group');
+  if (!bar || !sec || sec.contains(document.activeElement)) return;  // do not repaint under someone typing an audit note
+  const others = g.claims.filter(c => c.public_id !== g.mine);
+  bar.innerHTML = `<button type="button" id="claim" aria-pressed="${g.claimedByMe}" class="${g.claimedByMe ? 'on' : ''}">${g.claimedByMe ? '✓ You are reviewing this' : 'I’m reviewing this now'}</button>
+    <span class="small">${others.length ? `${esc(names(others))} ${others.length > 1 ? 'are' : 'is'} reviewing it (since ${esc(ago(others[0].started_at))}).`
+      : g.claimedByMe ? 'Others see this article as under review until you save your review or switch this off.' : 'Mark the article so others know you are working on it.'}</span>
+    ${g.state === 'audited' ? '<span class="badge audited">✓ Audited</span>' : g.state === 'to_audit' ? `<span class="badge audit">To be audited ${g.confirmed.length}/${AUDITS_NEEDED}</span>` : ''}`;
+  document.getElementById('claim').onclick = async () => {
+    if (!Store.me()) return openMine();
+    const r = await Store.claim(p.page_id, !g.claimedByMe);
+    if (!r.ok) bar.querySelector('.small').textContent = 'Could not reach the shared store: ' + r.error;
+    await Store.refresh(); renderAll();
+  };
+  const theirs = g.reviews.filter(r => r.public_id !== g.mine);
+  const audits = g.audits.map(a => `<li><strong>${esc(a.initials)}</strong> ${a.finished ? 'confirmed the work is finished' : 'found it not finished yet'} (${esc(ago(a.updated_at))})${a.note ? `: ${esc(a.note)}` : ''}</li>`).join('');
+  const canAudit = g.complete.some(r => r.public_id !== g.mine) && !g.reviewedByMe;
+  sec.innerHTML = `<h3 id="group-h">Group progress</h3>
+    <p>${g.state === 'audited' ? `Audited: ${g.confirmed.length} people confirmed the work is finished.`
+      : g.state === 'to_audit' ? `Reviewed, to be audited: ${g.confirmed.length} of the ${AUDITS_NEEDED} confirmations needed from people other than the reviewer.`
+      : 'Nobody has saved a complete review of this article yet.'}</p>
+    ${theirs.length ? `<ul class="tight group-reviews">${theirs.map(r => `<li><strong>${esc(r.initials)}</strong> (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${r.record.draft_usefulness ? ` · card ${esc(r.record.draft_usefulness)}` : ''}
+      ${r.record.notes ? `<blockquote class="small-q">${esc(r.record.notes)}</blockquote>` : ''}</li>`).join('')}</ul>` : ''}
+    ${audits ? `<h4>Audits</h4><ul class="tight">${audits}</ul>` : ''}
+    ${canAudit ? auditControls(g) : g.reviewedByMe && g.complete.length ? '<p class="small">You reviewed this article, so two other people need to audit it.</p>' : ''}`;
+  wireAudit(sec, p);
+}
+function auditControls(g, popup) {
+  if (!Store.me()) return `<p class="small">To audit this review, <button type="button" class="linklike" data-signin>sign in under “Your reviews”</button>.</p>`;
+  const was = g.myAudit ? `<p class="small">You said: ${g.myAudit.finished ? 'finished' : 'not finished yet'} (${esc(ago(g.myAudit.updated_at))}). You can change it.</p>` : '';
+  return `<div class="audit-form">${popup ? '' : '<p><strong>Audit:</strong> is the work on this article finished?</p>'}${was}
+    <label class="small" for="a-note${popup ? '-m' : ''}">Note (optional)</label><textarea id="a-note${popup ? '-m' : ''}" class="a-note" rows="2">${esc(g.myAudit?.note || '')}</textarea>
+    <div class="row"><button type="button" class="primary" data-audit="1">${g.acted ? 'Mark as finished' : 'I agree: no change needed'}</button>
+      <button type="button" data-audit="0">${g.acted ? 'Not finished yet' : 'I disagree'}</button>
+      ${popup ? '<button type="button" data-later>Decide later</button>' : ''}<span class="small a-status" role="status"></span></div></div>`;
+}
+function wireAudit(root, p, done) {
+  root.querySelectorAll('[data-signin]').forEach(b => b.onclick = () => { done?.(); openMine(); });
+  root.querySelectorAll('[data-later]').forEach(b => b.onclick = () => done?.());
+  root.querySelectorAll('[data-audit]').forEach(b => b.onclick = async () => {
+    const st = root.querySelector('.a-status');
+    st.textContent = 'Saving…';
+    const r = await Store.audit(p.page_id, b.dataset.audit === '1', root.querySelector('.a-note')?.value);
+    if (!r.ok) { st.textContent = 'Not saved: ' + r.error; return; }
+    await Store.refresh();
+    done?.(); renderAll();
+  });
+}
+// When a card that someone else reviewed is opened: if they edited and the article has changed since the
+// snapshot, the work is probably done; if they found no change needed, that still needs a second look.
+function maybeAuditPrompt(p, changed) {
+  if (!Store.shared) return;
+  const g = groupState(p), key = Store.prefix + 'prompted:' + p.page_id;
+  const theirs = g.complete.filter(r => r.public_id !== g.mine);
+  if (!theirs.length || g.state === 'audited' || g.reviewedByMe || g.myAudit) return;
+  if (g.acted && !changed) return;
+  try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch { /* ask again next time */ }
+  const who = theirs.map(r => `<li><strong>${esc(r.initials)}</strong> (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${r.record.notes ? `<blockquote class="small-q">${esc(r.record.notes)}</blockquote>` : ''}</li>`).join('');
+  const box = document.getElementById('audit-box'), modal = document.getElementById('audit-modal');
+  box.innerHTML = g.acted
+    ? `<h2 id="audit-title">This article has likely been finished</h2>
+      <p>Someone recorded an edit or talk-page post for “${esc(p.page.title)}”, and the article has changed since our snapshot.</p><ul class="tight">${who}</ul>
+      <p><a href="${esc(p.page.diff_url)}" target="_blank" rel="noopener">See the changes since the snapshot ↗</a></p>
+      <p class="small">If the change is there and sound, mark the article as finished. It counts as audited once ${AUDITS_NEEDED} people other than the reviewer have confirmed it (${g.confirmed.length} so far).</p>`
+    : `<h2 id="audit-title">A reviewer found no change needed</h2>
+      <p>Someone who reviewed “${esc(p.page.title)}” decided that no change is needed. That still needs a second look: read the card and the article, then say whether you agree.</p><ul class="tight">${who}</ul>
+      <p class="small">The article counts as audited once ${AUDITS_NEEDED} people other than the reviewer agree (${g.confirmed.length} so far).</p>`;
+  box.insertAdjacentHTML('beforeend', auditControls(g, true) + (Store.me() ? '' : '<div class="row"><button type="button" data-later>Close</button></div>'));
+  const prev = document.activeElement;
+  const close = () => { modal.hidden = true; prev?.focus?.(); };
+  modal.hidden = false;
+  modal.onkeydown = e => { if (e.key === 'Escape') close(); };
+  wireAudit(box, p, close);
+  box.querySelector('button')?.focus();
+}
+function renderAll() {
+  renderList();
+  const p = PAGES.find(x => x.page_id === ACTIVE);
+  if (p) paintGroup(p);
 }
 
 // ---------- ledger export ----------
@@ -528,6 +675,64 @@ function updateLedgerCount() {
   el.hidden = !fresh;
   document.getElementById('mine-menu').classList.toggle('unexported', !!fresh);
   el.textContent = `${fresh} saved review${fresh > 1 ? 's are' : ' is'} not in an export yet. Reviews stay only in this browser: export them to keep a copy or share them.`;
+  if (Store.shared) {  // the shared store replaces the export reminder; warn only about reviews not sent yet
+    const unsent = Store.pending().length;
+    el.hidden = !unsent;
+    document.getElementById('mine-menu').classList.toggle('unexported', !!unsent);
+    el.innerHTML = `${unsent} saved review${unsent > 1 ? 's are' : ' is'} kept in this browser but not shared yet` +
+      (Store.me() ? `. <button type="button" class="linklike" id="retry-sync">Try again</button>` : ': sign in to share.');
+    document.getElementById('retry-sync')?.addEventListener('click', syncNow);
+  }
+}
+// ---------- identity (shared store only) ----------
+function paintIdentity() {
+  if (!Store.shared) return;
+  const box = document.getElementById('mine-id'), who = Store.me();
+  box.hidden = false;
+  document.getElementById('initials-label').hidden = true;
+  box.innerHTML = (Store.demo ? '<p class="small warntext">Demo mode: shared reviews are pretend and stay in this browser.</p>' : '') + (who
+    ? `<p class="small">Signed in as <strong class="rid">${esc(who.reviewer_id)}</strong>. Keep this ID: it is how you sign in on another device.
+        Others see only your initials. <button type="button" class="linklike" id="sign-out">Sign out</button></p>`
+    : `<form id="sign-in" class="id-form"><label class="small" for="sid-id">Your reviewer ID</label>
+        <span class="row"><input id="sid-id" placeholder="e.g. BS#1312" autocomplete="username" maxlength="9"><button type="submit">Sign in</button></span></form>
+      <details class="new-id"><summary class="small">New here? Get a reviewer ID</summary>
+      <form id="register" class="id-form"><span class="row"><label class="small">Initials <input id="reg-ini" maxlength="4" size="4" required></label>
+        <label class="small">Number <input id="reg-num" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" size="4" placeholder="any"></label></span>
+        <label class="small" for="reg-email">Email (optional, so the organisers can remind you of your ID)</label>
+        <input id="reg-email" type="email" autocomplete="email">
+        <button type="submit">Get my ID</button></form></details>`) + '<p class="small warntext" id="id-msg" role="status"></p>';
+  const msg = t => { document.getElementById('id-msg').textContent = t; };
+  document.getElementById('sign-out')?.addEventListener('click', () => { Store.signOut(); paintIdentity(); renderAll(); });
+  document.getElementById('sign-in')?.addEventListener('submit', async e => {
+    e.preventDefault(); msg('Signing in…');
+    const r = await Store.signIn(document.getElementById('sid-id').value);
+    if (!r.ok) return msg(r.error);
+    await afterSignIn();
+  });
+  document.getElementById('register')?.addEventListener('submit', async e => {
+    e.preventDefault(); msg('Creating your ID…');
+    const r = await Store.register(document.getElementById('reg-ini').value, document.getElementById('reg-email').value, document.getElementById('reg-num').value);
+    if (!r.ok) return msg('Could not create an ID: ' + r.error);
+    await afterSignIn();
+  });
+}
+// After signing in: bring this reviewer's shared records into this browser (newer copy wins), send
+// anything saved here that the shared store does not have yet, and repaint.
+async function afterSignIn() {
+  const r = await Store.mine();
+  if (r.ok) for (const rec of r.v || []) {
+    const p = PAGES.find(x => x.page_id === rec.page_id), here = ledgerGet(rec.page_id);
+    if (p && (!here || (here.updated_at || '') < rec.updated_at)) ledgerPut(rec.page_id, rec);
+  }
+  PAGES.forEach(p => { const rec = ledgerGet(p.page_id); if (rec?.updated_at && !(r.v || []).some(x => x.page_id === p.page_id && x.updated_at >= rec.updated_at)) Store.queue(p.page_id); });
+  await syncNow();
+  paintIdentity();
+  const p = PAGES.find(x => x.page_id === ACTIVE);
+  if (p) show(p.page_id, false);
+}
+async function syncNow() {
+  if (Store.shared) { await Store.flush(ledgerGet); await Store.refresh(); }
+  renderAll();
 }
 function markExported() { lsSet(EXPORT_KEY, new Date().toISOString()); updateLedgerCount(); }
 function download(name, text, type) {
@@ -648,6 +853,7 @@ async function init() {
   PAGES = DATA.pages;
   SOURCES = DATA.sources || {};
   PAGES.sort((a, b) => (pageRepl(a) && KORDER[pageKind(a)] < 2 ? 0 : 1) - (pageRepl(b) && KORDER[pageKind(b)] < 2 ? 0 : 1) || KORDER[pageKind(a)] - KORDER[pageKind(b)] || a.page.title.localeCompare(b.page.title));
+  if (Store.demo) Demo.init(PAGES.slice(0, 4));
   PAGES.forEach(p => p.search = [p.page.title, ...p.items.flatMap(it => [it.original.short, it.original.citation,
     it.suggestion.rationale, ...it.occurrences.map(o => o.paragraph_plain)])].join(' ').toLowerCase());
   const rv = document.getElementById('reviewer');
@@ -663,7 +869,10 @@ async function init() {
   document.getElementById('toggle-filters').onclick = () => setFilters(document.getElementById('filters').hidden);
   document.getElementById('close-filters').onclick = () => { setFilters(false); document.getElementById('toggle-filters').focus(); };
   document.getElementById('clear-filters').onclick = clearFilters;
-  buildHelp();
+  if (Store.shared) document.getElementById('welcome-storage').innerHTML = '<strong>Your reviews are shared with the group.</strong> ' +
+    'Under “Your reviews”, at the top right, get a reviewer ID (your initials and four digits, such as BS#1312) or sign in with the one ' +
+    'you have. What you type is kept as a draft in this browser; a card counts as reviewed once you click “Save review”, and others can then audit it.';
+  buildHelp();  // after the line above: the help panel copies the walkthrough
   document.getElementById('open-help').onclick = () => document.getElementById('help-panel').hidden ? openHelp() : closeHelp();
   document.getElementById('help-close').onclick = closeHelp;
   document.getElementById('tab-how').onclick = () => helpTab('how');
@@ -702,10 +911,18 @@ async function init() {
       const p = PAGES.find(x => x.page_id === r.page_id);
       if (!p || String(r.reviewed_revision_id) !== String(p.page.frozen_revid)) { skipped++; continue; }
       ledgerPut(r.page_id, r); n++;
+      if (Store.shared) Store.queue(r.page_id);
     }
-    document.getElementById('summary').textContent = `Imported ${n} page reviews; skipped ${skipped} for unknown pages or a different article version.`;
-    renderList();
+    document.getElementById('summary').textContent = `Imported ${n} page reviews; skipped ${skipped} for unknown pages or a different article version.` +
+      (Store.shared ? (Store.me() ? ' They are shared under your reviewer ID.' : ' Sign in to share them.') : '');
+    syncNow();
   };
+  if (Store.shared) {
+    paintIdentity();
+    await Store.refresh();
+    if (Store.me()) Store.flush(ledgerGet).then(() => Store.refresh()).then(renderAll);
+    setInterval(() => { if (document.visibilityState === 'visible') Store.refresh().then(renderAll); }, 60000);
+  }
   buildSegments(); buildFilters(); renderList();
   const h = location.hash.slice(1);
   if (h && PAGES.some(p => p.page_id === h)) { SEGMENT = 'all'; buildSegments(); show(h, false); }
