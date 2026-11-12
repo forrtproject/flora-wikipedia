@@ -226,6 +226,31 @@ class CardText(unittest.TestCase):
         self.assertEqual(split_gist('The article is accurate. The replication agrees. More.'),
                          ('The article is accurate. The replication agrees.', 'More.'))
 
+    def test_no_change_relabelling_rule(self):
+        from build_site import replication_bears_on_claim
+        it = dict(suggestion=dict(citation_function='current_empirical_support',
+                                  specific_study_match=dict(status='matched'), existing_acknowledgement=dict(status='no')),
+                  replications=[dict(flora_outcome='failed')])
+        self.assertTrue(replication_bears_on_claim(it))
+        for change in [('citation_function', 'historical_attribution'), ('specific_study_match', dict(status='mismatch')),
+                       ('existing_acknowledgement', dict(status='yes'))]:
+            alt = copy.deepcopy(it)
+            alt['suggestion'][change[0]] = change[1]
+            self.assertFalse(replication_bears_on_claim(alt), change)
+        alt = copy.deepcopy(it)
+        alt['replications'] = [dict(flora_outcome='successful')]
+        self.assertFalse(replication_bears_on_claim(alt))
+
+    def test_label_overrides_name_no_change_cards(self):
+        if not HAVE_RUN:
+            self.skipTest('no run')
+        from build_site import build_items
+        items, _ = build_items()  # raises on a stale override
+        ids = {o['card_id'] for o in json.loads((ROOT / 'label_overrides.json').read_text())}
+        flagged = {i['card_id'] for i in items if i.get('judgement_basis')}
+        self.assertTrue(ids <= flagged)
+        self.assertTrue(all(i['suggestion']['proposed_action'] == 'no_change' for i in items if i.get('judgement_basis')))
+
     def test_every_shown_source_has_a_label(self):
         from build_site import build_items, item_dois, source_labels
         items, _ = build_items()

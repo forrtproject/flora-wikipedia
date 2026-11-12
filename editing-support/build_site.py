@@ -208,8 +208,43 @@ def build_items():
                             finished_at=meta.get('finished_at', ''), fulltext_update=ft_note,
                             orchestrator=dict(verdict=(review or {}).get('verdict', 'not yet reviewed'),
                                               notes=(review or {}).get('notes', '')))))
+    label_no_change(items)
     apply_text_overrides(items)
     return items, missing
+
+
+# FLoRA outcomes that plainly confirm the original. Screening only (#9): they decide which no-change cards are
+# flagged for people, never what a card says.
+CONFIRMING = {'successful', 'computationally reproducible, robust', 'computationally reproducible, robustness not checked'}
+
+
+def replication_bears_on_claim(it):
+    """A no-change item whose replication tested a claim the Wikipedia article relies on and did not plainly confirm it.
+
+    The article must use the paper as current evidence, the replication must test that claim (fully or in part), the
+    article must not already report it, and at least one replication must have a non-confirming FLoRA outcome."""
+    s = it['suggestion']
+    return (s['citation_function'] == 'current_empirical_support'
+            and s['specific_study_match']['status'] in ('matched', 'partial')
+            and s['existing_acknowledgement']['status'] != 'yes'
+            and any(r['flora_outcome'] not in CONFIRMING for r in it['replications']))
+
+
+def label_no_change(items):
+    """Relabel AI no-change items as judgement calls where a replication bears on a claim the article relies on (#9).
+
+    label_overrides.json records the calls the rule cannot make, card by card, with the reason."""
+    overrides = {o['card_id']: o for o in json.loads((HERE / 'label_overrides.json').read_text())}
+    for it in items:
+        o = overrides.pop(it['card_id'], None)
+        if it['kind'] != 'none':
+            if o:
+                raise ValueError(f"Label override for a card the AI did not mark 'no change': {it['card_id']}")
+            continue
+        if (o['bears_on_claim'] if o else replication_bears_on_claim(it)):
+            it['kind'], it['judgement_basis'] = 'judgement', 'replication_bears_on_claim'
+    if overrides:
+        raise ValueError(f'Label override for an unknown card: {sorted(overrides)}')
 
 
 def reviews_view(pk):
@@ -283,6 +318,7 @@ def counts(cards, pages=None):
         edit_strength=tally(lambda c: c['suggestion'].get('edit_strength', 'n/a')),
         two_runs=sum(bool(c['two_run']) for c in cards),
         two_runs_agree=sum(bool(c['two_run'] and c['two_run']['agree']) for c in cards),
+        no_change_flagged=sum(c.get('judgement_basis') == 'replication_bears_on_claim' for c in cards),
         pages_with_adjacent=sum(bool(p['adjacent']) for p in pages or []),
         open_literature_tasks=sum(any(w.startswith('open-ended') for w in c['validation']['warnings']) for c in cards),
         proposed_action=tally(lambda c: c['suggestion']['proposed_action']),

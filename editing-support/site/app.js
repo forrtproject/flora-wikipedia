@@ -62,6 +62,10 @@ const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="l
 
 
 function itemKind(it) { return it.kind || (EDIT_ACTIONS.has(it.suggestion.proposed_action) ? 'edit' : 'none'); }
+// A no-change suggestion shown as a judgement call (#9): never headline it "No change needed".
+const actionLabel = it => it.judgement_basis === 'replication_bears_on_claim' ? 'The AI suggests no change' : ACTION[it.suggestion.proposed_action];
+const minorNotes = p => (p.adjacent.length || p.items.some(it => (it.suggestion.alternatives || []).length))
+  && (pageKind(p) === 'other' || (pageKind(p) === 'judgement' && p.items.every(it => it.suggestion.proposed_action === 'no_change')));
 const KORDER = {edit: 0, judgement: 1, optional: 2, other: 3, none: 4};
 function pageKind(p) {
   const ks = p.items.map(itemKind);
@@ -163,7 +167,7 @@ function renderList() {
       <span class="t">${esc(p.page.title)}</span>
       <span class="m">${esc(studies)}</span>
       <span class="badges"><span class="badge ${cls}">${label}</span>
-      ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${pageKind(p) === 'other' ? '<span class="badge">Minor notes</span>' : ''}
+      ${pageRepl(p) ? '<span class="badge repl">Adds a replication</span>' : ''}${minorNotes(p) ? '<span class="badge">Minor notes</span>' : ''}
       ${fl.blp ? '<span class="badge care">Living person</span>' : ''}${fl.medrs ? '<span class="badge care">Health</span>' : ''}
       ${p.live_check.changed_since_frozen ? '<span class="badge warn">Edited since</span>' : ''}${needsLibrary(p) ? '<span class="badge lib" title="At least one paper has no known free copy">Library access</span>' : ''}
       ${reviewed(p) ? '<span class="badge done">✓ reviewed</span>' : ''}${hasDraft(p) ? `<span class="badge draft">${reviewed(p) ? 'Unsaved changes' : 'Draft'}</span>` : ''}</span></button></li>`;
@@ -345,7 +349,8 @@ function itemSection(it, i, n) {
   const s = it.suggestion, k = itemKind(it), [label, cls] = KIND[k];
   const head = `${n > 1 ? `Publication ${i + 1} of ${n}: ` : ''}${it.original.short}`;
   // No-change cards say why up front (#9), so a reader can disagree on sight rather than take the label on trust.
-  const whyNone = k === 'none' || k === 'other' ? `<p class="why-none"><span class="who">Why the AI suggests no change:</span></p><ul class="tight">
+  const bears = it.judgement_basis === 'replication_bears_on_claim';
+  const whyNone = k === 'none' || k === 'other' || bears ? `${bears ? '<p class="twoRun"><strong>Judgement call: a replication bears on a claim this Wikipedia article relies on.</strong> The AI suggests no change; weigh its reasons and decide.</p>' : ''}<p class="why-none"><span class="who">Why the AI suggests no change:</span></p><ul class="tight">
       <li><strong>Does the replication test this sentence?</strong> ${esc(s.specific_study_match.note)}</li>
       <li><strong>Does the Wikipedia article already cover it?</strong> ${esc(s.existing_acknowledgement.note)}</li></ul>
       <p class="small">This is the AI's reading. If you think the replication does bear on the sentence, record your own decision below.</p>` : '';
@@ -356,7 +361,7 @@ function itemSection(it, i, n) {
   const papers = `<p class="papers small"><span class="who">Papers:</span> original ${srcLink(it.original.doi)}${it.replications.map(r => ` · replication ${srcLink(r.doi)}`).join('')}</p>`;
   const body = `${papers}${issueBlock(it)}
     <h4>Suggestion</h4>
-    <p class="gist"><strong>${esc(ACTION[s.proposed_action])}</strong> <span class="sep" aria-hidden="true">·</span> ${label === ACTION[s.proposed_action] ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
+    <p class="gist"><strong>${esc(actionLabel(it))}</strong> <span class="sep" aria-hidden="true">·</span> ${label === actionLabel(it) ? '' : `<span class="badge ${cls}">${label}</span> <span class="sep" aria-hidden="true">·</span> `}${esc(it.gist || s.rationale)}</p>
     <div class="proposal ${cls}">${more}</div>
     ${writingBlock(it)}${yourCallBlock(it)}
     <div class="checking"><h4>Checking the AI's work</h4>
@@ -366,10 +371,10 @@ function itemSection(it, i, n) {
 }
 
 function overview(p) {
-  if (p.items.length < 2) return `<p class="overview one"><strong>1 publication to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(ACTION[p.items[0].suggestion.proposed_action])}</p>`;
+  if (p.items.length < 2) return `<p class="overview one"><strong>1 publication to review on this page:</strong> ${esc(p.items[0].original.short)} · ${esc(actionLabel(p.items[0]))}</p>`;
   return `<section class="overview"><h3>${p.items.length} publications to review on this page</h3>
     <p class="small">Each is a paper the Wikipedia article cites that others have tried to replicate. One paper can report several studies; a replication may test only some of them.</p>
-    <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(ACTION[it.suggestion.proposed_action])}</li>`).join('')}</ol></section>`;
+    <ol>${p.items.map(it => `<li><a href="#item-${it.card_id}" data-jump="${it.card_id}">${esc(it.original.short)}</a> · ${esc(actionLabel(it))}</li>`).join('')}</ol></section>`;
 }
 
 function otherFixesBlock(p) {
@@ -386,7 +391,7 @@ function decisionBlock(p, rec, draft) {
     <p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
-    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(ACTION[it.suggestion.proposed_action])})</span></legend>
+    ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(actionLabel(it))})</span></legend>
       ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
     ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
     <label for="l-useful">Was this card useful?</label>

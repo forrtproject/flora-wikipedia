@@ -1,0 +1,20 @@
+[
+  {
+    "card_id": "1ace7af762cf0b18e059",
+    "page": "Functional accounts of emotion",
+    "bears_on_claim": true,
+    "reason": "The Wikipedia article relies on van Dijk et al. (2008) for anger 'structuring the behavioral responses' of the other party; the replications tested one such response (Experiment 3, anger backfiring when rejection costs little). The AI coded this as a mismatch of a different experiment, which the rule leaves as no change."
+  },
+  {
+    "card_id": "f3b297557e3370f7fed2",
+    "page": "Jan Eeckhout",
+    "bears_on_claim": true,
+    "reason": "The biography states the 2004 finding as fact ('showing that ... across the entire urban system'), and Levy's comment on the same paper disputes it for the largest cities. Biographies are coded as historical attribution, which the rule leaves as no change."
+  },
+  {
+    "card_id": "bc9100486893dafefd86",
+    "page": "Lise Vesterlund",
+    "bears_on_claim": true,
+    "reason": "The biography says men prefer competition 'as they tend to be overconfident'; the replication found the same gap but reports that it 'cannot be explained by differences in confidence'. The replication's database outcome is successful, which the rule leaves as no change."
+  }
+]
