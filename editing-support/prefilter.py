@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-filter (brief v6): find articles that already cite every FLoRA replication we hold.
+"""Citation check (brief v6): which FLoRA replications each article already cites.
 
 Detection reads the visible frozen wikitext of each page (HTML comments removed): a
 replication counts as cited when its DOI appears exactly (not as the prefix of a longer
@@ -7,9 +7,11 @@ DOI), or when its title appears (normalised; at least 40 characters and six word
 that generic titles such as "Registered Replication Report" do not match). A citation
 anywhere counts except under Further reading (the group's call on #9: a replication listed
 only there is not yet in the article). Articles where every replication of every
-FLoRA original on the page is cited are dropped before coding (#9). Articles that report
-a replication only in prose, or through another source, are not caught here; the
-drafting model codes those (`already_on_page`).
+FLoRA original on the page is cited are reported as `all_cited`, but they are not dropped:
+every article is coded (Lukas, #9, 2026-11-13). The cards' "Adds a replication" filter
+already leaves them out, and coding them still finds fixes, such as a misdescribed original
+study (Door-in-the-face technique). The drafting prompt shows each replication's citation
+status; the model codes reports in prose or through another source (`already_on_page`).
 
 Usage: prefilter.py [--pages PAGEID ...] [--out report.json]   (default: the selected pages)
 """
@@ -74,7 +76,7 @@ def page_report(pageid, packets):
                             all_cited=bool(reps) and all(r['detected'] for r in reps)))
     title = next((p['page_title'] for p in packets if str(p['pageid']) == str(pageid)), '')
     return dict(pageid=str(pageid), title=title, studies=studies,
-                drop=bool(studies) and all(s['all_cited'] for s in studies))
+                all_cited=bool(studies) and all(s['all_cited'] for s in studies))
 
 
 def on_page_index(pageids=None, packets=None):
@@ -109,8 +111,8 @@ def main():
     for r in rep:
         n = sum(len(s['replications']) for s in r['studies'])
         k = sum(bool(x['detected']) for s in r['studies'] for x in s['replications'])
-        print(f"{'DROP' if r['drop'] else 'code':4} {r['title'][:45]:45} {k}/{n} replications cited", file=sys.stderr)
-    text = json.dumps(dict(pages=rep, dropped=[r['title'] for r in rep if r['drop']]), indent=1, ensure_ascii=False)
+        print(f"{'ALL' if r['all_cited'] else '':4} {r['title'][:45]:45} {k}/{n} replications cited", file=sys.stderr)
+    text = json.dumps(dict(pages=rep, all_cited=[r['title'] for r in rep if r['all_cited']]), indent=1, ensure_ascii=False)
     if a.out:
         open(a.out, 'w').write(text + '\n')
     else:

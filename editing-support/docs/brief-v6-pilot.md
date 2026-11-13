@@ -25,11 +25,12 @@ three model reviews changed, and a pilot on 20 of the 52 coded articles. The pla
   out of the review lists in both runs; the exceptions are listed under *Disagreements*.
 - **Every pilot draft validates.** All 68 drafts (34 studies × 2 runs) pass with no errors;
   4 warnings remain, each a draft citing a DOI that the Wikipedia article already cites.
-- **The pre-filter drops 5 of the 52 articles, not the 4 in the plan.** More Guns, Less Crime,
+- **5 of the 52 articles cite all their replications, not the 4 in the plan** (none is dropped;
+  see decision 2 below). More Guns, Less Crime,
   Red dress effect and Facial feedback hypothesis cite all their replications. Priming
   (psychology) does not: only 1 of its 4 replications is cited, so it stays in coding.
-  Door-in-the-face technique (title match; I checked the citation) and Multiculturalism are
-  dropped as well.
+  Door-in-the-face technique (title match; I checked the citation) and Multiculturalism cite
+  theirs as well.
 - **Cost:** US$0 metered. All runs used subscriptions or OAuth logins (ledger entry 13).
 
 ## What changed in v6
@@ -208,11 +209,12 @@ browser: it renders the v6 fields correctly with no console errors.
    them is *likely no change*. The brief now codes it as `method: reproduction`, its strength
    is `none` with `no_change_basis: reproduction_confirms`, and the tier rule gives *likely no
    change* when every replication that bears on the claim is a confirming reproduction.
-2. **The pre-filter's reach (decided in part).** The group agreed that a replication listed
-   only under Further reading does not count as cited, and the pre-filter now ignores that
-   section. This changes none of the five drops: each of them cites its replications in the
-   body. Door-in-the-face technique stays dropped, although both v5 runs found a fix to the
-   description of the original study there; the pre-filter cannot see such fixes.
+2. **The pre-filter's reach (decided).** No article is dropped before coding (Lukas, #9,
+   2026-11-13). The cards' *Adds a replication* filter already leaves out articles that cite
+   every replication, and coding them still finds fixes, such as the misdescribed original
+   study on Door-in-the-face technique. `prefilter.py` now only reports which replications
+   each article cites, ignoring Further reading (the group's call: a replication listed only
+   there is not yet in the article).
 3. **Historical wording for a present-day claim** (TCF7L2). Both runs read it as current
    evidence, which makes the card a judgement call where #9 had *likely no change*. I suggest
    accepting this, because it errs towards review.

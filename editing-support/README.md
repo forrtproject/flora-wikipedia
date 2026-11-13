@@ -58,7 +58,7 @@ the full English audit (`../search/runs/english-full-gh/en`) and the review queu
 | Screen and select articles (outcome-blind strata) | `select_pages.py` | `packet_features.csv`, `selection.json` | none |
 | Build evidence packets | `evidence.py` | `evidence/<card>/packet.{md,json}`, `article_plain.txt`, `cache/` | first run only: Wikipedia read API, Crossref, Europe PMC, OpenAlex, open PDFs (serial, paced, cached) |
 | Find full texts and check reviews | `fetch_fulltext.py`, `check_reviews.py` | `cache/fulltext_skill/`, `cache/reviews_checked/`, `ft-skill/` | free routes only |
-| Drop articles that already cite every replication (brief v6) | `prefilter.py` | report (JSON) | none |
+| Check which replications each article already cites (brief v6; nothing is dropped) | `prefilter.py` | report (JSON) | none |
 | Drafting copies of packets without FLoRA outcome codes (brief v6) | `blind_packets.py` | `evidence_v6/<card>/` | none |
 | Draft | `make_prompt.py` with `drafting_brief.md` (v6; earlier briefs are kept in the run directory); Claude sub-agents, or `run_route.py` for Codex | `drafts/<route>/<card>.json` | subscription CLIs only |
 | Validate | `validate.py`, `validate_all.py` | `validation-report.json` | none |
