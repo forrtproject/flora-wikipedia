@@ -567,7 +567,38 @@ def card_gist(card):
     return o['gist'], rationale
 
 
-def free_copies():
+OA_CACHE = RUN / 'cache' / 'openalex_access.json'
+PUBLISHER_OA = {'gold', 'diamond', 'hybrid', 'bronze'}  # OpenAlex statuses meaning free at the publisher's site
+
+
+def openalex_access(dois, fetch=False):
+    """OpenAlex open-access status for DOIs outside the evidence packets (reviews, later papers on the cards).
+
+    Cached in cache/openalex_access.json; only --fetch-labels fills it (batched, 50 DOIs per request)."""
+    from common import http_get
+    cache = load_json(OA_CACHE) if OA_CACHE.exists() else {}
+    todo = [d for d in dois if d not in cache]
+    if fetch and todo:
+        for i in range(0, len(todo), 50):
+            batch = todo[i:i + 50]
+            try:
+                res = json.loads(http_get('https://api.openalex.org/works', dict(
+                    filter='doi:' + '|'.join(batch), per_page=50, select='doi,open_access,best_oa_location')))['results']
+            except Exception as e:
+                print(f'OpenAlex lookup failed for {len(batch)} DOIs: {e}')
+                continue
+            for d in batch:
+                cache[d] = None  # not in OpenAlex
+            for w in res:
+                d = (w.get('doi') or '').replace('https://doi.org/', '').lower()
+                loc = w.get('best_oa_location') or {}
+                cache[d] = dict(oa_status=(w.get('open_access') or {}).get('oa_status'),
+                                oa_pdf=loc.get('pdf_url'), oa_landing=loc.get('landing_page_url'))
+        dump_json(OA_CACHE, cache)
+    return {d: cache[d] for d in dois if cache.get(d)}
+
+
+def free_copies(other_dois=(), fetch=False):
     """Where a reader can check each paper without a subscription, from what the pipeline recorded.
 
     kind 'copy' (a free copy we found or OpenAlex lists), 'publisher' (free at the DOI link) or 'none' (no free
@@ -584,6 +615,8 @@ def free_copies():
         pk = load_json(f)
         for s in [pk['original']['source'], *(r['source'] for r in pk['replications'])]:
             recs.setdefault(s['doi'].lower(), s)
+    for doi, oa in openalex_access([d for d in other_dois if d not in recs and d not in out], fetch).items():
+        recs[doi] = dict(doi=doi, openalex=oa)
     for doi, s in recs.items():
         if doi in out:
             continue
@@ -592,9 +625,10 @@ def free_copies():
         url = oa.get('oa_pdf') or oa.get('oa_landing')
         if pmc:
             out[doi] = dict(kind='copy', url=f'https://europepmc.org/article/PMC/{pmc.group(1)}', label='Free full text (Europe PMC)')
+        elif oa.get('oa_status') in PUBLISHER_OA or (oa.get('oa_status') and url and 'doi.org/' in url):
+            out[doi] = dict(kind='publisher', url=None, label='Free to read at the publisher')
         elif oa.get('oa_status') and oa['oa_status'] != 'closed' and url:
-            out[doi] = (dict(kind='publisher', url=None, label='Free to read at the publisher') if 'doi.org/' in url
-                        else dict(kind='copy', url=url, label='Open-access copy'))
+            out[doi] = dict(kind='copy', url=url, label='Open-access copy')
         elif oa.get('oa_status') == 'closed':
             out[doi] = dict(kind='none', url=None, label='No free copy known')
     return out
@@ -639,7 +673,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output-dir', required=True, type=pathlib.Path)
     ap.add_argument('--fetch-labels', action='store_true',
-                    help='fetch Crossref details for sources that have no cached author and year')
+                    help='fetch Crossref details and OpenAlex open-access status for sources not cached yet')
     ap.add_argument('--compare-assignment', type=pathlib.Path,
                     help='route assignment for a second card set, shown in the app as a toggle and side by side')
     ap.add_argument('--compare-label', default='Brief v6 pilot')
@@ -671,7 +705,7 @@ def main():
             lab = sources.get(src['doi'].lower())
             if src['citation'].startswith('Unknown authors') and lab and not lab['label'].startswith('doi:'):
                 src['citation'], src['short'] = lab['citation'], lab['label'] + src['short'][src['short'].index(':'):]
-    copies = free_copies()
+    copies = free_copies(sources, fetch=a.fetch_labels)
     for doi, v in sources.items():
         if doi in copies:
             v['access'] = copies[doi]
