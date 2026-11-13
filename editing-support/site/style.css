@@ -480,7 +480,7 @@ table.evidence th[scope=row] { overflow-wrap: normal; white-space: nowrap; }
 .badge.lib { background: #eef0f3; color: #4b5360; }
 a.oa { display: inline-flex; align-items: center; gap: .25rem; margin-left: .2rem; vertical-align: -.1em; text-decoration: none; font-size: .85em; }
 a.oa svg { flex: none; } a.oa span { text-decoration: underline; text-underline-offset: 2px; }
-a.oa-gold, .oa-gold { color: #8f6500; } a.oa-green, .oa-green { color: #2d7a3e; }
+a.oa-gold, .oa-gold { color: #a87d00; } a.oa-bronze, .oa-bronze { color: #9c4a1c; } a.oa-green, .oa-green { color: #2d7a3e; }
 
 /* Two card sets side by side (?cards=compare). Each column is a container, so the inner comparison stacks when narrow. */
 .cards-switch { background: #33364d; }

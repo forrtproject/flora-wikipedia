@@ -59,16 +59,17 @@ function srcLink(d) {
   const s = SOURCES[d.toLowerCase()];
   return s ? `<a href="https://doi.org/${esc(d)}" target="_blank" rel="noopener" title="${esc(s.citation)}">${esc(s.label)}</a>` : doiLink(d);
 }
-// Open access next to a paper (#17): an unlocked padlock, gold when the publisher's own page is free (links the
-// DOI), green when a free copy is elsewhere (links that copy). Closed papers get no icon; the list's
+// Open access next to a paper (#17): an unlocked padlock, gold when the publisher's own page is openly licensed,
+// bronze when it is free there without a licence (both link the DOI), green when a free copy is elsewhere (links
+// that copy). Closed papers get no icon; the list's
 // "Library access" badge and filter cover them. With `text`, the label follows the icon.
 const UNLOCK = '<svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false"><path d="M4.5 7V5a3.5 3.5 0 0 1 6.8-1.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><rect x="2.5" y="7" width="11" height="8" rx="1.6" fill="currentColor"/></svg>';
 function accessLink(d, text) {
   d = (d || '').replace(/^doi:/i, '').trim();
   const a = SOURCES[d.toLowerCase()]?.access;
-  if (!a || !(a.url || a.kind === 'publisher')) return '';
-  const pub = !a.url, label = pub ? 'Free to read at the publisher' : a.label;
-  return `<a class="oa ${pub ? 'oa-gold' : 'oa-green'}" href="${esc(pub ? 'https://doi.org/' + d : a.url)}" target="_blank" rel="noopener" title="${esc(label)}" aria-label="${esc(label)}">${UNLOCK}${text ? `<span>${esc(label)}</span>` : ''}</a>`;
+  if (!a || !(a.url || a.kind === 'publisher' || a.kind === 'bronze')) return '';
+  const pub = !a.url, label = a.kind === 'publisher' ? 'Free to read at the publisher' : a.label;
+  return `<a class="oa ${a.kind === 'bronze' ? 'oa-bronze' : pub ? 'oa-gold' : 'oa-green'}" href="${esc(pub ? 'https://doi.org/' + d : a.url)}" target="_blank" rel="noopener" title="${esc(label)}" aria-label="${esc(label)}">${UNLOCK}${text ? `<span>${esc(label)}</span>` : ''}</a>`;
 }
 // What the model read. In lists, full text is the default and stays unmarked; anything less is named.
 const lvlBadge = (l, quiet) => quiet && l === 'full_text' ? '' : `<span class="lvl ${l === 'full_text' ? '' : l === 'abstract' ? 'abs' : 'thin'}">${esc(LEVEL[l] || l)}</span>`;

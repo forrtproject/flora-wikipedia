@@ -571,7 +571,7 @@ def card_gist(card):
 
 
 OA_CACHE = RUN / 'cache' / 'openalex_access.json'
-PUBLISHER_OA = {'gold', 'diamond', 'hybrid', 'bronze'}  # OpenAlex statuses meaning free at the publisher's site
+PUBLISHER_OA = {'gold', 'diamond', 'hybrid'}  # OpenAlex statuses meaning openly licensed at the publisher's site
 
 
 def openalex_access(dois, fetch=False):
@@ -604,7 +604,8 @@ def openalex_access(dois, fetch=False):
 def free_copies(other_dois=(), fetch=False):
     """Where a reader can check each paper without a subscription, from what the pipeline recorded.
 
-    kind 'copy' (a free copy we found or OpenAlex lists), 'publisher' (free at the DOI link) or 'none' (no free
+    kind 'copy' (a free copy we found or OpenAlex lists), 'publisher' (free at the DOI link under an open licence),
+    'bronze' (free at the DOI link without an open licence, so it may not stay free) or 'none' (no free
     copy known: closed according to OpenAlex and none found by the source search)."""
     out = {}
     for f in sorted((RUN / 'hunt').glob('results_*.jsonl')):
@@ -628,6 +629,8 @@ def free_copies(other_dois=(), fetch=False):
         url = oa.get('oa_pdf') or oa.get('oa_landing')
         if pmc:
             out[doi] = dict(kind='copy', url=f'https://europepmc.org/article/PMC/{pmc.group(1)}', label='Free full text (Europe PMC)')
+        elif oa.get('oa_status') == 'bronze':
+            out[doi] = dict(kind='bronze', url=None, label='Free to read at the publisher for now (no open licence)')
         elif oa.get('oa_status') in PUBLISHER_OA or (oa.get('oa_status') and url and 'doi.org/' in url):
             out[doi] = dict(kind='publisher', url=None, label='Free to read at the publisher')
         elif oa.get('oa_status') and oa['oa_status'] != 'closed' and url:
