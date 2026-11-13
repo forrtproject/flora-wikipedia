@@ -6,9 +6,9 @@
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 repo="$(cd "$here/.." && pwd)"
-built="$repo/../flora-wikipedia-edit-prototype-20261006"
+built="$(mktemp -d)"  # a fresh build: the served preview folder may hold other sessions' extra files
 stage="$(mktemp -d)"
-trap 'rm -rf "$stage"' EXIT
+trap 'rm -rf "$stage" "$built"' EXIT
 [[ -z "$(git -C "$repo" status --porcelain -- editing-support)" ]] || { echo "editing-support has uncommitted changes" >&2; exit 1; }
 rev="$(git -C "$repo" rev-parse --short HEAD)"
 (cd "$here" && python3 build_site.py --output-dir "$built" >/dev/null)
