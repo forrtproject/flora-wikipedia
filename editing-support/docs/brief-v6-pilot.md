@@ -202,7 +202,10 @@ browser: it renders the v6 fields correctly with no console errors.
 - **The full re-run.** It needs `blind_packets.py` for all packets, the pre-filter, and route
   assignment updates (the build now accepts a per-card `second_runs` map).
 
-## Needs your decision before the full re-run
+## Decisions before the full re-run
+
+All five are settled (Lukas agreed to the suggestions in 3–5 on 2026-11-13). The full re-run waits until the
+hackathon group has finished its review of the cards.
 
 1. **Confirming reanalyses of the same data (decided).** The group agreed (#9, 2026-11-13)
    that a reproduction that re-runs the original analyses on the original data and confirms
