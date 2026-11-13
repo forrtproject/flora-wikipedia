@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Method &amp; coverage</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔁%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="has-wip">
+<div class="wip-banner" role="note"><strong>Work in progress.</strong> A prototype shared for feedback: the cards were prepared with AI help and have not yet been checked by people. Read the sources before acting on anything here.</div>
+<header class="top"><div class="brand"><h1>Method &amp; coverage</h1>
+<p class="sub">FLoRA × English Wikipedia edit-suggestion prototype · review material</p></div>
+<nav><a href="index.html">Review cards</a><a href="guide.html">Contributor workflow</a><a href="about.html">Method &amp; coverage</a><a href="downloads/">Downloads</a></nav></header>
+<div class="prose">
+<h2 id="status">Status</h2>
+<p>This page describes build <code>ac7997cf0f14</code>
+(2026-11-13T11:45:53+00:00). It has 52 cards, one for each English
+Wikipedia article, covering 73 studies. The cards were prepared with AI
+and nobody has checked them yet, so contributors need to check them
+before acting. This is research material shared for review, not for publication.
+The dashboard does not edit Wikipedia or Wikidata, post messages or copy
+text into an editor.</p>
+<p>A card shows where an edit might help, which points it could cover
+and which sources to read. It gives no ready-made wording: contributors
+decide whether to edit, and write their own text from sources they have
+read.</p>
+<p>For 42 of the 73 studies the AI suggests changing the article and for
+31 no change. We show the no-change suggestions too: in most of them the
+citation is accurate in context.</p>
+<p>11 articles cite more than one study. Studies on the same article
+were assessed together, so that the suggestions for one article do not
+repeat or contradict each other. 21 articles have at least one suggested
+edit, not counting judgement calls.</p>
+<p>Each suggestion has one of four strengths, set by a fixed rule:</p>
+<ul>
+<li><strong>Fix:</strong> the article says something its cited source
+contradicts or does not support, or a citation sits on the wrong
+claim.</li>
+<li><strong>Recommended addition:</strong> the article uses the study as
+evidence, a replication or reanalysis tested that claim directly and
+failed, found a clearly smaller effect or substantially qualified it,
+and the article does not say so.</li>
+<li><strong>Optional addition:</strong> the article is accurate, and the
+extra information would only confirm or enrich it.</li>
+<li><strong>None:</strong> no change is suggested.</li>
+</ul>
+<p>Additions are not suggested on biographies, lists, timelines or
+passing mentions.</p>
+<p>Each study was assessed twice, independently, by the same AI system.
+The two assessments agreed on the broad category (edit, optional
+addition or no change) for 66 of 73 studies. The other 7 are shown as
+judgement calls with both views; the card leads with the view that
+suggests more change. Agreement does not mean an assessment is
+right.</p>
+<p>Where both assessments suggest no change, the card is still shown as
+a judgement call if a replication tested a claim the article relies on,
+the article does not report it and the replication did not plainly
+confirm the original (6 studies). The replication database’s outcome
+codes only decide which cards are flagged this way; they never shape
+what a card says. “No change needed” is kept where no edit has a point:
+the paper is only listed, a biography or list mentions it in passing,
+the article already reports the replication, or the replication tests
+something the article does not rely on.</p>
+<p>We searched for legitimate free copies of every paper we had only as
+an abstract: on author and lab pages, in university repositories and on
+preprint and working-paper servers. The AI then checked each fact a
+suggestion relies on against the papers, and the card lists these checks
+with the passages quoted. An automatic check confirms that each quote
+appears word for word in the source; it cannot confirm that the AI read
+it correctly. Papers we could not obtain are listed in
+<code>papers-not-obtained.csv</code> in the downloads.</p>
+<p>For each replication we also looked for review articles: first works
+that cite both the original and the replication, then reviews of the
+original. We searched their text for the replication. Suggestions cite
+only sources that were read, and each point names a specific sentence,
+source or fact. Where no review covers a replication, the suggestion
+stays within what exists: narrowing the claim to the cited study, an
+attributed sentence about the replication on an article about that
+effect, or no change.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Suggested action</th>
+<th>Studies</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Add context</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>Narrow a claim</td>
+<td>16</td>
+</tr>
+<tr class="odd">
+<td>No change</td>
+<td>31</td>
+</tr>
+<tr class="even">
+<td>Remove a citation</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>Remove an unsupported claim</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Replace a source</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>AI recommendation</th>
+<th>Studies</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Leave out of review</td>
+<td>30</td>
+</tr>
+<tr class="even">
+<td>Keep for review</td>
+<td>43</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inputs-and-freshness">Inputs and freshness</h2>
+<p>The cards build on the complete English citation audit
+<code>search/runs/english-full-gh/en</code> (FLoRA file commit
+<code>717fbaf0a35dc662e276d5860dba7faaf7142f93</code>, SHA-256
+<code>28748e8c…</code>) and the citation contexts it recorded. In that
+audit, 586 of the 2,567 original FLoRA studies in scope had their DOI on
+at least one English article (979 articles and 1,193 article–study pairs
+in all). These are counts of DOI strings: they do not show that an
+article discusses a study or mentions its replication.</p>
+<p>On 6 October 2026 we saved the current upstream FLoRA file as
+<code>search/runs/inputs/flora-latest-20261006.csv</code> (commit
+<code>19012dfaabd54432955d2b1d39cd43da6c76f7c3</code>). It differs from
+the audited copy in a single field (one journal name changed from “OSF”
+to blank). Study pairs, DOIs and outcomes are identical, so we did not
+repeat the citation inventory.</p>
+<p>Article text comes from the revisions saved in the audit. On
+2026-10-06 we checked the current revision of each selected article: 1
+of 52 had changed since the snapshot. For a changed article, the card
+records whether the original DOI and the relevant paragraph are still
+there. Every card links to the snapshot, the current article and the
+difference between them.</p>
+<h2 id="how-articles-were-selected">How articles were selected</h2>
+<p>Selection ignored replication outcomes. Each article–study pair was
+classified from the saved article text: the type of article; whether the
+DOI sits in prose, a list, a bibliography or a hidden comment; and
+whether the article concerns a living person or health. One study was
+chosen per article, preferring citations in prose, and each article
+group was then filled in a fixed pseudo-random order (SHA-256 of
+<code>flora-en-edit-prototype-20261006</code> plus the article–study
+ID). A test checks that swapping failed and successful replication
+labels leaves the selection unchanged.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Article group</th>
+<th>Target</th>
+<th>Selected</th>
+<th>Articles of this kind in the audit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Effect or study article</td>
+<td>16</td>
+<td>16</td>
+<td>32</td>
+</tr>
+<tr class="even">
+<td>Broad topic article</td>
+<td>13</td>
+<td>13</td>
+<td>760</td>
+</tr>
+<tr class="odd">
+<td>Biography</td>
+<td>7</td>
+<td>7</td>
+<td>152</td>
+</tr>
+<tr class="even">
+<td>Biomedical (gene, drug or protein)</td>
+<td>4</td>
+<td>4</td>
+<td>25</td>
+</tr>
+<tr class="odd">
+<td>History, timeline or list article</td>
+<td>4</td>
+<td>4</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Bibliography or list entry only</td>
+<td>3</td>
+<td>3</td>
+<td>n/a (set by citation context)</td>
+</tr>
+<tr class="odd">
+<td>Original and replication both cited</td>
+<td>5</td>
+<td>5</td>
+<td>n/a (set by citation context)</td>
+</tr>
+</tbody>
+</table>
+<p>858 of the 979 audited articles cite an original study in prose.
+Article types come from simple rules (an effect article, for example, is
+one whose title appears in a study title). The AI then reclassified each
+article and the role of each citation, and the filters use those
+classifications. The sample is small and spread across article types on
+purpose, so its counts describe this sample, not English Wikipedia as a
+whole. Citations without a DOI were outside the audit, and so are
+outside the sample.</p>
+<h2 id="available-evidence">Available evidence</h2>
+<p>For each study we saved Crossref, Europe PMC and OpenAlex records,
+the abstract and any free full text (Europe PMC XML or a PDF), with the
+time each was retrieved. Requests were sent one at a time and paced for
+each service. Review articles suggested by OpenAlex are leads: a listed
+review has not necessarily been read.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Source and what was available</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Original: Abstract only</td>
+<td>18</td>
+</tr>
+<tr class="even">
+<td>Original: Full text</td>
+<td>52</td>
+</tr>
+<tr class="odd">
+<td>Original: Title and details only</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Replication: Abstract only</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td>Replication: Full text</td>
+<td>82</td>
+</tr>
+</tbody>
+</table>
+<p>A paper is counted once for each study it is attached to. Read the
+full paper before relying on it, especially where only the abstract was
+available.</p>
+<h2
+id="earlier-experiment-does-full-text-change-the-suggestions">Earlier
+experiment: does full text change the suggestions?</h2>
+<p>We ran this experiment on the first build, so its numbers do not
+describe the current cards.</p>
+<p>We searched free sources for the 90 papers we then had only as an
+abstract or as publication details. Usable text came back for 21 (8 of
+47 originals and 13 of 43 replications) in 13 minutes. Most failures
+were paywalled APA, SAGE, Elsevier and Wiley papers; we did not try
+institutional access, because that step only works on macOS. Four of the
+files were supplementary material rather than the article, and several
+were working papers or author manuscripts. The identity check let these
+through because their titles matched.</p>
+<p>Before any full text was read, GPT-6.1 Sol predicted from the
+abstracts which assessments the full text would change. Claude then
+reassessed 20 studies twice: once with the full text and once, as a
+control, without it. GPT-6.1 Sol compared each pair against the
+full-text files, and Claude Opus 5.5 checked four of its verdicts. No
+person reviewed this comparison.</p>
+<p>Full text made a meaningful difference to 13 of the 20 studies. Most
+changes settled or sharpened a check: the C-Raf structure citation, for
+example, turned out to be supported by the paper’s supplement. One study
+changed its suggested action: for Door-in-the-face, the replication
+tested a different study from the one the article describes. For Facial
+feedback, the suggested edit no longer needed a condition. Repeating an
+assessment without new evidence also changed the action for 2 studies,
+about as often as full text did. The predictions from abstracts missed 7
+of the meaningful changes, including both of these.</p>
+<p><strong>What follows.</strong> Get the full text of every source
+behind a suggestion that is kept or still uncertain, starting with the
+replications, which hold the detail needed to match the exact study.
+Check that each file is the article, not a supplement. Institutional
+access should reach most of the papers still missing.</p>
+<h2 id="earlier-comparison-of-ai-systems">Earlier comparison of AI
+systems</h2>
+<p>Three AI systems were given the same instructions and evidence for
+five pilot articles: Power posing (central effect; co-cited);
+Daydreaming (broad topic; current support); Francesca Gino (BLP;
+retracted paper list); C-Raf (biomedical; RP:CB preprint); Lara Aknin
+(BLP; publications list). Each result was scored from 0 to 2 on five
+criteria: factual support, fit to the article, specific advice,
+traceable sources and stated uncertainty. Claude Opus 5.5 did the
+scoring after reading the evidence, so the comparison may favour Claude.
+No person scored the results.</p>
+<table>
+<thead>
+<tr class="header">
+<th>AI system</th>
+<th>Access</th>
+<th>Mean seconds per study</th>
+<th>Score out of 50</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude</td>
+<td>Claude subscription</td>
+<td>72.7</td>
+<td>50</td>
+</tr>
+<tr class="even">
+<td>Codex</td>
+<td>ChatGPT subscription</td>
+<td>96.0</td>
+<td>47</td>
+</tr>
+<tr class="odd">
+<td>Gemini</td>
+<td>Google sign-in</td>
+<td>222.6</td>
+<td>41</td>
+</tr>
+</tbody>
+</table>
+<p>Claude used Opus 5.5, Codex used GPT-6.1 Sol and Gemini used 3.8
+Flash, the last two with high reasoning effort. Full settings and scores
+are in <code>route_comparison.json</code>.</p>
+<p>All five Claude results passed the automatic checks first time. Codex
+passed four, and all five once we fixed a check that wrongly rejected
+DOIs already cited in the article. Gemini passed three: one result had
+an unexpected field, and one attempt returned nothing and worked on a
+retry. On two pilot articles, Gemini also stated facts or study matches
+that the evidence did not support.</p>
+<p>We chose Claude for the full set because it scored highest, was
+fastest and most reliably spotted other problems in the article. Codex
+assessed the first 52 selected studies independently, as a comparison;
+Gemini was not used after the pilot. The instructions were then
+extended: the AI now sees the whole article, follows rules on secondary
+sources and on other problems in the article, and may not state anything
+from memory. All current assessments were made by Claude.</p>
+<p>In that comparison, Claude and Codex agreed on the broad action
+(edit, no change or wait) for 36 of the 52 studies. Codex more often
+suggested waiting, usually because it could not get the sources. Most
+other differences were between adding context and narrowing a claim, so
+both suggested an edit. Codex took 114.9 seconds per study on average.
+Claude Opus 5.5 reviewed the substantive disagreements; its notes are in
+the downloads.</p>
+<h2 id="earlier-spot-checks">Earlier spot checks</h2>
+<p>On 2026-10-06, Claude Opus 5.5 checked 12 assessments against the
+article text, the sources, the current revisions and Crossref. All
+quoted claims and original DOIs were still in the articles, and the
+Crossref and FLoRA titles matched closely (similarity of at least 0.8).
+These were AI checks of an earlier version, so they do not show that the
+current cards are right.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Article</th>
+<th>Citation context</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Power posing</td>
+<td>central effect, historical attribution</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>Romeo and Juliet effect</td>
+<td>central effect, false “not replicated” claim</td>
+<td>agrees with card</td>
+</tr>
+<tr class="odd">
+<td>Helminthiasis</td>
+<td>broad topic, health framing (MEDRS)</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>Francesca Gino</td>
+<td>biography (BLP), retracted-paper list</td>
+<td>agrees with card</td>
+</tr>
+<tr class="odd">
+<td>Lise Vesterlund</td>
+<td>biography (BLP), narrowed summary</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>C-Raf</td>
+<td>biomedical, RP:CB preprint</td>
+<td>agrees with card</td>
+</tr>
+<tr class="odd">
+<td>CASS4</td>
+<td>biomedical list context, internal inconsistency</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>List of Ig Nobel Prize winners</td>
+<td>list/historical record</td>
+<td>agrees with card</td>
+</tr>
+<tr class="odd">
+<td>Lara Aknin</td>
+<td>bibliography entry only</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>Big Five personality traits and culture</td>
+<td>large-project (OSC 2015) match</td>
+<td>agrees with card</td>
+</tr>
+<tr class="odd">
+<td>Religiosity and intelligence</td>
+<td>co-cited, multi-study original</td>
+<td>agrees with card</td>
+</tr>
+<tr class="even">
+<td>More Guns, Less Crime</td>
+<td>co-cited, reference-list repair</td>
+<td>agrees with card</td>
+</tr>
+</tbody>
+</table>
+<p>The detailed readings are in <code>manual-inspection.json</code>.</p>
+<h2 id="writing-and-wikipedia-policies">Writing and Wikipedia
+policies</h2>
+<p>Write your own text from sources you have read; the <a
+href="guide.html">contributor workflow</a> explains how.</p>
+<p>On 6 October 2026 we read <a
+href="https://en.wikipedia.org/wiki/Wikipedia:Writing_articles_with_large_language_models">Writing
+articles with large language models</a> (revision 1378473005, 4 October
+2026), the talk page guidelines (revision 1378840295) and the bot policy
+(revision 1372438517). They advise against AI-generated article text and
+talk-page comments, and against repetitive edits worked through from a
+list. Pressing save does not make generated wording your own. Policies
+change, so check them again before an event.</p>
+<h2 id="cost">Cost</h2>
+<p>Metered API charges: <strong>US$0.00</strong> (cap US$1.00). Every AI
+system was used through a subscription or a Google sign-in, so no
+metered API key was needed, and OpenAlex queries stayed within its free
+allowance. Subscription fees are not included. The cost record is in the
+downloads.</p>
+<h2 id="reproduce">Reproduce</h2>
+<p>For organisers rebuilding the dashboard:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> editing-support/build.sh                 <span class="co"># offline rebuild from saved evidence and assessments</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> editing-support/build.sh <span class="at">--refresh-live</span>  <span class="co"># also check current Wikipedia revision IDs</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> editing-support/tests/test_edit_prototype.py</span></code></pre></div>
+<p><code>editing-support/run_route.py</code> reruns the AI assessments.
+It can resume, and skips saved results that already parse. The
+instructions, settings and full AI outputs, including the earlier draft
+wording, are archived in
+<code>editing-support/runs/edit-prototype-en</code> (instruction files
+in <code>drafts/claude/*.prompt.txt</code>, everything else in
+<code>archive/</code>) and are not part of the downloads.</p>
+<h2 id="what-still-needs-people">What still needs people</h2>
+<ul>
+<li>Read the article, its talk page and the full sources before acting,
+and check every fact your edit relies on.</li>
+<li>Read secondary sources before saying anything about the overall
+state of the evidence.</li>
+<li>Confirm that a replication tested the exact study and claim,
+especially where its abstract does not name the original.</li>
+<li>Apply the rules on biographies of living people and on medical
+sources where they are relevant.</li>
+<li>Before giving participants a review list, have two people
+independently check each decision to keep, leave out or defer a
+suggestion.</li>
+<li>Check policies and the current article revisions again close to any
+event.</li>
+</ul>
+</div>
+</body>
+</html>

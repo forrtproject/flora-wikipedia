@@ -1,0 +1,98 @@
+{
+ "task": "English FLoRA edit-suggestion prototype (thread launched 2026-10-06)",
+ "cap_usd": 1.0,
+ "prior_task_metered_api_cost_usd": 0,
+ "incremental_metered_api_cost_usd": 0.0,
+ "cumulative_task_metered_api_cost_usd": 0.0,
+ "entries": [
+  {
+   "item": "Orchestrator: Claude Opus 5.5 in Claude Code",
+   "billing": "Claude.ai Max subscription (no ANTHROPIC_API_KEY in environment)",
+   "metered_usd": 0
+  },
+  {
+   "item": "Claude sub-agents (pilot 5 cards + full run)",
+   "billing": "same subscription session via Agent tool",
+   "metered_usd": 0
+  },
+  {
+   "item": "Codex CLI gpt-6.1-sol (pilot + second route)",
+   "billing": "ChatGPT login (codex login status: Logged in using ChatGPT; OPENAI_API_KEY absent); --ignore-user-config; OPENROUTER_API_KEY and other key variables removed from child environment",
+   "metered_usd": 0
+  },
+  {
+   "item": "agy Gemini 3.8 Flash (High) (pilot only)",
+   "billing": "Google OAuth (antigravity-oauth-token); no Gemini/Google API key; Gemini 3.1 Pro not used",
+   "metered_usd": 0
+  },
+  {
+   "item": "OpenAlex API",
+   "billing": "anonymous free allowance, no key, no prepaid balance (x-ratelimit-prepaid-remaining-usd: 0). List queries report a nominal cost_usd of 0.0001 each against the US$0.10/day free allowance; singleton lookups report 0.",
+   "metered_usd": 0,
+   "nominal_free_allowance_usd": 0.0108,
+   "list_queries": 108
+  },
+  {
+   "item": "Crossref, Europe PMC, Wikipedia read API, open-access publisher/repository PDFs",
+   "billing": "free public endpoints",
+   "metered_usd": 0
+  },
+  {
+   "item": "download-paper skill (fetchpdf open-access chain) for 90 DOIs",
+   "billing": "free open-access endpoints; no SerpAPI key; Chrome step not run (macOS-only); OpenAlex/CORE/Elsevier keys blanked; OpenRouter key removed",
+   "metered_usd": 0
+  },
+  {
+   "item": "gpt-6.1-sol (medium) triage x4 and judge x4 via Codex CLI",
+   "billing": "ChatGPT subscription login; --ignore-user-config; metered keys removed",
+   "metered_usd": 0
+  },
+  {
+   "item": "Claude sub-agents: 7 full-text re-draft agents + 7 control agents",
+   "billing": "Claude.ai Max subscription",
+   "metered_usd": 0
+  },
+  {
+   "item": "Brief v3 (9 Oct 2026): download-paper skill for new sources and candidate reviews (428 attempts in total, 131 usable texts); 16 Claude sub-agents drafting 52 pages / 73 studies",
+   "billing": "free open-access endpoints with keys blanked; Claude.ai Max subscription",
+   "metered_usd": 0
+  },
+  {
+   "item": "Brief v4 (9 Oct 2026): 8 Claude sub-agents searched the web (WebSearch/WebFetch) for legitimate free copies of 96 papers (64 found; no piracy sources); 16 Claude sub-agents re-drafted 52 pages / 73 studies with 501 recorded verifications",
+   "billing": "Claude.ai Max subscription; no metered keys",
+   "metered_usd": 0
+  },
+  {
+   "item": "Brief v5 (10 Oct 2026): 28 Claude sub-agents drafted all 52 pages / 73 studies twice (claude_v5a, claude_v5b) with rule-based edit_strength",
+   "billing": "Claude.ai Max subscription; no metered keys",
+   "metered_usd": 0
+  },
+  {
+   "item": "Brief v6 (12 Nov 2026): reviews by Claude Opus 5.5 (T3 delegate, Claude provider), gpt-6.1-sol (T3 delegate, Codex provider, high) and Gemini 4 Argon High (T3 delegate, Antigravity provider); pilot drafting by 12 Claude Opus 5.5 sub-agents (20 pages, 34 studies, two runs: drafts/claude_v6a, claude_v6b)",
+   "billing": "Claude.ai Max subscription; Codex ChatGPT login; Antigravity Google OAuth. OpenCode/OpenRouter not used; no metered keys used",
+   "metered_usd": 0
+  }
+ ],
+ "not_used": [
+  "OpenRouter (OPENROUTER_API_KEY present in parent shell but stripped from every delegated process)",
+  "any pay-per-token API key",
+  "paid translation"
+ ],
+ "wikipedia_wikidata_writes": 0,
+ "updated_at": "2026-10-09T14:04:11+00:00",
+ "summary": "All model routes were subscription- or OAuth-backed CLIs; no metered API key was used. OpenAlex list queries (108) drew a nominal US$0.0108 from the anonymous free allowance, which is not billed. Subscription usage is not an API bill and is not converted into a nominal figure here.",
+ "free_service_requests_by_host": {
+  "api.openalex.org": 221,
+  "www.ebi.ac.uk": 129,
+  "api.crossref.org": 113,
+  "en.wikipedia.org": 16,
+  "journals.sagepub.com": 4,
+  "www.nature.com": 2
+ },
+ "free_service_requests_total": 503,
+ "delegated_runs": {
+  "claude_subagents": "21 Agent sub-agent runs (5 pilot + 16 full run), Claude Opus 5.5, subscription",
+  "codex": "52 codex exec runs (5 pilot + 47 full run), gpt-6.1-sol high, ChatGPT subscription",
+  "agy": "6 agy runs (5 pilot cards, 1 retry), Gemini 3.8 Flash (High)"
+ }
+}

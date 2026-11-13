@@ -1,0 +1,59 @@
+{
+ "generated_at": "2026-10-06T19:25:58+00:00",
+ "skill": "download-paper (fetchpdf open-access chain, pinned commit 82a4c47); SerpAPI absent; Chrome step macOS-only so skipped; OpenAlex/CORE/Elsevier keys blanked and OpenRouter key removed for the child process",
+ "targets": 90,
+ "pdf_returned": 23,
+ "usable_text": 21,
+ "usable_by_role": {
+  "original": "8/47",
+  "replication": "13/43"
+ },
+ "wall_clock_seconds": 780,
+ "failure_reasons": {
+  "paywalled publisher page, no open copy found": 65,
+  "PDF without extractable text": 2
+ },
+ "file_quality": {
+  "supplementary material only (not the article)": 4,
+  "working paper or author manuscript rather than version of record": "at least 6",
+  "published article": "remainder"
+ },
+ "cards_gaining_full_text": 20,
+ "design": "Blind triage by gpt-6.1-sol (medium) from abstracts and current drafts before any full text was read; then for each card with new full text the same Claude route re-drafted twice: with the full-text packet and, as a noise control, with the original packet. gpt-6.1-sol judged each control/full-text pair, grepping the full-text files; the orchestrator spot-verified four verdicts.",
+ "results": {
+  "meaningful_change_attributable_to_full_text": 13,
+  "action_or_queue_changes_attributable": 1,
+  "draft_upgraded_conditional_to_provided": 1,
+  "checks_resolved": [
+   "C-Raf structure citation",
+   "CASS4 statistics",
+   "Camerer study identity (Religiosity)",
+   "TPM label (Suzanne Flynn)",
+   "Positive illusions replication status",
+   "Big Five OSC inclusion"
+  ],
+  "rerun_noise_action_flips": 2,
+  "rerun_noise_note": "Re-running the same route on the same packet changed the proposed action on 2/20 cards (Naive cynicism, Religiosity and intelligence), about as often as full text changed an action."
+ },
+ "triage": {
+  "flagged": 6,
+  "true_positive": 6,
+  "false_negative": 7,
+  "consequential_caught": "0/2",
+  "note": "Abstract-based triage was precise but missed half the full-text-attributable changes, including both consequential ones (Door-in-the-face, Facial feedback), which it predicted as \"no\"."
+ },
+ "judge_seconds": [
+  68,
+  71,
+  89,
+  107
+ ],
+ "triage_seconds": [
+  69,
+  70,
+  74,
+  102
+ ],
+ "recommendation": "Do not use abstract triage to skip full text. Fetch full text for every source on retained or uncertain cards (downloads take seconds and cost nothing on free routes), prioritise replication papers (higher yield, they carry the specific-study detail), and re-draft. Run the skill on the Mac with institutional Chrome/EBSCO to reach APA, SAGE, Elsevier and Wiley papers, which accounted for most failures. Add a main-article-versus-supplement check to the identity verification.",
+ "incremental_metered_cost_usd": 0
+}

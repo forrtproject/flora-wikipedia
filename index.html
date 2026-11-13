@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Replication evidence on Wikipedia: review cards (prototype for review)</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔁%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="has-wip">
+<div class="wip-banner" role="note"><strong>Work in progress.</strong> A prototype shared for feedback: the cards were prepared with AI help and have not yet been checked by people. Read the sources before acting on anything here.</div>
+<header class="top">
+  <div class="brand">
+    <h1>Replication evidence on Wikipedia: review cards</h1>
+    <p class="sub">English Wikipedia articles that cite studies others have tried to replicate, mostly in psychology and
+      the behavioural sciences. Each card asks whether the article should mention the replication, and how.
+      A prototype shared for review, prepared with AI help and not yet checked by people; nothing is posted to Wikipedia.</p>
+  </div>
+  <nav aria-label="Help and background">
+    <details class="menu mine-menu" id="mine-menu"><summary>Your reviews <span class="mine-n" id="mine-n"></span></summary>
+      <div class="mine-panel" aria-label="Your reviews">
+        <p class="small" id="ledger-count"></p>
+        <p class="small warntext" id="export-reminder" hidden></p>
+        <div id="mine-id" class="mine-id" hidden></div>
+        <div class="mine-actions">
+          <label class="small" id="initials-label">Initials <input id="reviewer" size="5" maxlength="12"></label>
+          <button type="button" id="export-csv">Export CSV</button>
+          <button type="button" id="export-json">Export JSON</button>
+          <label class="btn">Import<input id="import-json" type="file" accept="application/json" hidden></label>
+        </div>
+      </div></details>
+    <button id="open-help" type="button" aria-expanded="false" aria-controls="help-panel">Help</button>
+    <details class="menu" id="about-menu"><summary>About this prototype</summary>
+      <ul>
+        <li><a href="about.html" target="_blank" rel="noopener">Method &amp; coverage <span aria-hidden="true">↗</span><span class="visually-hidden">(opens in a new tab)</span></a></li>
+        <li><a href="downloads/" target="_blank" rel="noopener">Downloads <span aria-hidden="true">↗</span><span class="visually-hidden">(opens in a new tab)</span></a></li>
+      </ul></details>
+  </nav>
+</header>
+
+<div class="notice" role="note">
+  Write any edit in your own words from sources you have read. English Wikipedia does not allow AI-written article text.
+  <button class="linklike" type="button" data-open-help="guide" data-anchor="the-rule-on-generated-text">Why?</button>
+</div>
+
+<div id="welcome" class="modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+  <div class="modal-box">
+    <p class="steps small" id="step-count" aria-live="polite"></p>
+    <section class="step">
+      <h2 id="welcome-title">Before you start</h2>
+      <p>Each card looks at one English Wikipedia article and the studies it cites that others have tried to replicate.
+        Most are findings from psychology and the behavioural sciences, such as priming, default effects or stereotype
+        threat; a few come from economics or biology. The studies and their replications come from FLoRA, the FORRT
+        Library of Reproduction and Replication Attempts. We used AI to read the article and the papers we could get, and to suggest
+        what, if anything, could change.</p>
+      <p><strong>How to use it:</strong> read the card, read the sources, make any edit on Wikipedia itself in another
+        tab, then come back and record what you did.</p>
+      <ul class="welcome-list">
+        <li><strong>Write in your own words.</strong> English Wikipedia bans AI-written article text, and other editors
+          may collapse talk-page comments that are obviously AI-written.</li>
+        <li><strong>The suggestions are AI output, not yet checked by people.</strong> You decide what, if anything, to do.</li>
+        <li><strong>"No change needed" is a common, useful answer.</strong> A failed replication does not make a sentence
+          wrong: many articles cite a study for its history or already discuss the replication.</li>
+      </ul>
+    </section>
+    <section class="step" hidden>
+      <h2>Finding a card</h2>
+      <p>The buttons above the list choose which articles to show.</p>
+      <dl class="legend">
+        <dt><span class="badge repl">Adds a replication</span> (main aim)</dt><dd>Start here. The suggested edit cites a
+          replication that the article does not cite yet. This is what the project is for; the other corrections we
+          noticed along the way are useful but secondary.</dd>
+      </dl>
+      <h3 class="legend-h">Kind of suggestion</h3>
+      <p>Every card also carries one of four labels, saying what the AI suggested:</p>
+      <dl class="legend">
+        <dt><span class="badge edit">Edit suggested</span></dt><dd>The article says something its source does not
+          support, or leaves out a replication that tested a claim it makes.</dd>
+        <dt><span class="badge warn">Judgement call</span></dt><dd>Either two independent AI assessments disagreed about
+          whether a change is needed, or the AI suggests no change although a replication bears on a claim the article
+          relies on. The card shows both views, or the AI's reasons, for you to weigh. Some also carry
+          <span class="badge">Minor notes</span>.</dd>
+        <dt><span class="badge info">Optional addition</span></dt><dd>The article is accurate; adding more
+          information is up to you.</dd>
+        <dt><span class="badge none">No change needed</span></dt><dd>No edit has a point here: the paper is only listed,
+          mentioned in passing, already reported with its replication, or the replication tests something the article
+          does not rely on. Some of these also
+          carry <span class="badge">Minor notes</span>: small things such as a typo in a reference, or material that
+          belongs in another article.</dd>
+      </dl>
+      <p><strong>Worth a look</strong> shows the first two together, Edit suggested and Judgement call, whether or not
+        the edit would add a replication.</p>
+      <p>Other labels on the list: <span class="badge care">Living person</span> and <span class="badge care">Health</span>
+        (extra care, see later), <span class="badge warn">Edited since</span> (the article changed after our snapshot),
+        <span class="badge lib">Library access</span> (at least one paper has no known free copy; the “Reading the papers” filter hides these),
+        <span class="badge done">✓ reviewed</span> (you have saved a decision) and <span class="badge draft">Draft</span>
+        (you have started a review but not saved it).</p>
+    </section>
+    <section class="step" hidden>
+      <h2>Reading a card</h2>
+      <p>A card has one section per publication (a paper the article cites; one paper can report several studies).
+        The bar at the top of the card stays in view and jumps to the form for recording your review. Each section
+        has three parts:</p>
+      <dl class="legend">
+        <dt>Papers line and AI recommendation</dt><dd>The original study and its replications, named by author and year
+          (hover for the full reference), and what the AI suggests. An open padlock after a paper means you can read it
+          for free: <span class="oa-gold">gold</span> on the publisher's site, <span class="oa-bronze">bronze</span> on the
+          publisher's site for now (no open licence), <span class="oa-green">green</span> as a copy elsewhere (click it). No padlock: you may need library access.</dd>
+        <dt>A box with three tabs</dt><dd><strong>Comparison</strong>: the Wikipedia sentence beside the evidence from
+          the papers, with any questions to decide before acting. Citations are marked
+          <span class="cite focal">[this study]</span>, <span class="cite paired">[replication]</span> and
+          <span class="cite other">[other source]</span>.
+          <strong>Papers</strong>: each paper, what the AI read of it, where to read it for free (or that you may need
+          library access), and the passages quoted from it.
+          <strong>Details &amp; AI review</strong>: the points an edit could cover, then each AI statement beside the
+          passage it relied on, and the search of review articles. Papers were read in full unless marked
+          <span class="lvl abs">Abstract only</span> or <span class="lvl thin">Title and details only</span>; checks
+          marked <span class="badge bad">✗ Not in the source</span> need your attention.</dd>
+        <dt>AI interpretation</dt><dd>Below the box: the AI's reason, and for an edit <strong>What</strong>,
+          <strong>Where</strong> and <strong>Cite</strong>. We deliberately give no ready-made wording: the text is
+          yours to write. For “No change needed”, it says why.</dd>
+      </dl>
+      <p class="small">The bar at the very top switches to earlier layouts of the same card, kept for comparison.</p>
+    </section>
+    <section class="step" hidden>
+      <h2>Reading a replication</h2>
+      <p>A replication repeats an earlier study to see whether its result holds. What it tells you depends on how it was done.</p>
+      <ul class="welcome-list">
+        <li><strong>Did it test the same claim?</strong> A <em>direct</em> replication repeats the original method as
+          closely as it can; a <em>conceptual</em> one tests the same idea another way. A replication may also cover
+          only one experiment in a paper. Check that it tested the claim the article makes (the card's "How this
+          suggestion was made" section gives the AI's view).</li>
+        <li><strong>One study settles little either way.</strong> A failed replication does not show that the original
+          finding was false, and a successful one does not prove it true. Larger samples, preregistered designs and
+          multi-lab projects (such as Many Labs or Registered Replication Reports) carry more weight than a single
+          small study.</li>
+        <li><strong>Mixed results are common.</strong> Avoid words such as "debunked" or "confirmed". Say what was
+          done and found, and who did it: "A 2012 replication with 120 participants did not find the effect."</li>
+        <li><strong>Reviews outweigh single studies.</strong> One replication can support a short, attributed sentence
+          in an article about the effect. Statements about "the evidence" or whether an effect is real need a review
+          or meta-analysis; the card lists any reviews we found that discuss the replication.</li>
+        <li><strong>Keep due weight.</strong> In a broad article, or where the study is mentioned in passing, making the
+          claim more precise often works better than a new paragraph on replication.</li>
+        <li><strong>The database's labels ("failed", "mixed") are screening labels.</strong> They help us find cards;
+          they are not citable and are not a verdict.</li>
+      </ul>
+    </section>
+    <section class="step" hidden>
+      <h2>Checking, deciding and recording</h2>
+      <ul class="welcome-list">
+        <li><strong>Read the sources yourself.</strong> Each quoted passage appears word for word in the paper, but the AI may
+          have misread it. Check anything your edit will rely on, and note in your record if something looks wrong.</li>
+        <li><strong>Cards are snapshots.</strong> Use "Changes since this snapshot" or "Check now" to see whether
+          someone has already edited the article.</li>
+        <li><strong>Take extra care with living people and health topics.</strong> Findings are about studies, not
+          people (<a href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons" target="_blank" rel="noopener">WP:BLP</a>); health claims need reviews, not single studies (<a href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)" target="_blank" rel="noopener">WP:MEDRS</a>).</li>
+        <li><strong>If you are unsure,</strong> raise it on the article's talk page or record "Needs more checking first".</li>
+        <li id="welcome-storage"><strong>Your records stay in this browser</strong> (a limitation of this prototype; shared storage is planned). What you type is kept as a draft as you go; a card counts as
+          reviewed only once you click "Save review". Under "Your reviews", at the top right of the page, add your initials and use
+          Export CSV or Export JSON to keep or share your records.</li>
+      </ul>
+      <p class="small">This guide and the full contributor workflow stay available from the <strong>Help</strong>
+        button while you review.</p>
+    </section>
+    <div class="modal-actions">
+      <label><input type="checkbox" id="welcome-hide"> Don't show this again</label>
+      <span class="row">
+        <button type="button" id="step-back">Back</button>
+        <button type="button" id="step-next" class="primary">Next</button>
+        <button type="button" id="welcome-close">Skip</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<main class="layout" id="layout">
+  <aside class="filters" id="filters" aria-label="Filters" hidden>
+    <div class="filters-head"><h2 class="side-h">Filters</h2>
+      <span class="filters-actions"><button type="button" id="clear-filters" class="linklike small" hidden>Clear all</button>
+      <button type="button" id="close-filters" aria-label="Close filters">Close ✕</button></span></div>
+    <div id="filter-groups"></div>
+  </aside>
+  <section class="list" aria-label="Cards">
+    <div class="toolbar">
+      <div class="searchrow">
+        <label class="visually-hidden" for="q">Search</label>
+        <input id="q" type="search" placeholder="Search article, study or text…">
+        <button type="button" id="toggle-filters" aria-expanded="false" aria-controls="filters">Filters</button>
+      </div>
+      <div id="segments" class="segments"></div>
+    </div>
+    <div id="summary" class="small" aria-live="polite"></div>
+    <ol id="cards"></ol>
+  </section>
+  <article id="detail" class="detail" tabindex="-1">
+    <div class="placeholder">
+      <h2>Choose an article to review</h2>
+      <p>Each entry in the list on the left is one Wikipedia article. Click it to open its review card: the sentence
+        that cites the study, what the replication found and what, if anything, could change.</p>
+      <p>The list starts with articles marked <span class="badge repl">Adds a replication</span>, our main focus: the
+        suggested edit cites a replication the article does not cite yet. Use the buttons above the list to see other
+        kinds of suggestion. <button class="linklike" type="button" data-open-help>How this works</button></p>
+    </div>
+  </article>
+</main>
+<aside id="help-panel" class="help-panel" aria-labelledby="help-h" hidden>
+  <div class="help-head">
+    <h2 id="help-h" class="side-h">Help</h2>
+    <div class="help-tabs" role="tablist" aria-label="Help topics">
+      <button type="button" role="tab" id="tab-how" aria-controls="help-how" aria-selected="true">How this works</button>
+      <button type="button" role="tab" id="tab-guide" aria-controls="help-guide" aria-selected="false" tabindex="-1">Contributor workflow</button>
+    </div>
+    <button type="button" id="help-close" aria-label="Close help">✕</button>
+  </div>
+  <div id="help-how" role="tabpanel" aria-labelledby="tab-how" class="help-body"></div>
+  <div id="help-guide" role="tabpanel" aria-labelledby="tab-guide" class="help-body" hidden><p class="small">Loading…</p></div>
+</aside>
+<div id="audit-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="audit-title" hidden>
+  <div class="modal-box" id="audit-box"></div>
+</div>
+<script src="config.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+<script src="layouts.js"></script>
+</body>
+</html>

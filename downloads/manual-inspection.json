@@ -1,0 +1,216 @@
+{
+  "checked_at": "2026-10-06T16:47:08+00:00",
+  "summary": "The orchestrator read 12 cards across roles against the article text and sources, and re-checked each against the live article and Crossref. 12/12 passed every mechanical check (claim still present in the live revision, original DOI still cited, Crossref titles match FLoRA titles at similarity ≥ 0.8); the remainder are listed with the failing check. This is model review by the orchestrating model, not independent human adjudication.",
+  "inspected": [
+    {
+      "page": "Power posing",
+      "card_id": "d8579e4f64dcd9b4011c",
+      "role": "central effect, historical attribution",
+      "frozen_revid": "1375180001",
+      "live_revid": 1375180001,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "orchestrator_reading": "Read lead and Initial claims; confirmed citations are attributions and replication coverage is extensive. Agree no change; uncited \"lasting hormonal changes\" sentence is a real check.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Romeo and Juliet effect",
+      "card_id": "18b1cb4274004eeec969",
+      "role": "central effect, false \"not replicated\" claim",
+      "frozen_revid": "1377085873",
+      "live_revid": 1377085873,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "4/4",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Confirmed sentence \"While Driscoll's study has not been replicated\" and that Sinclair et al. (2014) title/abstract describe a replication of Driscoll et al. (1972). Agree contextualise; fallback deletion of the false clause is minimal.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Helminthiasis",
+      "card_id": "066a57de8b7ccf083efe",
+      "role": "broad topic, health framing (MEDRS)",
+      "frozen_revid": "1356691142",
+      "live_revid": 1356691142,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "1/1",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Compared \"improve school attendance by 25 percent\" with the abstract (\"reduced school absenteeism ... by one-quarter\"). Different quantity; agree narrow.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Francesca Gino",
+      "card_id": "a4a8e22e3920a0af98bb",
+      "role": "biography (BLP), retracted-paper list",
+      "frozen_revid": "1375260943",
+      "live_revid": 1375260943,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "1/1",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Confirmed the DOI sits in a bulleted list of retracted papers with {{Retracted}}. Agree no change; adding the replication would risk implying misconduct from a replication outcome.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Lise Vesterlund",
+      "card_id": "bc9100486893dafefd86",
+      "role": "biography (BLP), narrowed summary",
+      "frozen_revid": "1372822445",
+      "live_revid": 1372822445,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Compared article sentence (overconfidence only) with abstract (overconfidence and preferences for competing). Agree narrow.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "C-Raf",
+      "card_id": "41110e7d6b180e1147c2",
+      "role": "biomedical, RP:CB preprint",
+      "frozen_revid": "1359563328",
+      "live_revid": 1359563328,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Confirmed the replication DOI is a bioRxiv posted-content record. Agree no change; MEDRS.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "CASS4",
+      "card_id": "4031a6c18f78687c2ec3",
+      "role": "biomedical list context, internal inconsistency",
+      "frozen_revid": "1367140079",
+      "live_revid": 1367140079,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0,
+        0.97,
+        0.97
+      ],
+      "orchestrator_reading": "Confirmed prose \"not found predictive\" and table \"Odds ratio 0.8888; p-value 1.75 ×10−7\" both cite Ruiz_2014. Inconsistency is real; talk-page route appropriate.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "List of Ig Nobel Prize winners",
+      "card_id": "7b3d33cc48f39207c3b6",
+      "role": "list/historical record",
+      "frozen_revid": "1376076686",
+      "live_revid": 1376076686,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "1/1",
+      "original_title_match": 0.92,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Prize record; agree no change.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Lara Aknin",
+      "card_id": "840f50a2cb83406ee6e9",
+      "role": "bibliography entry only",
+      "frozen_revid": "1357442492",
+      "live_revid": 1357442492,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "0/0",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Publications list only; agree no change.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Big Five personality traits and culture",
+      "card_id": "a0da68b33531177ed5ea",
+      "role": "large-project (OSC 2015) match",
+      "frozen_revid": "1367239856",
+      "live_revid": 1367239856,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Replication is the OSC 2015 project paper; specific-study match cannot be established from the packet. Agree no change.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "Religiosity and intelligence",
+      "card_id": "ec200c471454ce5d4f62",
+      "role": "co-cited, multi-study original",
+      "frozen_revid": "1371633272",
+      "live_revid": 1371633272,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "5/5",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0,
+        0.98,
+        1.0
+      ],
+      "orchestrator_reading": "Confirmed \"Noernzayan\" misspelling and that Sanchez et al. (2017) title/abstract concern a replication of the Thinker prime. Agree narrow.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    },
+    {
+      "page": "More Guns, Less Crime",
+      "card_id": "7b6947af9be62e1ff93e",
+      "role": "co-cited, reference-list repair",
+      "frozen_revid": "1374756959",
+      "live_revid": 1374756959,
+      "live_checked_at": "2026-10-06T16:46:56+00:00",
+      "original_doi_in_live": true,
+      "claim_quotes_in_live": "2/2",
+      "original_title_match": 1.0,
+      "replication_title_match": [
+        1.0
+      ],
+      "orchestrator_reading": "Confirmed duplicated DOI/s2cid identifiers across different references. Agree no change to focal citation; retain for citation repair.",
+      "verified": "live passage and DOI present; Crossref titles match FLoRA titles; ",
+      "outcome": "agree with card"
+    }
+  ]
+}

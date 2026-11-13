@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Contributor workflow</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🔁%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="has-wip">
+<div class="wip-banner" role="note"><strong>Work in progress.</strong> A prototype shared for feedback: the cards were prepared with AI help and have not yet been checked by people. Read the sources before acting on anything here.</div>
+<header class="top"><div class="brand"><h1>Contributor workflow</h1>
+<p class="sub">FLoRA × English Wikipedia edit-suggestion prototype · review material</p></div>
+<nav><a href="index.html">Review cards</a><a href="guide.html">Contributor workflow</a><a href="about.html">Method &amp; coverage</a><a href="downloads/">Downloads</a></nav></header>
+<div class="prose">
+<h2 id="what-these-cards-are">What these cards are</h2>
+<p>Each card describes one English Wikipedia article and every study on
+it that is listed in FLoRA (the FORRT Library of Reproduction and
+Replication Attempts). We used AI to read the article passage and the
+sources we could retrieve, and to suggest what, if anything, a careful
+editor might change. The cards are research material shared for review, and nobody
+has checked them yet: whether to edit is your decision.</p>
+<p>A FLoRA match is a screening signal. The absence of a replication DOI
+on a page does not show that the article ignores replication evidence,
+and a failed replication does not by itself make a claim wrong. Many
+cards therefore recommend no change, and we report those as useful
+outcomes.</p>
+<h2 id="the-rule-on-generated-text">The rule on generated text</h2>
+<p>English Wikipedia prohibits using large language models to generate
+or rewrite article content, apart from copyediting your own writing and
+translation (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Writing_articles_with_large_language_models">WP:NOLLM</a>,
+revision 1378473005, checked 6 October 2026). Persistent use outside
+those exceptions is treated as disruptive. Talk-page comments that are
+obviously generated can be collapsed (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Talk_page_guidelines#LLM-generated">WP:AITALK</a>,
+revision 1378840295).</p>
+<p>The cards therefore give no ready-made wording. Each suggested edit
+says where a change could go, which sources it could cite and which
+points from those sources it could cover; the text is yours to write
+from the sources you have read. Do not use AI output in an article, an
+edit summary or a talk page.</p>
+<p>Clicking “save” yourself does not turn a generated suggestion into
+your own work, and making many similar edits from a list can be treated
+as bot-like editing (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Bot_policy#Bot-like_editing"
+title="Bot policy revision 1372438517, section Bot-like editing">WP:MEATBOT</a>).
+The prototype has no edit, submit or copy-to-Wikipedia function by
+design.</p>
+<h2 id="working-through-a-card">Working through a card</h2>
+<ol type="1">
+<li><strong>Open the snapshot and the live article.</strong> Use
+“Changes since this snapshot” to see whether the passage has changed. If
+it has, re-read the current text; the card describes the snapshot
+only.</li>
+<li><strong>Read the whole section and the talk page</strong>, including
+archives, for earlier discussion of the study or its replications.
+Existing consensus takes precedence over our suggestions.</li>
+<li><strong>Identify the claim.</strong> Which sentence does the
+citation support, and is it presented as current empirical fact, as
+history (“X first proposed…”), as an example, or only as a bibliography
+entry? Historical wording that is used to support a present-day claim
+counts as current support.</li>
+<li><strong>Use “What we checked”.</strong> We collected the papers we
+could (open-access copies, author and repository versions), and the AI
+checked the facts each suggestion relies on against them. Each check
+shows its verdict and the passage it quotes. The quote appears word for
+word in the source, which shows that the passage exists, not that the AI
+understood it, so read the sources yourself and check anything your edit
+will rely on. If a quote looks wrong or out of context, say so in your
+notes. Each check also says what was read: the AI relies on an abstract
+only for what it plainly states (what was tested, in whom, the main
+result) and gives further detail only where it read the full paper. If
+neither could be obtained, the card says so.</li>
+<li><strong>Weigh the evidence.</strong> A single replication is a
+primary source: it can support a short, attributed, descriptive sentence
+in an article about that effect, but not a conclusion about “the
+evidence”. Review articles we found that discuss the replication are
+listed on the card. See “Reading a replication” below. Do not ask other
+Wikipedia editors to check sources for you.</li>
+<li><strong>Decide on the smallest change that makes the claim
+accurate.</strong> The options are: no change; add context; narrow the
+wording; replace or upgrade the source; remove an unsupported claim or
+citation (only where the source does not support it, never merely
+because a replication failed); or open a talk-page discussion. Deferring
+is a good choice when you lack source access or subject expertise. Each
+suggestion carries a strength. A <strong>fix</strong> means the article
+says something its cited source contradicts or does not support. A
+<strong>recommended addition</strong> means the article relies on the
+study and leaves out a replication that tested the same claim and failed
+or clearly qualified it. An <strong>optional addition</strong> means the
+article is accurate and adding information is your choice. A
+<strong>judgement call</strong> means one of two things: two independent
+AI assessments disagreed about whether a change is needed (the card
+shows both views), or the AI suggests no change although a replication
+bears on a claim the article relies on (the card shows the AI’s reasons
+for you to weigh). <strong>No change needed</strong> is kept only where
+no edit has a point: the paper is only listed, a biography or list
+mentions it in passing, the article already reports the replication, or
+the replication tests something the article does not rely on.</li>
+<li><strong>Write in your own words</strong>, matching the article’s
+variety of English, tone and citation style. Attribute primary findings
+in text (“A 2016 preregistered replication by … found …”), avoid weasel
+words, and keep due weight: a tangential mention usually needs at most a
+narrower claim, not a new paragraph on replication.</li>
+<li><strong>Record your decision</strong> for each study on the card
+(edit, talk page, no change, needs more checking, or skip; give a reason
+when you disagree with the suggestion). What you enter is kept in your
+browser as a draft as you go; the card counts as reviewed once you click
+“Save review”, and cards with an unsaved draft are marked “Draft” in the
+list. Export your records from “Your reviews” at the top right. The
+record notes which article version you reviewed. “Clear form” empties
+the form if you decide not to review the card (“Discard changes” goes
+back to your saved review). Where shared storage is switched on, sign in
+under “Your reviews” with your reviewer ID (initials and four digits,
+such as BS#1312) before saving: saved reviews are then shared, “I’m
+reviewing this now” marks a card as under review, and two other people
+audit each review before the card counts as audited.</li>
+</ol>
+<h2 id="reading-a-replication">Reading a replication</h2>
+<p>A replication repeats an earlier study to see whether its result
+holds. What it tells you depends on how it was done.</p>
+<ul>
+<li><strong>Did it test the same claim?</strong> A direct replication
+repeats the original method as closely as it can; a conceptual one tests
+the same idea another way, and a failure says less about the original
+study. A replication may also cover only one experiment in a paper.
+Check that it tested the claim the article makes; the card’s “How this
+suggestion was made” section gives the AI’s view.</li>
+<li><strong>One study settles little either way.</strong> A failed
+replication does not show that the original finding was false, and a
+successful one does not prove it true. Larger samples, preregistered
+designs and multi-lab projects (such as Many Labs or Registered
+Replication Reports) carry more weight than a single small study.</li>
+<li><strong>Mixed results are common.</strong> Avoid “debunked” or
+“confirmed”. Say what was done and found, and who did it: “A 2012
+replication with 120 participants did not find the effect.”</li>
+<li><strong>Reviews outweigh single studies.</strong> Statements about
+“the evidence” or whether an effect is real need a review or
+meta-analysis.</li>
+<li><strong>Keep due weight.</strong> In a broad article, or where the
+study is mentioned in passing, a more precise claim often works better
+than a new paragraph on replication.</li>
+<li><strong>FLoRA’s outcome labels are screening labels.</strong> They
+are not citable and are not a verdict on the study.</li>
+</ul>
+<h2 id="extra-care">Extra care</h2>
+<ul>
+<li><strong>Living people (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Biographies_of_living_persons">WP:BLP</a>).</strong>
+Replication outcomes concern findings, not people. Do not imply
+misconduct or incompetence unless high-quality sources say so directly,
+and do not add replication material to a biography unless it is about
+that person’s work and has secondary coverage.</li>
+<li><strong>Health and biomedical content (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Identifying_reliable_sources_(medicine)">WP:MEDRS</a>).</strong>
+Use recent systematic reviews, meta-analyses and major textbooks.
+Primary studies and single replications, including Reproducibility
+Project: Cancer Biology papers, are generally not adequate sources for
+biomedical claims.</li>
+<li><strong>Conflicts of interest.</strong> If you are an author of a
+study on the card, or the edit would promote FORRT/FLoRA or your own
+papers, do not review that card; disclose the connection and use an edit
+request on the talk page rather than editing directly. Disclose paid or
+funded editing as the Wikimedia Terms of Use require (<a
+href="https://en.wikipedia.org/wiki/Wikipedia:Conflict_of_interest">WP:COI</a>).
+Do not cite FLoRA itself as a source.</li>
+<li><strong>Disagreement.</strong> If an edit is reverted or challenged,
+discuss it on the talk page; do not organise others to restore it.</li>
+</ul>
+<h2 id="limits-of-the-checks">Limits of the checks</h2>
+<p>Automatic checks confirm that the passages a card quotes from the
+article and the sources appear in the saved texts, that every source it
+cites was among those we collected or is already cited in the article,
+and that each label for what was read (full text, abstract, or title and
+details) is right. They do not show that the AI understood the sources,
+that every relevant review was found, or that the suggestion is what an
+experienced editor would do. Those checks are yours.</p>
+</div>
+</body>
+</html>
