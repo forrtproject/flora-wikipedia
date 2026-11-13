@@ -454,7 +454,7 @@ function otherFixesBlock(p) {
 function decisionBlock(p, rec, draft) {
   const f = draft || rec;
   return `<section class="ledger" id="record" aria-labelledby="record-h"><h3 id="record-h">Record your review</h3>
-    ${Store.shared ? `<p class="small">Your review is kept in this browser and shared with the group when you save it${Store.me() ? '' : ' (sign in under “Your reviews” first)'}.</p>`
+    ${Store.shared ? `<p class="small">Your review is kept in this browser and shared with the group when you save it${Store.me() ? '' : '. Sign in or get a reviewer ID under “Your reviews” before saving'}.</p>`
     : '<p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>'}
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
       What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
@@ -467,6 +467,7 @@ function decisionBlock(p, rec, draft) {
     <textarea id="l-notes">${esc(f.notes || '')}</textarea>
     <p id="l-hint" class="small warntext" hidden>You disagreed with a suggestion: please add a short reason in the notes.</p>
     <div class="row"><button type="button" id="l-save" class="primary">Save review</button>
+    <button type="button" id="l-clear" title="${rec.updated_at ? 'Go back to your saved review' : 'Clear the decisions and notes on this card'}">${rec.updated_at ? 'Discard changes' : 'Clear form'}</button>
     <span id="l-status" class="small" role="status">${statusText(rec, draft)}</span></div></section>`;
 }
 const stamp = t => esc((t || '').slice(0, 16).replace('T', ' '));
@@ -495,6 +496,13 @@ function formState(p) {
       .filter(([, v]) => v)),
     other_fix_done: document.getElementById('l-other')?.checked || false,
     draft_usefulness: document.getElementById('l-useful').value, notes: document.getElementById('l-notes').value};
+}
+function fillForm(p, f) {
+  p.items.forEach(it => document.querySelectorAll(`input[name="dec-${it.card_id}"]`).forEach(i => { i.checked = f.items?.[it.card_id] === i.value; }));
+  const other = document.getElementById('l-other');
+  if (other) other.checked = !!f.other_fix_done;
+  document.getElementById('l-useful').value = f.draft_usefulness || '';
+  document.getElementById('l-notes').value = f.notes || '';
 }
 const sameForm = (a, b) => JSON.stringify(a.items || {}) === JSON.stringify(b.items || {}) && !!a.other_fix_done === !!b.other_fix_done
   && (a.draft_usefulness || '') === (b.draft_usefulness || '') && (a.notes || '') === (b.notes || '');
@@ -559,6 +567,11 @@ function show(id, focus) {
   document.getElementById('l-save').onclick = async () => {
     clearTimeout(NOTES_TIMER);
     if (stale()) return;
+    if (Store.shared && !Store.me()) {  // shared reviews need a reviewer ID, or nobody can audit them (#10)
+      keepDraft();
+      document.getElementById('l-status').textContent = 'Sign in or get a reviewer ID under “Your reviews”, then save. Your answers are kept as a draft.';
+      return openMine();
+    }
     const f = formState(p), notes = f.notes;
     // A reason is required only when a decision departs from that study's suggestion.
     const disagrees = p.items.some(it => {
@@ -586,9 +599,21 @@ function show(id, focus) {
     await Store.refresh();
     if (ACTIVE !== id) return;
     status.textContent = said + (sent.ok ? ' Shared with the group.'
-      : !Store.me() ? ' Kept in this browser: sign in under “Your reviews” to share it.'
       : ` Kept in this browser; not shared yet (${sent.error}). It will be sent next time.`);
     renderAll();
+  };
+  // Clear the form (nothing saved yet) or go back to the saved review; a saved, shared review stays saved.
+  document.getElementById('l-clear').onclick = () => {
+    clearTimeout(NOTES_TIMER);
+    if (stale()) return;
+    const saved = ledgerGet(id) || baseRec(p);
+    if (!sameForm(formState(p), saved) && !confirm(saved.updated_at ? 'Discard your unsaved changes and go back to your saved review?'
+      : 'Clear your decisions and notes on this card?')) return;
+    fillForm(p, saved);
+    draftPut(id, null);
+    document.getElementById('l-hint').hidden = true;
+    document.getElementById('l-status').textContent = statusText(saved, null);
+    renderList();
   };
   // The snapshot check runs whenever a card is opened; the button repeats it. The result is kept with a
   // saved review (not a new record) so exports show which version the reviewer last saw.
