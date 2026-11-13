@@ -5,7 +5,8 @@ Detection reads the visible frozen wikitext of each page (HTML comments removed)
 replication counts as cited when its DOI appears exactly (not as the prefix of a longer
 DOI), or when its title appears (normalised; at least 40 characters and six words, so
 that generic titles such as "Registered Replication Report" do not match). A citation
-anywhere counts, including further reading. Articles where every replication of every
+anywhere counts except under Further reading (the group's call on #9: a replication listed
+only there is not yet in the article). Articles where every replication of every
 FLoRA original on the page is cited are dropped before coding (#9). Articles that report
 a replication only in prose, or through another source, are not caught here; the
 drafting model codes those (`already_on_page`).
@@ -22,6 +23,24 @@ from common import PACKETS, RUN, wikitext
 
 MIN_TITLE, MIN_WORDS = 40, 6
 COMMENT = re.compile(r'<!--.*?-->', re.S)
+HEADING = re.compile(r'^(=+)\s*(.*?)\s*\1\s*$', re.M)
+
+
+def visible(wikitext_):
+    """The wikitext a citation counts in: without HTML comments or the Further reading section (with its subsections)."""
+    text, out, pos, skip = COMMENT.sub(' ', wikitext_), [], 0, None
+    for m in HEADING.finditer(text):
+        level = len(m.group(1))
+        if skip is None:
+            out.append(text[pos:m.start()])
+        if skip is not None and level <= skip:
+            skip = None
+        if skip is None and m.group(2).lower() == 'further reading':
+            skip = level
+        pos = m.start()
+    if skip is None:
+        out.append(text[pos:])
+    return ' '.join(out)
 
 
 def _flat(s):
@@ -43,7 +62,7 @@ def detect(doi, title, text, flat_text=None):
 
 def page_report(pageid, packets):
     """Per-study and per-page detection for one page, from every English packet on it."""
-    text = COMMENT.sub(' ', wikitext(pageid))
+    text = visible(wikitext(pageid))
     flat = _flat(text)
     studies = []
     for p in packets:
@@ -69,7 +88,7 @@ def on_page_index(pageids=None, packets=None):
             continue
         if pid not in cache:
             try:
-                t = COMMENT.sub(' ', wikitext(pid))
+                t = visible(wikitext(pid))
             except FileNotFoundError:
                 continue
             cache[pid] = (t, _flat(t))

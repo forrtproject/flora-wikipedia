@@ -264,6 +264,8 @@ def check_v6(draft, pk):
         warnings.append(f'no_change_basis {basis}, but a relevant replication does not confirm')
     if basis == 'confirms_claim' and draft['article_scope'] not in ADDITIONS_BANNED and not draft['flags']['medrs']:
         warnings.append('no_change_basis confirms_claim on a page where a confirming replication is an optional_addition')
+    if basis == 'reproduction_confirms' and not (rel and all(r['method'] == 'reproduction' and r['result_vs_article_claim'] == 'confirms' for r in rel)):
+        warnings.append('no_change_basis reproduction_confirms, but not every relevant replication is a confirming reproduction')
     if basis in ('listed_only', 'named_without_finding') and use['states_finding'] in ('as_fact', 'attributed'):
         warnings.append(f"no_change_basis {basis}, but article_use.states_finding is {use['states_finding']}")
     return errors, warnings

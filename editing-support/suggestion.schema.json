@@ -141,6 +141,7 @@
           "method": {
             "enum": [
               "replication",
+              "reproduction",
               "reanalysis",
               "other"
             ]
@@ -511,6 +512,7 @@
         "tests_other_claim",
         "scope_or_policy_limit",
         "confirms_claim",
+        "reproduction_confirms",
         "history_or_example",
         "none_applies",
         "not_applicable"

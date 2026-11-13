@@ -260,14 +260,14 @@ class CardText(unittest.TestCase):
 
 
 def v6_suggestion(scope='broad_topic', use='current_empirical_support', states='as_fact', relies=True, reps=()):
-    """A minimal brief-v6 suggestion for the tier rule: reps are (bears, result, on_page, accurate) tuples."""
+    """A minimal brief-v6 suggestion for the tier rule: reps are (bears, result, on_page, accurate[, method]) tuples."""
     return dict(brief_version='v6', proposed_action='no_change', edit_strength='none', article_scope=scope,
                 citation_function=use, article_use=dict(states_finding=states, relies_as_evidence=relies, note=''),
-                replications_assessed=[dict(doi=f'10.1/{i}', method='replication',
+                replications_assessed=[dict(doi=f'10.1/{i}', method=(m or ['replication'])[0],
                                             tested_result='cited_result' if b != 'none' else 'other_result_same_paper',
                                             bears_on_article_claim=b, result_vs_article_claim=r, already_on_page=o,
                                             page_quote='' if o == 'no' else 'x' * 40, report_accurate=acc, note='')
-                                       for i, (b, r, o, acc) in enumerate(reps)])
+                                       for i, (b, r, o, acc, *m) in enumerate(reps)])
 
 
 class NoChangeTiers(unittest.TestCase):
@@ -303,6 +303,14 @@ class NoChangeTiers(unittest.TestCase):
         # The article reports the result only as disputed and does not rely on it.
         self.assertEqual(self.tier(states='reported_as_disputed', relies=False, reps=[('direct', 'fails', 'no', None)]),
                          'likely_no_change')
+
+    def test_confirming_reproduction_is_likely_no_change(self):
+        # Re-running the original analyses on the original data (Outgroup favoritism): the group's call on #9.
+        self.assertEqual(self.tier(reps=[('direct', 'confirms', 'no', None, 'reproduction')]), 'likely_no_change')
+        # A failed reproduction, or one beside a confirming new-data replication, stays a judgement call.
+        self.assertEqual(self.tier(reps=[('direct', 'fails', 'no', None, 'reproduction')]), 'judgement_call')
+        self.assertEqual(self.tier(reps=[('direct', 'confirms', 'no', None, 'reproduction'), ('direct', 'confirms', 'no', None)]),
+                         'judgement_call')
 
     def test_unclear_relevance_is_not_likely_no_change(self):
         self.assertEqual(self.tier(reps=[('unclear', 'not_determinable', 'no', None)]), 'judgement_call')
@@ -402,6 +410,12 @@ class Prefilter(unittest.TestCase):
         self.assertEqual(detect('10.1/zzz', 'A direct replication of the classic door in the face study', text), 'title')
         self.assertIsNone(detect('10.1/zzz', 'Registered Replication', text))  # short titles are not matched
         self.assertIsNone(detect('10.1/ab', '', text))  # a prefix of a longer DOI is not a match
+
+    def test_further_reading_does_not_count(self):
+        from prefilter import detect, visible
+        page = 'Body {{cite journal|doi=10.1/a}}\n== Further reading ==\n* {{cite journal|doi=10.1/b}}\n=== Sub ===\n* 10.1/c\n== References ==\n10.1/d'
+        found = {d: detect(d, '', visible(page)) for d in ['10.1/a', '10.1/b', '10.1/c', '10.1/d']}
+        self.assertEqual(found, {'10.1/a': 'doi', '10.1/b': None, '10.1/c': None, '10.1/d': 'doi'})
 
 
 class TwoRunTier(unittest.TestCase):

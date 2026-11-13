@@ -272,7 +272,8 @@ def no_change_tier(s):
       is relevant, at least one replication is), each with a verbatim page quote;
     likely_no_change: no replication is relevant; or the article neither states the finding as true nor relies on it;
       or it cites the paper for history, as an example or in a list without relying on it, and every relevant
-      replication confirms what it says.
+      replication confirms what it says; or every relevant replication is a reproduction (original analyses re-run
+      on the original data) that confirms it (the group's call on #9).
     An inaccurate report of a replication on the page is always a judgement call. FLoRA outcome codes are not used."""
     from validate import relevant
     reps, use = s['replications_assessed'], s['article_use']
@@ -283,6 +284,8 @@ def no_change_tier(s):
             any(r['already_on_page'] != 'no' and r['report_accurate'] is True for r in reps):
         return 'already_covered'
     if not rel or (use['states_finding'] in ('no', 'reported_as_disputed') and not use['relies_as_evidence']):
+        return 'likely_no_change'
+    if all(r['method'] == 'reproduction' and r['result_vs_article_claim'] == 'confirms' for r in rel):
         return 'likely_no_change'
     if s['citation_function'] in HISTORY_USES and not use['relies_as_evidence'] and \
             all(r['result_vs_article_claim'] == 'confirms' for r in rel):

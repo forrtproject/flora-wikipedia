@@ -68,8 +68,9 @@ separately from your proposal, and later steps read them directly.
    multi-study projects (Many Labs, OSC 2015, SCORE, RP:CB) identify the specific study
    first. When two DOIs report the same replication (a project paper and its overview),
    code them consistently.
-   - `method`: `replication` (new data), `reanalysis` (the original or pooled data
-     analysed again), or `other` (a comment, audit or review).
+   - `method`: `replication` (new data), `reproduction` (the original analyses run
+     again on the original data), `reanalysis` (the original data analysed differently,
+     or pooled with other data), or `other` (a comment, audit or review).
    - `tested_result`: which result of the original paper it tested. `cited_result` (the
      result the Wikipedia article cites the paper for; if the article states no result,
      the paper's main result), `other_result_same_paper` (another experiment, analysis
@@ -128,7 +129,8 @@ separately from your proposal, and later steps read them directly.
    record); `named_without_finding` (named or described without its result);
    `tests_other_claim` (no replication tested anything the article states or relies
    on); `confirms_claim` (the replications confirm what the article says, on a page
-   where additions are not allowed); `scope_or_policy_limit` (a replication that fails,
+   where additions are not allowed); `reproduction_confirms` (every replication that
+   bears on the claim is a `reproduction` that confirms it); `scope_or_policy_limit` (a replication that fails,
    qualifies or is inconclusive bears on the claim, but an addition is not allowed on
    this kind of page or under WP:MEDRS); `history_or_example` (cited for history or as an example, and the
    replication does not dispute the result stated); or `none_applies` (another reason;
@@ -162,7 +164,8 @@ On biographies, lists, timelines, bibliography entries and passing mentions, use
 or `none` only; put anything else under `alternatives`. The same applies to biomedical
 claims (WP:MEDRS) unless a checked review in the packet supports the addition. On
 other pages, a replication that confirms the claim is an `optional_addition`, not
-`none`. This limits what the card
+`none`, except a `reproduction`: re-running the original analyses on the original data
+and confirming them adds nothing a reader needs, so it is `none`. This limits what the card
 proposes, not what you record: when a replication bears on a finding such a page
 states, code it fully in `replications_assessed` and `article_use` even though the
 strength is `none`.

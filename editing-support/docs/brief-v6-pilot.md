@@ -203,17 +203,16 @@ browser: it renders the v6 fields correctly with no console errors.
 
 ## Needs your decision before the full re-run
 
-1. **Confirming reanalyses of the same data.** Under v6, a reproduction that re-runs the
-   original analyses on the original data and confirms them is an optional addition on a topic
-   page (Outgroup favoritism, both runs). #9 treated it as no change. I recommend counting a
-   confirming same-data reanalysis as no change (*likely no change*): it adds nothing a reader
-   is missing. This is a one-sentence change to the strength rules.
-2. **The pre-filter's reach.** As agreed, it drops articles that cite every replication,
-   counting any DOI or title match, including further reading. On the 52 articles it drops
-   five. This includes Door-in-the-face technique, where both v5 runs found a fix to the
-   description of the original study, and Multiculturalism (an optional addition in v5).
-   Priming (psychology), named in the plan, stays in coding. Should the pre-filter run as is,
-   or count only citations in the article body?
+1. **Confirming reanalyses of the same data (decided).** The group agreed (#9, 2026-11-13)
+   that a reproduction that re-runs the original analyses on the original data and confirms
+   them is *likely no change*. The brief now codes it as `method: reproduction`, its strength
+   is `none` with `no_change_basis: reproduction_confirms`, and the tier rule gives *likely no
+   change* when every replication that bears on the claim is a confirming reproduction.
+2. **The pre-filter's reach (decided in part).** The group agreed that a replication listed
+   only under Further reading does not count as cited, and the pre-filter now ignores that
+   section. This changes none of the five drops: each of them cites its replications in the
+   body. Door-in-the-face technique stays dropped, although both v5 runs found a fix to the
+   description of the original study there; the pre-filter cannot see such fixes.
 3. **Historical wording for a present-day claim** (TCF7L2). Both runs read it as current
    evidence, which makes the card a judgement call where #9 had *likely no change*. I suggest
    accepting this, because it errs towards review.
