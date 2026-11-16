@@ -17,7 +17,7 @@ const Store = (() => {
   const set = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* not stored */ } };
   const getJSON = (k, d) => { try { return JSON.parse(get(k)) ?? d; } catch { return d; } };
 
-  let board = {reviews: [], claims: [], audits: []}, online = null, lastError = '';
+  let board = {reviews: [], claims: []}, online = null, lastError = '';
 
   async function rpc(name, args = {}) {
     if (demo) return Demo.call(name, args);
@@ -113,19 +113,16 @@ const Store = (() => {
   const signOut = () => set(ME_KEY, null);
   const mine = async () => { const who = me(); return who ? attempt(() => rpc('my_reviews', {p_reviewer_id: who.reviewer_id})) : {ok: false}; };
   const claim = async (pageId, on) => attempt(() => rpc('set_claim', {p_reviewer_id: me().reviewer_id, p_page_id: pageId, p_on: on}));
-  const audit = async (pageId, finished, note) =>
-    attempt(() => rpc('save_audit', {p_reviewer_id: me().reviewer_id, p_page_id: pageId, p_finished: finished, p_note: note || ''}));
 
-  const forPage = id => ({reviews: board.reviews.filter(r => r.page_id === id), claims: board.claims.filter(c => c.page_id === id),
-    audits: board.audits.filter(a => a.page_id === id)});
+  const forPage = id => ({reviews: board.reviews.filter(r => r.page_id === id), claims: board.claims.filter(c => c.page_id === id)});
 
-  return {shared, demo, prefix: PFX, meKey: ME_KEY, ns, nsFor, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, audit, forPage,
+  return {shared, demo, prefix: PFX, meKey: ME_KEY, ns, nsFor, me, signIn, register, signOut, refresh, push, queue, flush, pending, mine, claim, forPage,
     status: () => ({online, lastError})};
 })();
 
 // A pretend backend for ?store=demo. Mirrors the rules in supabase/schema.sql closely enough to try the flow.
 const Demo = (() => {
-  const K = 'flora-demo:db';
+  const K = 'flora-demo:db2';  // v2: seeded with outcomes (done / review requested)
   const load = () => { try { return JSON.parse(localStorage.getItem(K)); } catch { return null; } };
   const save = db => { try { localStorage.setItem(K, JSON.stringify(db)); } catch { /* demo only */ } };
   const now = () => new Date().toISOString();
@@ -135,18 +132,17 @@ const Demo = (() => {
   function seed(pages) {
     const people = [['AB#1001', 'AB'], ['CD#1002', 'CD'], ['EF#1003', 'EF'], ['GH#1004', 'GH']]
       .map(([id, ini]) => ({reviewer_id: id, initials: ini, public_id: 'demo-' + ini.toLowerCase()}));
-    const rec = (p, dec, notes, h) => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid,
-      items: Object.fromEntries(p.items.map(it => [it.card_id, dec])), other_fix_done: false, draft_usefulness: 'useful', notes, updated_at: ago(h)});
+    const rec = (p, dec, outcome, notes, h) => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid,
+      items: Object.fromEntries(p.items.map(it => [it.card_id, dec])), other_fix_done: false, draft_usefulness: 'useful', notes, outcome, updated_at: ago(h)});
     const [a, b, c, d] = pages;
-    db = {reviewers: people, reviews: [], claims: [], audits: []};
-    const rv = (who, p, dec, notes, h) => db.reviews.push({page_id: p.page_id, reviewer_id: who, record: {...rec(p, dec, notes, h), reviewer: who.slice(0, 2)}, updated_at: ago(h)});
-    if (a) { rv('AB#1001', a, 'edit', 'Added one attributed sentence on the 2012 replication to the Criticism section.', 5);
-      db.audits.push({page_id: a.page_id, auditor_id: 'CD#1002', finished: true, note: 'Sentence is in and sourced.', updated_at: ago(2)}); }
-    if (b) rv('CD#1002', b, 'no_change', 'The article already describes the replication in the Reception section.', 20);
+    db = {reviewers: people, reviews: [], claims: []};
+    const rv = (who, p, dec, outcome, notes, h) => db.reviews.push({page_id: p.page_id, reviewer_id: who,
+      record: {...rec(p, dec, outcome, notes, h), reviewer: who.slice(0, 2)}, updated_at: ago(h)});
+    if (a) rv('AB#1001', a, 'edit', 'done', 'Added one attributed sentence on the 2012 replication to the Criticism section.', 5);
+    if (b) rv('CD#1002', b, 'no_change', 'review', 'The article may already cover the replication in the Reception section, but I am not sure it is the same study. Could someone check?', 20);
     if (c) db.claims.push({page_id: c.page_id, reviewer_id: 'EF#1003', started_at: ago(0.5)});
-    if (d) { rv('GH#1004', d, 'talk', 'Raised on the talk page; regulars agreed to add it.', 30);
-      db.audits.push({page_id: d.page_id, auditor_id: 'AB#1001', finished: true, note: '', updated_at: ago(10)},
-        {page_id: d.page_id, auditor_id: 'EF#1003', finished: true, note: 'Done.', updated_at: ago(8)}); }
+    if (d) { rv('GH#1004', d, 'edit', 'review', 'Added a sentence on the replication; please check the wording against the paper.', 30);
+      rv('AB#1001', d, 'edit', 'done', 'Checked against the paper and tightened the sentence.', 8); }
     save(db);
   }
   const who = id => { const r = db.reviewers.find(x => x.reviewer_id === String(id || '').trim().toUpperCase()); if (!r) throw new Error('unknown reviewer ID'); return r; };
@@ -165,11 +161,9 @@ const Demo = (() => {
     sign_in({p_reviewer_id}) { try { const r = who(p_reviewer_id); return {reviewer_id: r.reviewer_id, ...pub(r)}; } catch { return null; } },
     save_review({p_reviewer_id, p_page_id, p_record}) {
       const r = who(p_reviewer_id), t = now();
-      const old = db.reviews.find(x => x.page_id === p_page_id && x.reviewer_id === r.reviewer_id);
-      const same = old && JSON.stringify(old.record.items || {}) === JSON.stringify(p_record.items || {});
-      db.reviews = db.reviews.filter(x => x !== old);
-      db.reviews.push({page_id: p_page_id, reviewer_id: r.reviewer_id, record: {...p_record, page_id: p_page_id, reviewer: r.initials},
-        updated_at: t, decided_at: same ? (old.decided_at || old.updated_at) : t});
+      if ('outcome' in p_record && !['done', 'review'].includes(p_record.outcome)) throw new Error('outcome must be done or review');
+      db.reviews = db.reviews.filter(x => !(x.page_id === p_page_id && x.reviewer_id === r.reviewer_id));
+      db.reviews.push({page_id: p_page_id, reviewer_id: r.reviewer_id, record: {...p_record, page_id: p_page_id, reviewer: r.initials}, updated_at: t});
       db.claims = db.claims.filter(x => !(x.page_id === p_page_id && x.reviewer_id === r.reviewer_id));
       save(db); return t;
     },
@@ -179,20 +173,11 @@ const Demo = (() => {
       if (p_on) db.claims.push({page_id: p_page_id, reviewer_id: r.reviewer_id, started_at: now()});
       save(db); return null;
     },
-    save_audit({p_reviewer_id, p_page_id, p_finished, p_note}) {
-      const r = who(p_reviewer_id);
-      if (db.reviews.some(x => x.page_id === p_page_id && x.reviewer_id === r.reviewer_id)) throw new Error('you reviewed this page, so someone else needs to audit it');
-      if (!db.reviews.some(x => x.page_id === p_page_id)) throw new Error('nobody else has reviewed this page yet');
-      db.audits = db.audits.filter(x => !(x.page_id === p_page_id && x.auditor_id === r.reviewer_id));
-      db.audits.push({page_id: p_page_id, auditor_id: r.reviewer_id, finished: p_finished, note: p_note || '', updated_at: now()});
-      save(db); return null;
-    },
     board() {
       const byId = id => pub(db.reviewers.find(r => r.reviewer_id === id));
       const fresh = Date.now() - 24 * 3600e3;
-      return {reviews: db.reviews.map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), record: x.record, updated_at: x.updated_at, decided_at: x.decided_at || x.updated_at})),
-        claims: db.claims.filter(x => Date.parse(x.started_at) > fresh).map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), started_at: x.started_at})),
-        audits: db.audits.map(x => ({page_id: x.page_id, ...byId(x.auditor_id), finished: x.finished, note: x.note, updated_at: x.updated_at}))};
+      return {reviews: db.reviews.map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), record: x.record, updated_at: x.updated_at})),
+        claims: db.claims.filter(x => Date.parse(x.started_at) > fresh).map(x => ({page_id: x.page_id, ...byId(x.reviewer_id), started_at: x.started_at}))};
     },
     my_reviews({p_reviewer_id}) { const r = who(p_reviewer_id); return db.reviews.filter(x => x.reviewer_id === r.reviewer_id).map(x => ({...x.record, updated_at: x.updated_at})); },
   };

@@ -105,42 +105,36 @@ function lsGet(k) { try { return localStorage.getItem(k); } catch { return null;
 function lsSet(k, v) { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch { /* not stored */ } }
 function ledgerGet(id) { try { return JSON.parse(lsGet(LS + id)) || null; } catch { return null; } }
 function ledgerPut(id, rec) { lsSet(LS + id, JSON.stringify(rec)); }
-// Drafts: the form as last typed, kept until "Save review". A card counts as reviewed only once saved.
+// Drafts: the form as last typed, kept until saved. A card counts as reviewed only once saved.
 function draftGet(id) { try { return JSON.parse(lsGet(LS + id + ':draft')) || null; } catch { return null; } }
 function draftPut(id, d) { lsSet(LS + id + ':draft', d ? JSON.stringify(d) : null); }
 const reviewed = p => { const r = ledgerGet(p.page_id); return !!r && p.items.every(it => r.items?.[it.card_id]); };
 const hasDraft = p => !!draftGet(p.page_id);
 
 // ---------- group progress (shared store only) ----------
-// A review counts for the group once every publication on the card has a decision and at least one is
-// "edited", "talk page" or "no change needed". It then waits for an audit: two people other than its
-// reviewers confirming the work is finished.
-const SETTLED = ['edit', 'talk', 'no_change'], ACTED = ['edit', 'talk'], AUDITS_NEEDED = 2;
-const GROUP = {open: 'Nobody yet', under_review: 'Under review', to_audit: 'To be audited', audited: 'Audited'};
+// Each save ends with an outcome: "done" or "review" (review requested). A save whose decisions are all
+// "needs more checking" or "skip" has none. A card's state is the outcome of its most recent save that has one;
+// done cards stay listed and anyone can record a further review on them.
+const SETTLED = ['edit', 'talk', 'no_change'];
+const OUTCOME = {done: 'Done', review: 'Review requested'};
+const GROUP = {open: 'Nobody yet', under_review: 'Under review', review: 'Review requested', done: 'Done'};
+const hasFinal = f => Object.values(f.items || {}).some(d => SETTLED.includes(d));
+const newest = rows => [...rows].sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at));
 function groupState(p) {
   const s = Store.forPage(p.page_id), mine = Store.me()?.public_id;
-  const complete = s.reviews.filter(r => p.items.every(it => r.record.items?.[it.card_id])
-    && Object.values(r.record.items).some(d => SETTLED.includes(d)));
-  // An audit counts only if it was made after the latest change of decisions in a counting review, and
-  // never from anyone who reviewed the page.
-  const decided = Math.max(0, ...complete.map(r => Date.parse(r.decided_at || r.updated_at)));
-  const reviewers = new Set(s.reviews.map(r => r.public_id));
-  const current = s.audits.filter(a => complete.length && !reviewers.has(a.public_id) && Date.parse(a.updated_at) >= decided);
-  const confirmed = current.filter(a => a.finished);
-  const state = !complete.length ? (s.claims.length ? 'under_review' : 'open') : confirmed.length >= AUDITS_NEEDED ? 'audited' : 'to_audit';
-  return {...s, complete, current, confirmed, state, acted: complete.some(r => Object.values(r.record.items).some(d => ACTED.includes(d))),
-    mine, claimedByMe: !!mine && s.claims.some(c => c.public_id === mine), reviewedByMe: !!mine && reviewers.has(mine),
-    myAudit: mine ? current.find(a => a.public_id === mine) : null};
+  const latest = newest(s.reviews.filter(r => OUTCOME[r.record.outcome]))[0] || null;
+  const state = latest ? latest.record.outcome : s.claims.length ? 'under_review' : 'open';
+  return {...s, latest, state, mine, claimedByMe: !!mine && s.claims.some(c => c.public_id === mine)};
 }
 const names = rows => [...new Set(rows.map(r => r.initials))].join(', ');
 function groupBadges(p) {
   if (!Store.shared) return '';
   const g = groupState(p);
   const claim = g.claims.length ? `<span class="badge review" title="Someone has marked this article as under review">Under review: ${esc(names(g.claims))}</span>` : '';
-  if (g.state === 'audited') return claim + ' <span class="badge audited">✓ Audited</span>';
-  if (g.state === 'to_audit') return claim + ` <span class="badge audit" title="Reviewed by ${esc(names(g.complete))}">To be audited ${g.confirmed.length}/${AUDITS_NEEDED}</span>`;
-  return claim;
+  return claim + stateBadge(g);
 }
+const stateBadge = g => g.state === 'done' ? ` <span class="badge settled" title="Marked done by ${esc(g.latest.initials)}">✓ Done</span>`
+  : g.state === 'review' ? ` <span class="badge asked" title="Requested by ${esc(g.latest.initials)}">Review requested</span>` : '';
 
 // ---------- list and filters ----------
 const SEGMENTS = [
@@ -458,7 +452,8 @@ function decisionBlock(p, rec, draft) {
     ${Store.shared ? `<p class="small">Your review is kept in this browser and shared with the group when you save it${Store.me() ? '' : '. Sign in or get a reviewer ID under “Your reviews” before saving'}.</p>`
     : '<p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>'}
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
-      What you enter is kept as a draft as you go; the card counts as reviewed once you click “Save review”.</p>
+      What you enter is kept as a draft as you go. When you have finished, save: <strong>mark it done</strong> if the work on this
+      article is finished, or <strong>request a review</strong> if you would like someone else to check or continue it${Store.shared ? ' (the card then appears under “Review requested”)' : ''}.</p>
     ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(actionLabel(it))})</span></legend>
       ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
     ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
@@ -466,15 +461,17 @@ function decisionBlock(p, rec, draft) {
     <select id="l-useful"><option value="">–</option>${['useful', 'partly useful', 'not useful', 'misleading'].map(v => `<option ${f.draft_usefulness === v ? 'selected' : ''}>${v}</option>`).join('')}</select>
     <label for="l-notes">Notes (reasons, sources you checked, what you plan to write)</label>
     <textarea id="l-notes">${esc(f.notes || '')}</textarea>
-    <p id="l-hint" class="small warntext" hidden>You disagreed with a suggestion: please add a short reason in the notes.</p>
-    <div class="row"><button type="button" id="l-save" class="primary">Save review</button>
+    <p id="l-hint" class="small warntext" hidden></p>
+    <div class="row"><button type="button" id="l-done" class="primary">Save and mark done</button>
+    <button type="button" id="l-review">Save and request review</button>
+    <button type="button" id="l-open" class="primary" hidden>Save review</button>
     <button type="button" id="l-clear" title="${rec.updated_at ? 'Go back to your saved review' : 'Clear the decisions and notes on this card'}">${rec.updated_at ? 'Discard changes' : 'Clear form'}</button>
     <span id="l-status" class="small" role="status">${statusText(rec, draft)}</span></div></section>`;
 }
 const stamp = t => esc((t || '').slice(0, 16).replace('T', ' '));
 function statusText(rec, draft) {
-  if (draft) return `Draft kept ${stamp(draft.saved_at)}: not counted as reviewed until you click “Save review”.`;
-  return rec.updated_at ? `Saved ${stamp(rec.updated_at)}` : 'Not saved yet';
+  if (draft) return `Draft kept ${stamp(draft.saved_at)}: not counted as reviewed until you save it.`;
+  return rec.updated_at ? `Saved ${stamp(rec.updated_at)}${rec.outcome ? ` · ${OUTCOME[rec.outcome].toLowerCase()}` : ''}` : 'Not saved yet';
 }
 
 const baseRec = p => ({page_id: p.page_id, page_title: p.page.title, reviewed_revision_id: p.page.frozen_revid, items: {}});
@@ -508,7 +505,7 @@ function fillForm(p, f) {
 const sameForm = (a, b) => JSON.stringify(a.items || {}) === JSON.stringify(b.items || {}) && !!a.other_fix_done === !!b.other_fix_done
   && (a.draft_usefulness || '') === (b.draft_usefulness || '') && (a.notes || '') === (b.notes || '');
 
-let NOTES_TIMER = null, BOARD_READY = Promise.resolve();
+let NOTES_TIMER = null;
 function show(id, focus) {
   ACTIVE = id;
   const p = PAGES.find(x => x.page_id === id), pg = p.page, lc = p.live_check, rec = ledgerGet(id) || baseRec(p), fl = flags(p);
@@ -562,18 +559,27 @@ function show(id, focus) {
     document.getElementById('l-status').textContent = statusText(saved, draftGet(id)).replace(/&amp;/g, '&');
     renderList();
   };
+  // With no final decision (only "needs more checking" or "skip"), a save leaves the card open: one plain button.
+  const syncButtons = () => {
+    const f = formState(p), final = hasFinal(f) || !Object.keys(f.items).length;
+    ['l-done', 'l-review'].forEach(b => { document.getElementById(b).hidden = !final; });
+    document.getElementById('l-open').hidden = final;
+  };
+  syncButtons();
   const form = document.getElementById('record');
-  form.addEventListener('change', e => { if (e.target.id !== 'l-save') keepDraft(); });
+  form.addEventListener('change', e => { if (!e.target.closest('button')) { keepDraft(); syncButtons(); } });
   document.getElementById('l-notes').addEventListener('input', () => { clearTimeout(NOTES_TIMER); NOTES_TIMER = setTimeout(keepDraft, 600); });
-  document.getElementById('l-save').onclick = async () => {
+  const save = async outcome => {
     clearTimeout(NOTES_TIMER);
     if (stale()) return;
-    if (Store.shared && !Store.me()) {  // shared reviews need a reviewer ID, or nobody can audit them (#10)
+    if (Store.shared && !Store.me()) {  // shared reviews need a reviewer ID, so others can see who did the work (#10)
       keepDraft();
       document.getElementById('l-status').textContent = 'Sign in or get a reviewer ID under “Your reviews”, then save. Your answers are kept as a draft.';
       return openMine();
     }
-    const f = formState(p), notes = f.notes;
+    const f = formState(p), notes = f.notes.trim();
+    if (!hasFinal(f)) outcome = null;
+    const missing = p.items.filter(it => !f.items[it.card_id]).length;
     // A reason is required only when a decision departs from that study's suggestion.
     const disagrees = p.items.some(it => {
       const d = f.items[it.card_id], k = itemKind(it);
@@ -581,16 +587,20 @@ function show(id, focus) {
       const expected = k === 'edit' ? ['edit', 'talk'] : ['no_change'];
       return d && d !== 'skip' && !expected.includes(d);
     });
+    const [why, toNotes] = outcome && missing ? [`Choose a decision for ${missing === 1 ? 'the remaining publication' : `all ${missing} remaining publications`} first.`, false]
+      : outcome === 'done' && Object.values(f.items).includes('later') ? ['A publication is marked “Needs more checking first”: request a review instead, or change that decision.', false]
+      : disagrees && !notes ? ['You disagreed with a suggestion: please add a short reason in the notes.', true]
+      : outcome === 'review' && !notes ? ['Say in the notes what you would like the next person to check or do.', true] : ['', false];
     const hint = document.getElementById('l-hint');
-    hint.hidden = !(disagrees && !notes.trim());
-    if (!hint.hidden) { keepDraft(); document.getElementById('l-notes').focus(); return; }
+    hint.textContent = why; hint.hidden = !why;
+    if (why) { keepDraft(); if (toNotes) document.getElementById('l-notes').focus(); return; }
     const r = {...(ledgerGet(id) || baseRec(p)), ...f, reviewer: Store.me()?.initials || document.getElementById('reviewer').value, updated_at: new Date().toISOString()};
+    if (outcome) r.outcome = outcome; else delete r.outcome;
     ledgerPut(id, r);
     draftPut(id, null);
-    const missingItems = p.items.filter(it => !f.items[it.card_id]).length;
-    const said = missingItems
-      ? `Saved. Choose a decision for ${missingItems === 1 ? 'the remaining publication' : `all ${missingItems} remaining publications`} to mark the card as reviewed.`
-      : 'Saved: the card counts as reviewed.';
+    const said = outcome === 'done' ? 'Saved and marked done.' : outcome === 'review' ? 'Saved; review requested.'
+      : missing ? `Saved. Choose a decision for ${missing === 1 ? 'the remaining publication' : `all ${missing} remaining publications`} to mark the card as reviewed.`
+      : 'Saved. No publication has a final decision, so the card stays open for others.';
     const status = document.getElementById('l-status');
     status.textContent = said;
     renderList();
@@ -603,6 +613,9 @@ function show(id, focus) {
       : ` Kept in this browser; not shared yet (${sent.error}). It will be sent next time.`);
     renderAll();
   };
+  document.getElementById('l-done').onclick = () => save('done');
+  document.getElementById('l-review').onclick = () => save('review');
+  document.getElementById('l-open').onclick = () => save(null);
   // Clear the form (nothing saved yet) or go back to the saved review; a saved, shared review stays saved.
   document.getElementById('l-clear').onclick = () => {
     clearTimeout(NOTES_TIMER);
@@ -613,6 +626,7 @@ function show(id, focus) {
     fillForm(p, saved);
     draftPut(id, null);
     document.getElementById('l-hint').hidden = true;
+    syncButtons();
     document.getElementById('l-status').textContent = statusText(saved, null);
     renderList();
   };
@@ -640,7 +654,7 @@ function show(id, focus) {
   paintGroup(p);
   renderList();
   if (focus) document.getElementById('card-title').focus({preventScroll: true});
-  Promise.all([checkLive(), BOARD_READY]).then(([changed]) => { if (ACTIVE === id) maybeAuditPrompt(p, changed ?? !!lc.changed_since_frozen); });
+  checkLive();
 }
 
 // ---------- group progress on a card ----------
@@ -656,80 +670,27 @@ function openMine(focusId) {
 function paintGroup(p) {
   if (!Store.shared || ACTIVE !== p.page_id) return;
   const g = groupState(p), bar = document.getElementById('claimbar'), sec = document.getElementById('group');
-  if (!bar || !sec || sec.contains(document.activeElement)) return;  // do not repaint under someone typing an audit note
+  if (!bar || !sec) return;
   const others = g.claims.filter(c => c.public_id !== g.mine);
   bar.innerHTML = `<button type="button" id="claim" aria-pressed="${g.claimedByMe}" class="${g.claimedByMe ? 'on' : ''}">${g.claimedByMe ? '✓ You are reviewing this' : 'I’m reviewing this now'}</button>
     <span class="small">${others.length ? `${esc(names(others))} ${others.length > 1 ? 'are' : 'is'} reviewing it (since ${esc(ago(others[0].started_at))}).`
-      : g.claimedByMe ? 'Others see this article as under review until you save your review or switch this off.' : 'Mark the article so others know you are working on it.'}</span>
-    ${g.state === 'audited' ? '<span class="badge audited">✓ Audited</span>' : g.state === 'to_audit' ? `<span class="badge audit">To be audited ${g.confirmed.length}/${AUDITS_NEEDED}</span>` : ''}`;
+      : g.claimedByMe ? 'Others see this article as under review until you save your review or switch this off.' : 'Mark the article so others know you are working on it.'}</span>${stateBadge(g)}`;
   document.getElementById('claim').onclick = async () => {
     if (!Store.me()) return openMine();
     const r = await Store.claim(p.page_id, !g.claimedByMe);
     if (!r.ok) bar.querySelector('.small').textContent = 'Could not reach the shared store: ' + r.error;
     await Store.refresh(); renderAll();
   };
-  const theirs = g.reviews.filter(r => r.public_id !== g.mine);
-  const audits = g.audits.map(a => `<li${g.current.includes(a) ? '' : ' class="stale"'}><strong>${esc(a.initials)}</strong> ${a.finished ? 'confirmed the work is finished' : 'found it not finished yet'} (${esc(ago(a.updated_at))})${a.note ? `: ${esc(a.note)}` : ''}${g.current.includes(a) ? '' : ' <span class="small">(before the latest review, so it no longer counts)</span>'}</li>`).join('');
-  const canAudit = g.complete.some(r => r.public_id !== g.mine) && !g.reviewedByMe;
-  sec.innerHTML = `<h3 id="group-h">Group progress</h3>
-    <p>${g.state === 'audited' ? `Audited: ${g.confirmed.length} people confirmed the work is finished.`
-      : g.state === 'to_audit' ? `Reviewed, to be audited: ${g.confirmed.length} of the ${AUDITS_NEEDED} confirmations needed from people other than the reviewer.`
-      : 'Nobody has saved a complete review of this article yet.'}</p>
-    ${theirs.length ? `<ul class="tight group-reviews">${theirs.map(r => `<li><strong>${esc(r.initials)}</strong> (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${r.record.draft_usefulness ? ` · card ${esc(r.record.draft_usefulness)}` : ''}
-      ${r.record.notes ? `<blockquote class="small-q">${esc(r.record.notes)}</blockquote>` : ''}</li>`).join('')}</ul>` : ''}
-    ${audits ? `<h4>Audits</h4><ul class="tight">${audits}</ul>` : ''}
-    ${canAudit ? auditControls(g) : g.reviewedByMe && g.complete.length ? '<p class="small">You reviewed this article, so two other people need to audit it.</p>' : ''}`;
-  wireAudit(sec, p);
-}
-function auditControls(g, popup) {
-  if (!Store.me()) return `<p class="small">To audit this review, <button type="button" class="linklike" data-signin>sign in under “Your reviews”</button>.</p>`;
-  const was = g.myAudit ? `<p class="small">You said: ${g.myAudit.finished ? 'finished' : 'not finished yet'} (${esc(ago(g.myAudit.updated_at))}). You can change it.</p>` : '';
-  return `<div class="audit-form">${popup ? '' : '<p><strong>Audit:</strong> is the work on this article finished?</p>'}${was}
-    <label class="small" for="a-note${popup ? '-m' : ''}">Note (optional)</label><textarea id="a-note${popup ? '-m' : ''}" class="a-note" rows="2">${esc(g.myAudit?.note || '')}</textarea>
-    <div class="row"><button type="button" class="primary" data-audit="1">${g.acted ? 'Mark as finished' : 'I agree: no change needed'}</button>
-      <button type="button" data-audit="0">${g.acted ? 'Not finished yet' : 'I disagree'}</button>
-      ${popup ? '<button type="button" data-later>Decide later</button>' : ''}<span class="small a-status" role="status"></span></div></div>`;
-}
-function wireAudit(root, p, done) {
-  const drawnFor = Store.me()?.reviewer_id;  // audit controls act only for the ID they were drawn for
-  root.querySelectorAll('[data-signin]').forEach(b => b.onclick = () => { done?.(); openMine(); });
-  root.querySelectorAll('[data-later]').forEach(b => b.onclick = () => done?.());
-  root.querySelectorAll('[data-audit]').forEach(b => b.onclick = async () => {
-    if (Store.me()?.reviewer_id !== drawnFor) { done?.(); setNamespace(); paintIdentity(); reshow(); return; }
-    const st = root.querySelector('.a-status');
-    st.textContent = 'Saving…';
-    const r = await Store.audit(p.page_id, b.dataset.audit === '1', root.querySelector('.a-note')?.value);
-    if (!r.ok) { st.textContent = 'Not saved: ' + r.error; return; }
-    await Store.refresh();
-    done?.(); renderAll();
-  });
-}
-// When a card that someone else reviewed is opened: if they edited and the article has changed since the
-// snapshot, the work is probably done; if they found no change needed, that still needs a second look.
-function maybeAuditPrompt(p, changed) {
-  if (!Store.shared) return;
-  const g = groupState(p), key = Store.prefix + 'prompted:' + p.page_id;
-  const theirs = g.complete.filter(r => r.public_id !== g.mine);
-  if (!theirs.length || g.state === 'audited' || g.reviewedByMe || g.myAudit) return;
-  if (g.acted && !changed) return;
-  try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch { /* ask again next time */ }
-  const who = theirs.map(r => `<li><strong>${esc(r.initials)}</strong> (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${r.record.notes ? `<blockquote class="small-q">${esc(r.record.notes)}</blockquote>` : ''}</li>`).join('');
-  const box = document.getElementById('audit-box'), modal = document.getElementById('audit-modal');
-  box.innerHTML = g.acted
-    ? `<h2 id="audit-title">This article has likely been finished</h2>
-      <p>Someone recorded an edit or talk-page post for “${esc(p.page.title)}”, and the article has changed since our snapshot.</p><ul class="tight">${who}</ul>
-      <p><a href="${esc(p.page.diff_url)}" target="_blank" rel="noopener">See the changes since the snapshot ↗</a></p>
-      <p class="small">If the change is there and sound, mark the article as finished. It counts as audited once ${AUDITS_NEEDED} people other than the reviewer have confirmed it (${g.confirmed.length} so far).</p>`
-    : `<h2 id="audit-title">A reviewer found no change needed</h2>
-      <p>Someone who reviewed “${esc(p.page.title)}” decided that no change is needed. That still needs a second look: read the card and the article, then say whether you agree.</p><ul class="tight">${who}</ul>
-      <p class="small">The article counts as audited once ${AUDITS_NEEDED} people other than the reviewer agree (${g.confirmed.length} so far).</p>`;
-  box.insertAdjacentHTML('beforeend', auditControls(g, true) + (Store.me() ? '' : '<div class="row"><button type="button" data-later>Close</button></div>'));
-  const prev = document.activeElement;
-  const close = () => { modal.hidden = true; prev?.focus?.(); };
-  modal.hidden = false;
-  modal.onkeydown = e => { if (e.key === 'Escape') close(); };
-  wireAudit(box, p, close);
-  box.querySelector('button')?.focus();
+  const l = g.latest, byMe = l && l.public_id === g.mine, who = l && (byMe ? 'you' : esc(l.initials));
+  const line = g.state === 'done' ? `<strong>Done</strong>: marked by ${who} ${esc(ago(l.updated_at))}. The work on this article counts as finished.
+      If you disagree, record your own review below and request a review.`
+    : g.state === 'review' ? `<strong>Review requested</strong> by ${who} ${esc(ago(l.updated_at))}. ${byMe ? 'Someone else can pick it up; if you settle it yourself, save again and mark it done.'
+      : 'Read their notes, make any further changes on Wikipedia, then record your review below: mark it done, or request another review.'}`
+    : 'Nobody has marked this article done or requested a review yet.';
+  sec.innerHTML = `<h3 id="group-h">Group progress</h3><p>${line}</p>
+    ${g.reviews.length ? `<h4>Saved reviews, newest first</h4><ul class="tight group-reviews">${newest(g.reviews).map(r => `<li><strong>${r.public_id === g.mine ? 'You' : esc(r.initials)}</strong>
+      (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${OUTCOME[r.record.outcome] ? ` · <strong>${OUTCOME[r.record.outcome].toLowerCase()}</strong>` : ''}${r.record.draft_usefulness ? ` · card ${esc(r.record.draft_usefulness)}` : ''}
+      ${r.record.notes ? `<blockquote class="small-q">${esc(r.record.notes)}</blockquote>` : ''}</li>`).join('')}</ul>` : ''}`;
 }
 function renderAll() {
   renderList();
@@ -841,7 +802,6 @@ function reshow() {
 // Signing in or out in another tab changes the ID here too: switch records and redraw.
 window.addEventListener('storage', e => {
   if (!Store.shared || e.key !== Store.meKey) return;
-  document.getElementById('audit-modal').hidden = true;  // drawn for the previous ID
   setNamespace(); paintIdentity(); reshow();
   Store.refresh().then(renderAll);
 });
@@ -1006,7 +966,7 @@ async function init() {
   document.getElementById('clear-filters').onclick = clearFilters;
   if (Store.shared) document.getElementById('welcome-storage').innerHTML = '<strong>Your reviews are shared with the group.</strong> ' +
     'Under “Your reviews”, at the top right, get a reviewer ID (your initials and four digits, such as BS#1312) or sign in with the one ' +
-    'you have. What you type is kept as a draft in this browser; a card counts as reviewed once you click “Save review”, and others can then audit it.';
+    'you have. What you type is kept as a draft in this browser; when you save, mark the card done or request a review, and it then appears under “Review requested” for someone else to pick up.';
   buildHelp();  // after the line above: the help panel copies the walkthrough
   document.getElementById('open-help').onclick = () => document.getElementById('help-panel').hidden ? openHelp() : closeHelp();
   document.getElementById('help-close').onclick = closeHelp;
@@ -1056,7 +1016,7 @@ async function init() {
     paintIdentity();
     // Draw the page at once; group status fills in when the shared store answers (a paused or slow
     // project must not hold up the cards).
-    BOARD_READY = Store.refresh().then(() => Store.me() && Store.flush()).then(() => Store.refresh()).then(renderAll);
+    Store.refresh().then(() => Store.me() && Store.flush()).then(() => Store.refresh()).then(renderAll);
     setInterval(() => { if (document.visibilityState === 'visible') Store.refresh().then(renderAll); }, 60000);
   }
   buildSegments(); buildFilters(); renderList();

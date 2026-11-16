@@ -27,7 +27,9 @@ create table if not exists reviewers (
 
 -- One record per reviewer and card (page). `record` keeps the site's existing per-page record shape:
 -- page_id, page_title, reviewed_revision_id, items {card_id: decision}, other_fix_done,
--- draft_usefulness, notes, reviewer (initials), live_revision_checked, live_checked_at, updated_at.
+-- draft_usefulness, notes, outcome ('done' or 'review', i.e. review requested; absent when no publication has a
+-- final decision), reviewer (initials), live_revision_checked, live_checked_at, updated_at.
+-- A card's state is the outcome of its most recent save that has one (computed in the site).
 create table if not exists reviews (
   page_id     text not null check (page_id ~ '^[0-9]{1,12}$'),
   reviewer_id text not null references reviewers on delete cascade,
@@ -35,11 +37,10 @@ create table if not exists reviews (
   updated_at  timestamptz not null default now(),
   primary key (page_id, reviewer_id)
 );
--- When the decisions (record->'items') last changed. Audits made before it no longer count.
--- Existing rows (from before this column) take their last save time, so earlier audits keep counting.
-alter table reviews add column if not exists decided_at timestamptz;
-update reviews set decided_at = updated_at where decided_at is null;
-alter table reviews alter column decided_at set default now(), alter column decided_at set not null;
+-- Retired with the two-person audit (replaced by "done" / "review requested" on each saved review).
+drop function if exists save_audit(text, text, boolean, text);
+drop table if exists audits;
+alter table reviews drop column if exists decided_at;
 
 -- "I'm reviewing this now". Shown as "Under review" for 24 hours unless switched off or a review is saved.
 create table if not exists claims (
@@ -49,22 +50,11 @@ create table if not exists claims (
   primary key (page_id, reviewer_id)
 );
 
--- One audit per person and card: did the reviewed work get finished (finished = true) or not.
-create table if not exists audits (
-  page_id     text not null check (page_id ~ '^[0-9]{1,12}$'),
-  auditor_id  text not null references reviewers on delete cascade,
-  finished    boolean not null,
-  note        text not null default '' check (length(note) <= 2000),
-  updated_at  timestamptz not null default now(),
-  primary key (page_id, auditor_id)
-);
-
 alter table pages     enable row level security;
 alter table reviewers enable row level security;
 alter table reviews   enable row level security;
 alter table claims    enable row level security;
-alter table audits    enable row level security;
-revoke all on pages, reviewers, reviews, claims, audits from anon, authenticated;
+revoke all on pages, reviewers, reviews, claims from anon, authenticated;
 
 -- Caps that bound what a script holding the public key can do.
 create or replace function _limits() returns jsonb language sql immutable as
@@ -131,12 +121,12 @@ begin
        select 1 from jsonb_each_text(coalesce(p_record->'items', '{}'))
        where value not in ('edit', 'talk', 'no_change', 'later', 'skip')) then
     raise exception 'unknown decision' using errcode = '22023'; end if;
+  if p_record ? 'outcome' and coalesce(p_record->>'outcome', '') not in ('done', 'review') then
+    raise exception 'outcome must be done or review' using errcode = '22023'; end if;
   select initials into ini from reviewers where reviewer_id = me;
-  insert into reviews (page_id, reviewer_id, record, updated_at, decided_at)
-  values (p_page_id, me, p_record || jsonb_build_object('page_id', p_page_id, 'reviewer', ini), now_ts, now_ts)
-  on conflict (page_id, reviewer_id) do update set record = excluded.record, updated_at = excluded.updated_at,
-    decided_at = case when reviews.record->'items' is distinct from excluded.record->'items' then excluded.decided_at
-                      else reviews.decided_at end;
+  insert into reviews (page_id, reviewer_id, record, updated_at)
+  values (p_page_id, me, p_record || jsonb_build_object('page_id', p_page_id, 'reviewer', ini), now_ts)
+  on conflict (page_id, reviewer_id) do update set record = excluded.record, updated_at = excluded.updated_at;
   delete from claims where page_id = p_page_id and reviewer_id = me;
   return now_ts;
 end $$;
@@ -154,34 +144,16 @@ begin
   end if;
 end $$;
 
--- Record whether the work on a page is finished. Only once someone else has reviewed it; someone who
--- reviewed the page cannot audit it.
-create or replace function save_audit(p_reviewer_id text, p_page_id text, p_finished boolean, p_note text default '')
-returns void language plpgsql volatile security definer set search_path = public as $$
-declare me text := _who(p_reviewer_id);
-begin
-  perform _page(p_page_id);
-  if exists (select 1 from reviews where page_id = p_page_id and reviewer_id = me) then
-    raise exception 'you reviewed this page, so someone else needs to audit it' using errcode = '42501'; end if;
-  if not exists (select 1 from reviews where page_id = p_page_id and reviewer_id <> me) then
-    raise exception 'nobody else has reviewed this page yet' using errcode = '22023'; end if;
-  insert into audits (page_id, auditor_id, finished, note) values (p_page_id, me, p_finished, coalesce(p_note, ''))
-  on conflict (page_id, auditor_id) do update set finished = excluded.finished, note = excluded.note, updated_at = now();
-end $$;
-
 -- Everything the list and cards need, without reviewer IDs or emails.
 create or replace function board() returns jsonb
 language sql stable security definer set search_path = public as $$
   select jsonb_build_object(
     'reviews', coalesce((select jsonb_agg(jsonb_build_object('page_id', v.page_id, 'public_id', r.public_id,
-                 'initials', r.initials, 'record', v.record - 'reviewer_id', 'updated_at', v.updated_at, 'decided_at', v.decided_at))
+                 'initials', r.initials, 'record', v.record - 'reviewer_id', 'updated_at', v.updated_at))
                from reviews v join reviewers r using (reviewer_id)), '[]'),
     'claims', coalesce((select jsonb_agg(jsonb_build_object('page_id', c.page_id, 'public_id', r.public_id,
                  'initials', r.initials, 'started_at', c.started_at))
-               from claims c join reviewers r using (reviewer_id) where c.started_at > now() - interval '24 hours'), '[]'),
-    'audits', coalesce((select jsonb_agg(jsonb_build_object('page_id', a.page_id, 'public_id', r.public_id,
-                 'initials', r.initials, 'finished', a.finished, 'note', a.note, 'updated_at', a.updated_at))
-               from audits a join reviewers r on r.reviewer_id = a.auditor_id), '[]'))
+               from claims c join reviewers r using (reviewer_id) where c.started_at > now() - interval '24 hours'), '[]'))
 $$;
 
 -- The caller's own records, to restore them in a new browser.
@@ -193,4 +165,4 @@ $$;
 
 revoke execute on function _who(text), _page(text), _limits() from public, anon, authenticated;
 grant execute on function register_reviewer(text, text, int), sign_in(text), save_review(text, text, jsonb),
-  set_claim(text, text, boolean), save_audit(text, text, boolean, text), board(), my_reviews(text) to anon, authenticated;
+  set_claim(text, text, boolean), board(), my_reviews(text) to anon, authenticated;

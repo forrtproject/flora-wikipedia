@@ -1,7 +1,7 @@
 # Shared review storage (Supabase)
 
 The review-card site saves reviews in each reviewer's browser. With a Supabase project, saved reviews are also
-shared: the list shows which articles are under review, waiting for an audit or audited, and a reviewer can sign
+shared: the list shows which articles are under review, have a review requested or are done, and a reviewer can sign
 in on another device. Without the project the site works as before (browser only). To try the shared features
 without a project, open the site with `?store=demo`: a pretend backend in the browser, with made-up reviewers.
 
@@ -45,20 +45,23 @@ functions that check their input:
 |---|---|---|
 | `register_reviewer(initials, email?, number?)` | anyone | creates an ID such as `BS#1312` (chosen or random digits) |
 | `sign_in(id)` | anyone | returns initials and a random public ID, or nothing |
-| `save_review(id, page_id, record)` | holder of an ID | one record per reviewer and card; ends their "under review" mark; `decided_at` moves only when the decisions change |
+| `save_review(id, page_id, record)` | holder of an ID | one record per reviewer and card; `record.outcome` is absent, `done` or `review`; ends their "under review" mark |
 | `set_claim(id, page_id, on)` | holder of an ID | "I'm reviewing this now", shown for 24 hours |
-| `save_audit(id, page_id, finished, note)` | holder of an ID who did not review the card, once someone else has | finished / not finished |
-| `board()` | anyone | all reviews, current claims and audits, with initials and public IDs only |
+| `board()` | anyone | all reviews and current claims, with initials and public IDs only |
 | `my_reviews(id)` | holder of an ID | that reviewer's records, to restore them in a new browser |
 
 Every function accepts only the cards listed in `pages`. Limits: at most 300 reviewer IDs and 20 kB per review record (`_limits()` in `schema.sql`). Emails are stored only in
 `reviewers.email`, visible to project owners in the dashboard and never returned by the functions.
 
-Rules computed in the site (`groupState` in `site/app.js`): a review counts once every publication on the card has a
-decision and at least one decision is "edited", "talk page" or "no change needed". The card is then "to be audited"
-until two people who did not review it mark it finished; it is then "audited". An audit counts only if it was
-made after the latest change of decisions in a counting review, so changing a decision asks for a fresh audit (editing
-only the notes does not).
+Rules computed in the site (`groupState` in `site/app.js`): each save ends as "done" or "review requested"
+(`record.outcome`), chosen by the reviewer; a save in which no publication has a final decision ("edited", "talk
+page" or "no change needed") has no outcome. A card's state is the outcome of its most recent save that has one, so
+anyone, including the person who asked, can follow a review request with a save marked done, and a done card
+returns to "review requested" when someone disagrees. Without such a save the card is "under review" while someone
+has claimed it and otherwise open.
+
+Re-running `schema.sql` on a project set up before outcomes existed removes the retired two-person audit
+(`audits`, `save_audit`, `reviews.decided_at`). The site works before and after that step.
 
 In the browser, records are kept per reviewer ID. Reviews saved without an ID (or from before shared storage) are
 shared only when someone signed in clicks "Share as …" under "Your reviews".
@@ -69,7 +72,7 @@ shared only when someone signed in clicks "Share as …" under "Your reviews".
   `select r.initials, v.page_id, v.record, v.updated_at from reviews v join reviewers r using (reviewer_id);`
   (or the table editor's CSV export). Each reviewer can still export their own CSV/JSON from the site.
 - **Forgotten ID**: look up the initials (and email, if given) in the `reviewers` table and send the ID.
-- **Remove someone's data**: `delete from reviewers where reviewer_id = 'BS#1312';` (their reviews, claims and audits
+- **Remove someone's data**: `delete from reviewers where reviewer_id = 'BS#1312';` (their reviews and claims
   go with it).
 - **Free-plan pause**: Supabase pauses free projects after a period without activity; restore it from the dashboard.
   The site keeps saving to the browser meanwhile and sends queued reviews once the project answers again.

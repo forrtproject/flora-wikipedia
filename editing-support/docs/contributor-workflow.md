@@ -84,17 +84,27 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    on replication.
 8. **Record your decision** for each study on the card (edit, talk page, no
    change, needs more checking, or skip; give a reason when you disagree with
-   the suggestion). What you enter is kept in your browser as a draft as you
-   go; the card counts as reviewed once you click "Save review", and cards with
-   an unsaved draft are marked "Draft" in the list. Export your records from
+   the suggestion) and add notes on what you checked and changed. What you
+   enter is kept in your browser as a draft as you go, and cards with an
+   unsaved draft are marked "Draft" in the list. Then save in one of two ways:
+   **Save and mark done** when the work on the article is finished, or **Save
+   and request review** when you would like someone else to check or continue
+   it; say in the notes what they should look at. A review request is the
+   right choice when you marked a study "Needs more checking first". If no
+   study has a final decision (only "needs more checking" or "skip"), the
+   button reads "Save review" and the card stays open for others. Export your records from
    "Your reviews" at the top right. The record notes which article version you
    reviewed. "Clear form" empties the form if you decide not to review the
    card ("Discard changes" goes back to your saved review). Where shared
    storage is switched on, sign in under "Your reviews" with your reviewer ID
    (initials and four digits, such as BS#1312) before saving: saved reviews are
-   then shared, "I'm reviewing this now" marks a card as under
-   review, and two other people audit each review before the card counts as
-   audited.
+   then shared and "I'm reviewing this now" marks a card as under review.
+   Cards whose review was requested appear under "Review requested" in the
+   filters: open one, read the earlier notes, make any further changes on
+   Wikipedia, then record your own review and mark it done or request another
+   review. Done cards stay in the list; if you disagree with one, record your
+   own review and request a review. A card's status is the choice in its
+   latest save.
 
 ## Reading a replication
 
