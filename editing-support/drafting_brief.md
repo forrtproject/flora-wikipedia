@@ -107,6 +107,12 @@ separately from your proposal, and later steps read them directly.
      article that reports it, copied verbatim (at least 30 characters); otherwise empty.
    - `report_accurate`: if the article reports it, whether that report matches what
      the replication found (`true` or `false`); `null` if `already_on_page` is `no`.
+     "Replicated" and "not replicated" can mean that a replication was or was not
+     attempted, or that one did or did not succeed ("this study has not been
+     replicated"). Decide from the context which reading the article intends. If both
+     readings are plausible and they would lead to different coding, say so in the note
+     and do not call the sentence wrong on one reading alone; the edit can replace it
+     with what was done and what was found.
    - `note`: one or two sentences on the above, naming the experiment or result tested.
 5. **Card-level summaries.** `specific_study_match` and `existing_acknowledgement`
    summarise the per-replication coding in one status and one plain sentence each; the
