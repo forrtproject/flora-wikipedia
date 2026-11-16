@@ -1,0 +1,1194 @@
+packet_id,pageid,page_title,original_doi,page_kind,context_kind,living_person,health_flag,co_cited,originals_on_page,outcomes,large_project,order
+11ce231bfc2f99f21f41,609189,1963 in science,10.1037/h0040525,history_list,inline,False,False,False,1,mixed,False,4dde40db1682ee36cb5a
+5470ee948afc1fb54685,244180,1973 oil crisis,10.2307/1913712,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,6ab6b2e0bec87f4d59e6
+4a40344ea2b0e6a5909c,576062,1995 in science,10.3928/0048-5713-19951201-07,history_list,inline,False,False,False,1,successful,False,c5f1507b5f25affc1e10
+9854ebaedbd9e2e6b32d,14188691,5-HT1A receptor,10.1176/appi.ajp.160.11.1965,biomedical,inline,False,True,False,1,failed,False,9c200467f1df08256d9d
+8d4f47d73ab375d83f1e,290,A,10.1348/000709909x466479,broad_topic,list,False,False,False,1,failed,False,87780055dcf782c451d8
+b6293d93529a7793161d,14876435,ABCA7,10.1038/ng.2802,broad_topic,inline,False,False,False,2,failed|successful,False,299e8ab6e2840a6b2284
+6d9fc36260a6366e6670,14876435,ABCA7,10.1038/ng.3246,broad_topic,inline,False,False,False,2,mixed,False,e3729af743c730b15e6f
+c007f37bfea758940780,41879,Absolute pitch,10.3758/bf03206733,broad_topic,inline,False,False,False,1,successful,False,8876cfe78378d3c66d2e
+ed602d4f5a91e8bf0ca0,40912579,Accent perception,10.1073/pnas.251541498,broad_topic,inline,False,False,False,1,successful,False,394e337843ee79b51a5f
+479b5e7b5088c71f1599,13416327,Accident-proneness,10.1037/0022-3514.93.5.880,broad_topic,inline,False,True,False,1,successful,False,5bc7f674fbc1ff7ee91f
+5950ae37199e361dd555,1040219,Achievement gaps in the United States,10.1126/science.1195996,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges|mixed",False,6005f7ddd65987c7b410
+bd13abf02b46976cbfed,46759796,ACOT13,10.1523/jneurosci.5996-10.2012,biomedical,list,False,False,False,1,failed,False,9c6d9bb8831500ca9165
+f16a8bdee0e4a17f85eb,70661484,Action bias,10.1016/j.joep.2006.12.001,central_effect,inline,False,False,False,1,statistically successful but flawed,False,3119f34f7180bf266381
+ee708b26b75282fd1862,445239,Active learning,10.1007/s11251-009-9093-x,broad_topic,inline,False,False,False,1,successful,False,572eb5d67c42f9319ac4
+31a2ae232cff4d86baf6,76070956,Additive bias,10.1038/s41586-021-03380-y,broad_topic,inline,False,False,False,1,successful,False,3793e31b03e4abdebb5e
+56f9a18ebf75432a6735,70834521,Adolescent idiopathic scoliosis,10.1038/ng.974,broad_topic,inline,False,True,True,1,successful,False,c0b77d594eac564ad12b
+83edcbe91ac206640144,63153498,Adultification,10.1037/a0035663,broad_topic,inline,False,True,False,2,failed,False,6b397eca4db68250d939
+8ffdf71f2ad2417454bc,63153498,Adultification,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,2,failed,False,ea33161ba4fd87d0fbf0
+8b00e4df4a105163848a,72741362,Adversarial stylometry,10.1145/2382448.2382450,broad_topic,list,False,False,False,1,"computationally reproducible, robust",False,ebc0cc6ed904ca155078
+ec85ae455510963f54c4,309452,Adverse selection,10.1257/aer.101.2.526,broad_topic,inline,False,False,False,1,successful,False,cde7a1d25e6e917d9a76
+1defa1d49550df44c4a4,3496027,Advertising clutter,10.1080/00913367.2004.10639175,broad_topic,inline,False,False,False,1,successful,False,83512bda29bf75f01f5e
+761d0c870077228236ee,57560460,Affect as information hypothesis,10.1037/h0037031,broad_topic,inline,False,False,False,1,failed,False,7b23f650f281d4faf370
+d7e7a7f49876b1644fd3,62319630,Affect labeling,10.1037/xge0000263,broad_topic,inline,False,True,False,1,mixed,False,20a3d77ef859663d4996
+d7decdc5d79de0e79050,62527611,Affect priming,10.1037/0022-3514.89.3.277,broad_topic,inline,False,False,False,1,mixed,False,21124f5ca28ba0046926
+36752971de0b5b536536,2640086,Affective neuroscience,10.1037/h0054651,broad_topic,inline,False,False,False,1,successful,True,9f08ed1e2ae7a37a100c
+011c8ddd95307bc03642,51788780,African Americans in New York City,10.1016/j.annepidem.2020.08.012,broad_topic,inline,False,False,False,1,failed,False,5c20c9a60b120fa041b3
+0d6cc8cb0895913e1fc8,1205993,Agenda 2010,10.1257/jep.28.1.167,broad_topic,list,False,True,False,1,failed,False,751d9b789dc7806f9676
+75edbed93c54c7265ff6,76603859,Agnes Melinda Kovacs,10.1073/pnas.0811323106,biography,list,True,False,False,2,failed,False,46ee47619c41e9cca0f6
+69711c73212ed167ee3e,76603859,Agnes Melinda Kovacs,10.1126/science.1190792,biography,list,True,False,False,2,successful,False,7902d8e494d67e921845
+d59e1d9e9fe154ed5c5c,1908551,Aid,10.1111/obes.12012,broad_topic,inline,False,False,False,2,mixed,False,8f5afb8a40948e820b3c
+1203453966c4682bf6df,1908551,Aid,10.1257/aer.104.6.1630,broad_topic,inline,False,False,False,2,"computationally reproducible, robust",False,f4b0aadde09074c51fc3
+778720447fb0558bce55,1472607,Aid effectiveness,10.1111/j.1468-0297.2011.02482.x,broad_topic,inline,False,False,False,3,"computationally reproducible, robustness challenges",False,b0f7c97cf84c28509295
+7b91db7c00c1ebf2616d,1472607,Aid effectiveness,10.1257/aer.104.6.1630,broad_topic,inline,False,False,False,3,"computationally reproducible, robust",False,f2dac2dac870c7b3e3d5
+e23870f804ca836780c1,1472607,Aid effectiveness,10.1257/aer.90.4.847,broad_topic,inline,False,False,False,3,"computation not checked, robustness challenges",False,e62be5b724e68b6c85e6
+67ca315e29065174256a,7221088,Air conditioning,10.1086/684582,broad_topic,inline,False,False,False,1,"computational issues, robustness not checked",False,fe60eafe6fd8faf6fddd
+e2b8e23732eacefc02e4,3257669,Alan Baddeley,10.1111/j.2044-8295.1975.tb01468.x,biography,inline,True,True,False,1,failed,False,16043ccd9cdaa42104b0
+5c3e97305e2000f79daf,38033305,Alan M. Taylor,10.1257/aer.102.2.1029,biography,list,True,False,False,1,"computationally reproducible, robust",False,4983ab50d365195bfb3c
+d39fa6d010818feaaadb,50595056,Alastair Compston,10.1056/nejmoa073493,biography,inline,True,True,False,1,mixed|successful,False,2c045799d691d15d9b5c
+6025713e6a5dc55673f0,36230788,Amy Cuddy,10.1177/0956797610383437,biography,inline,True,False,True,1,failed|mixed,False,2b98de605ac4f3fdca6c
+c6c24afeab6c245818c9,5090455,Analysis of European colonialism and colonization,10.1162/003355302320935025,broad_topic,inline,False,True,False,2,mixed,False,15d95a2fd4e514e420ee
+d0337c08ae70334192bd,5090455,Analysis of European colonialism and colonization,10.1257/aer.91.5.1369,broad_topic,inline,False,True,False,2,"computational issues, robustness challenges",False,e82c9c8044cb12ad1e08
+5342623450c4dca1438e,751106,Anchoring effect,10.1111/j.1467-9280.2006.01704.x,broad_topic,inline,False,False,False,3,failed|mixed,False,acdf89be714d63aca29f
+6c1ddd78b35b573c2904,751106,Anchoring effect,10.1111/j.1467-9280.2008.02057.x,broad_topic,inline,False,False,False,3,successful,False,1a8be91a3bb72f74ce80
+86e2cd713b65bb5a2fdf,751106,Anchoring effect,10.1177/01461672952111004,broad_topic,inline,False,False,False,3,successful,False,9ab4b0618b94adf13563
+2be4a51d2e47b7bec198,78221812,Andrea Califano,10.1016/j.cell.2011.09.029,biography,list,True,True,False,1,failed,False,c8320332dfb1e720de00
+75ec8598cb9a06ac4c31,39219388,ANGPTL8,10.1016/j.cell.2013.04.008,biomedical,inline,False,True,True,1,failed,False,2a428bd918daccd8a6e2
+a51e0a0d999573a19ee7,425938,Animal cognition,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,2,failed,False,179107134bb36575e658
+6cf0c0eae16f53e6ef74,425938,Animal cognition,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,2,failed,False,7ab677814690ae5353ee
+4f60cd299a495daa2d0e,13001588,Animal consciousness,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,2,failed,False,e32b5cfba60f6f40f2cc
+a412ec0ae3f662e24449,13001588,Animal consciousness,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,2,failed,False,3853aeecf7d759ca9783
+81d36875735b8e4a6bf5,63667868,Annie Luetkemeyer,10.1056/nejmoa1013607,biography,inline,True,True,False,1,"computationally reproducible, robustness challenges",False,5d5ae7dbd3f7b77fce1a
+2dec53f1362a4ce78866,62336765,Annoyance factor,10.1080/00913367.2004.10639175,broad_topic,list,False,False,False,1,successful,False,c63cdac506b651c7ea53
+be1634bfb822c095348c,19009060,Anthropomorphism,10.1177/0146167211424291,broad_topic,inline,False,True,False,1,successful,False,193aaa567c00a7531900
+93c2994f48e1cadb7626,922,Anxiety,10.1111/j.1467-9280.2008.02052.x,broad_topic,inline,False,True,False,1,failed,True,d71d1bf7c76007f1ecce
+a5fa8e73a352a935630b,42904206,Ap Dijksterhuis,10.1037/0022-3514.71.2.230,biography,inline,True,False,False,2,failed,False,c6c9f0d7b9bad6ce76b6
+8d5e55a37ba7640b04e0,42904206,Ap Dijksterhuis,10.1037/0022-3514.74.4.865,biography,inline,True,False,False,2,failed,False,6e689b9a8cb898f159d4
+99c76584e11d468bf13c,214059,Aphelocoma,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,edef9c2a38e6a27e6b89
+081de71bd071abc62911,1781075,Applied behavior analysis,10.1097/00004703-200604002-00013,broad_topic,inline,False,True,False,1,successful,False,f81219a61ec9a880efd3
+dbb9d4131ceb0764f435,69206295,April–June 2021 in science,10.1038/s41586-021-03380-y,broad_topic,inline,False,True,False,1,successful,False,7773a438b79988198805
+406e04a9a080a2f9e8bc,60354079,Aquatic macroinvertebrate DNA barcoding,10.1002/ece3.3192,broad_topic,inline,False,False,False,1,successful,False,621cfe01abe74b3ace51
+8586bd1e89dce7ddd1c0,26826368,Armin Falk,10.1093/restud/rdr027,biography,list,True,False,False,2,successful,False,a4eb9708b8d17b58fda9
+5569c7481c29a4140361,26826368,Armin Falk,10.1257/aer.96.5.1611,biography,list,True,False,False,2,mixed,False,a8fda5d97d3b9dcec0f7
+e2f04cad30b6223ac35e,44355555,Articulatory approach for teaching pronunciation,10.1121/1.1894649,broad_topic,inline,False,False,False,1,mixed,False,b181624fc411703b7fb2
+5aea06f97a2e1560bc7a,641947,Asch conformity experiments,10.1037/h0093718,broad_topic,inline,False,False,True,1,successful,False,4f4c9c716e56f0c6dd73
+2c20c07ee547e0dc5571,64897372,Ashleigh Shelby Rosette,10.1177/0956797611428079,biography,inline,True,False,False,1,failed,False,7a08a193efb39e7424f8
+53b0c690613aa7fda177,37556,Asperger syndrome,10.1007/s10803-014-2080-3,broad_topic,list,False,True,False,1,successful,True,d41700827e0f5983af7a
+5d3d78b2c3e7f77b0e0f,31360442,Assimilation and contrast effects,10.1086/269239,central_effect,inline,False,False,False,1,failed,True,c168a12b1e5dec60a0ae
+b5e05e4a4c6fdad823e9,568209,Atkinson–Shiffrin memory model,10.1037/h0093759,broad_topic,list,False,False,False,1,successful,False,eea29a2cfb679389ad18
+5e89f84ce31617349d9f,5761568,Attachment in children,10.2307/3333827,broad_topic,inline,False,True,False,1,mixed,False,2acdf669ad29acf631ab
+9190363479df1392fb85,884589,Attachment theory,10.2307/3333827,broad_topic,inline,False,True,False,1,mixed,False,08bbc1d9db831164c13f
+efd4c27a151347d831e4,64976,Attention deficit hyperactivity disorder,10.1016/j.nicl.2018.02.020,broad_topic,inline,False,True,False,1,mixed,False,ce55d2c6b162de2fe197
+744695ae69e0c5405bdb,4741593,Attentional bias,10.1080/026999398379411,central_effect,list,False,True,False,1,successful,False,b82871133555347ae25e
+06f30ca2a287e516a45f,33980253,Attenuation theory,10.1080/17470215908416289,broad_topic,inline,False,False,False,1,successful,False,c0217dee0b76478b5c2f
+05d89a0845b9dcba15f7,1962537,Attitude change,10.1037/0022-3514.94.1.1,broad_topic,inline,False,False,False,1,failed,True,ba063f2c49258fb53b35
+d60a604073875acb34dc,61020530,Attitude object,10.1037/0022-3514.94.1.1,broad_topic,inline,False,False,False,1,failed,True,bebfaf61044926fa11ca
+675af967e078f62ac4de,62912,Auction,10.1257/aer.101.2.749,broad_topic,inline,False,False,False,1,failed,False,bb8c42a7115718ccca79
+7cb13415d8c16cf9d2c3,81382826,Auditory hypersensitivity,10.1007/s10803-012-1608-7,broad_topic,inline,False,True,False,1,failed,False,7bcd9b65963961b6989a
+990beec4af3932c6e720,51394776,Authority bias,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,ddbcd3c6921843d3c68f
+e90cd78a8a19b3b81f24,39068271,Automatic and controlled processes,10.1037/0022-3514.74.4.865,broad_topic,inline,False,False,False,1,failed,False,5c160e909282f17ad93d
+9711782d9050f45cafc4,1205439,Automaticity,10.1037/0022-3514.71.2.230,broad_topic,inline,False,False,True,1,failed,False,371433675e48805d5f22
+293d0730bf5ed1444af8,64685441,Bad News (video game),10.1057/s41599-019-0279-9,central_effect,inline,False,True,True,3,successful,False,7e7ee1bd91ba8ff0f763
+d0f5428c75c410473ca5,64685441,Bad News (video game),10.1080/13669877.2018.1443491,broad_topic,inline,False,True,False,3,failed,False,dbf6bf2fc9d1db6e72ec
+59c565aa69b0392e3137,64685441,Bad News (video game),10.5334/joc.91,central_effect,inline,False,True,False,3,mixed,False,2b3debc888f8bf8a5839
+a013ddbcd8604d273c6a,57430554,Baiting crowd,10.1037/0022-3514.41.4.703,broad_topic,inline,False,True,False,1,failed,False,b4764ad69074bad8d8a4
+3f9d1209ea49d9489936,20790053,Barbara Landau,10.1111/j.1467-9280.2008.02066.x,biography,inline,True,True,False,1,mixed,True,a4b230a2d191591c8ff3
+08130f73ae8ee74d8ec9,64297082,Bart Bonikowski,10.1177/0003122416663683,biography,inline,True,False,False,1,"computational issues, robustness not checked",False,f08baae2d1f22810f23b
+fcfcb123747653d33988,48010725,Baruch Fischhoff,10.1037/0096-1523.1.3.288,biography,inline,True,True,False,1,failed|successful,False,1c2f5faaaab8a8263ac4
+965413d8d6d5fa3abef0,21107290,Bayesian approaches to brain function,10.1038/nature02169,broad_topic,inline,False,True,False,1,successful,False,10d738eabac5497e06f7
+e755a12a01fe6c625f58,15600834,Behavioral activation,10.1037/0022-006x.74.4.658,broad_topic,inline,False,True,False,1,failed,False,e38e2a6a5ae527e882d6
+f00471d96393fe6d17f4,13552978,Behavioral confirmation,10.1037/0022-3514.35.9.656,broad_topic,inline,False,False,False,2,successful,False,c511bd34eeaabb5a8365
+dea175750bfff37e2834,13552978,Behavioral confirmation,10.1037/0022-3514.81.6.1014,broad_topic,inline,False,False,False,2,failed,False,85be0a3721c3b616c62e
+87dab7e3fc7cba34cbf0,19682421,Behavioral contagion,10.1111/j.1467-9280.2009.02306.x,broad_topic,inline,False,False,False,1,failed,False,701b6f3d2e232ddb1d38
+8388cded8f46aec0b1aa,177698,Behavioral economics,10.1257/0002828054201387,broad_topic,inline,False,False,False,1,failed,False,348f2abc554ee6680a0c
+50d54a46b247e2aa7351,25777855,Behavioral immune system,10.1037/ebs0000028,broad_topic,inline,False,True,False,3,successful,False,9ef98deff5322319be76
+2e8849cc208984ff0763,25777855,Behavioral immune system,10.1177/0956797611420166,broad_topic,inline,False,True,False,3,failed,False,d8312a8b4a0f14251d0a
+2da5b7c22bcbf8e2d906,25777855,Behavioral immune system,10.1177/0956797613493642,broad_topic,inline,False,True,False,3,failed,False,f4a819165b2f1bc722c1
+4cdca4956ee24a1e662b,14585748,Belongingness,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,1,mixed,False,b4a8ff6348fccb8463a6
+3731bda64a4dc8631740,30899012,Benevolent prejudice,10.1037/0022-3514.81.1.33,broad_topic,inline,False,False,False,1,failed,False,3c9113a7290ae093bd7f
+41d1e1c7a6c32808cb20,56496498,Benjamin Nagengast,10.1037/a0035615,biography,list,True,False,False,1,"computational issues, robustness not checked",False,7acce3086fbc7169cda5
+bc0bc12a461bf53b0e02,4490772,Bernd Schmitt,10.1509/jmkg.73.3.052,biography,list,True,False,False,1,successful,False,73c325c700f36e3e66d1
+f859be028b88a8310f94,46382490,BET inhibitor,10.1038/nature10509,broad_topic,inline,False,True,False,1,mixed,False,066d6e43ffce1e624648
+ee01d58ae7e1cacb4156,6608143,Bexarotene,10.1126/science.1217697,broad_topic,inline,False,True,False,1,failed,False,ad704bd417fa44da9d23
+196b6dd824a22d3c2737,53686950,Bi-directional hypothesis of language and action,10.3758/bf03196313,broad_topic,inline,False,False,False,1,failed,False,d76cb575af2bc09a0371
+920be77a85cb92bf7368,893668,Bias blind spot,10.1177/0146167202286008,central_effect,inline,False,False,True,1,successful,False,f7bc9b4384b69ce49dfa
+6eca243d7703df70e41e,1284664,Big Five personality traits,10.1037/0022-3514.93.5.880,broad_topic,inline,False,False,False,1,successful,False,a038a44f7959b6ddc246
+a0da68b33531177ed5ea,34997829,Big Five personality traits and culture,10.1111/j.1467-9280.2008.02085.x,broad_topic,inline,False,False,False,1,successful,True,00603e67cbd867e44082
+5c6d6cb0203b102d7989,14132500,BIN1,10.1038/ng.2802,broad_topic,inline,False,False,False,1,failed|successful,False,8a6b2116b0bce98daebb
+c4c957fcd388353fc493,31496181,Biology and political orientation,10.1016/j.cub.2011.03.017,broad_topic,inline,False,True,False,3,mixed,False,9d405d733712f4785d85
+2c4cfb28560ed25aeb75,31496181,Biology and political orientation,10.1111/j.1467-9280.2008.02124.x,broad_topic,inline,False,True,False,3,failed,False,4ea5293eb1053fcf96f6
+ac2e768a6585a4195abf,31496181,Biology and political orientation,10.1126/science.1157627,broad_topic,inline,False,True,True,3,failed,False,b6daea2187c3ee2cc547
+1f0df502fc2a43c6c1de,3275398,Bird intelligence,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,62044d64a3b184b416f6
+adbeaf942a89d849f03a,53802984,Birthday-number effect,10.1002/ejsp.2420170402,broad_topic,list,False,False,False,1,successful,False,d65600e7baca3a540ca2
+8be6e050844ad961e58a,366663,Body language,10.1037/0022-3514.94.3.516,broad_topic,inline,False,True,False,1,successful,True,b26ede4260fed2b03dc5
+1e09104d2627a30c74c1,149223,Borderline personality disorder,10.1177/2167702616677312,broad_topic,inline,False,True,False,1,successful,False,4cee695de27ce9506f8e
+faab6548e7ed58f675c1,18950900,Brand,10.1509/jmkg.73.3.052,broad_topic,inline,False,False,False,1,successful,False,44060aa3f1825fdf9ce4
+02fdc2bc751b7f5bf3c5,76429200,Burden of knowledge,10.1257/aer.20180338,broad_topic,inline,False,False,False,1,successful,False,d89f411d80d643c78b74
+4b6ae9c5acb14aaf7c87,2590175,Busia County,10.1111/j.1468-0262.2004.00481.x,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,d6e479cd5db455c1b168
+41110e7d6b180e1147c2,5624750,C-Raf,10.1038/nature08833,biomedical,inline,False,False,False,1,failed,False,166cb642a88b1e6410cf
+4eb2aef95ff59be0d4f5,39299121,CALHM1,10.1016/j.cell.2008.05.048,biomedical,inline,False,True,False,1,mixed,False,fe4e121434139f39a6fb
+39942c95d1dd86321569,8842207,Cancer Genome Project,10.1038/nature11005,broad_topic,inline,False,True,False,1,mixed,False,5f28c4dc7a3244ff371e
+897cbaad3a45fc924be4,2448941,Cancer stem cell,10.1038/nm.2284,broad_topic,inline,False,True,False,1,failed,False,72c992637e9f0160bf26
+c6c1bd320c16dd10d326,31567468,Capacity theory,10.1111/j.1460-2466.1984.tb02164.x,broad_topic,list,False,False,False,1,failed,False,249ddd5dc63f7013d59f
+3e2db88f4164791e239e,2289641,Capilano Suspension Bridge,10.1037/h0037031,broad_topic,inline,False,False,False,1,failed,False,4bd50e76afd29efbcc86
+2e18cd7fe30931905ee3,84107,Carbon tax,10.1257/pol.20170144,broad_topic,inline,False,False,False,1,"computation not checked, robust",False,fa553dace46d409d45c8
+cf71b90c15be39504999,146250,Carbon-14,10.1038/s41561-020-00674-0,broad_topic,inline,False,False,False,1,failed,False,168b97afca83348aba14
+be86b7620218280f0829,2332422,Carcinogenesis,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,945c200674bf1f818786
+84f7eb93d7131e29188f,38670719,Carhart four-factor model,10.1111/j.1540-6261.1997.tb03808.x,broad_topic,inline,False,False,False,1,failed,False,50f098cace5cea57bc64
+41365a672992ff484fce,39193418,Carnism,10.1177/0146167211424291,broad_topic,inline,False,False,False,1,successful,False,a79aa7d05d4f2855cc01
+5038b2fdf7f872590898,54415041,Carol Brayne,10.1038/ng.2802,biography,list,True,True,False,1,failed|successful,False,93f51e81831c0b4c711c
+9485e27f0e385d793d55,10619739,Carol Dweck,10.1111/j.1467-8624.2007.00995.x,biography,list,True,False,False,1,failed,False,e40bd8a853e1b8141ff9
+4031a6c18f78687c2ec3,45223069,CASS4,10.1038/ng.2802,biomedical,list,False,False,False,1,failed|successful,False,04c2f8649007c24d8ac1
+13bd9251982e4dd2f9df,448244,Caudate nucleus,10.1016/j.nicl.2018.02.020,broad_topic,inline,False,True,False,1,mixed,False,a13e2ab82effddc48b4c
+6aba6f2a5568a7691505,741028,Causal theory of reference,10.1016/j.cognition.2003.10.003,broad_topic,list,False,False,False,1,failed|mixed,False,19617e94eefcfb733f61
+dc1a0942d4ffd66c4df4,11840996,Causes of intelligence,10.1111/j.1467-8624.2007.00995.x,broad_topic,inline,False,False,False,1,failed,False,8b5b08d27ae09cabe2ce
+e87a084b7cd6660d25cb,14723854,CD47,10.1073/pnas.1121623109,broad_topic,list,False,True,False,1,mixed,False,8b9cd6d0fd306b6a2f55
+7576a856909b3bde5d7b,31107926,CDKN2BAS,10.1093/hmg/ddm352,broad_topic,list,False,True,False,2,successful,False,abf6af6aeeacfe19cf01
+1a07cc30b4e3514659f7,31107926,CDKN2BAS,10.1371/journal.pgen.1000378,broad_topic,list,False,True,False,2,successful,False,b20a97a11d286131bedf
+d87d6ad57be308f02717,31192328,Center for Effective Global Action,10.1111/j.1468-0262.2004.00481.x,broad_topic,inline,False,True,False,1,"computational issues, robustness challenges",False,4a5244badb8505b1d052
+ac58fb50c0c897d8ee11,29675785,Certainty effect,10.1126/science.7455683,broad_topic,list,False,False,False,1,successful,True,ab27d8af6c5e194385aa
+3f191198e69d6cc439d0,27665426,Charisma,10.5465/amle.2010.0012,broad_topic,inline,False,False,False,1,mixed,False,94aa9fd226afaa1aa532
+a1af8474b747f44548f7,227674,Charismatic authority,10.5465/amle.2010.0012,broad_topic,inline,False,False,False,1,mixed,False,05ed12348f9321971004
+2b25ea87a0a55f6b277f,8818585,Charles Wardell Stiles,10.1162/qjec.121.1.73,biography,list,False,True,False,1,failed,False,1a6f2c6008b8ed39b877
+114ecf07f6f812cf8367,47579630,Cheerleader effect,10.1177/0956797610397956,broad_topic,inline,False,False,False,2,successful,False,bd075d78f4f5ec767bc5
+1c980d34f47fb17eac60,47579630,Cheerleader effect,10.1177/0956797613497969,broad_topic,list,False,False,True,2,failed,False,f564f89beeeb19572ed3
+04250b5280078dfacba8,9627698,Child development,10.1073/pnas.1113380109,broad_topic,inline,False,False,False,1,successful,False,33900b6090351e22125b
+e2985f10092745d74733,2435914,Child poverty,10.1257/aer.102.5.1927,broad_topic,inline,False,False,False,1,"computational issues, robust",False,13538d2e282535f8a1ad
+3cdd00b4ba39ec036e47,18721790,Child sexual abuse,10.1080/016396299266524,broad_topic,list,False,True,False,1,mixed,False,4c7e1d03459e31c3cc3c
+a8bff0b01c084b34a00d,30873056,Children in the Israeli–Palestinian conflict,10.1257/aer.98.4.1591,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,3ba2e315366d0c659f29
+9148bd2437f3f0e96106,20502327,Choice architecture,10.1111/1467-9280.02431,broad_topic,inline,False,True,False,2,mixed,False,042eb9aa28fa4c8a447a
+6a61b434691693f085f2,20502327,Choice architecture,10.1126/science.1091721,broad_topic,list,False,True,False,2,successful,False,531948b8e49e0e78880e
+7670e73366cdfd4e36da,2999259,Choice-supportive bias,10.1126/science.1186799,broad_topic,list,False,False,False,1,failed,False,c801e6f7bfc756735b0e
+31607244d5bafaab1d00,465176,Chris McKinstry,10.1111/j.1467-9280.2008.02041.x,biography,inline,False,True,False,1,successful,True,9fbb5ecc5079fcc59e5f
+10221a42a540970df34f,56931427,Christian Dustmann,10.1257/jep.28.1.167,biography,inline,True,False,False,1,failed,False,abf173a4614d9c5ccccc
+96c03b734a883e4c8f91,63123780,Christina Salmivalli,10.1111/j.1467-8624.2010.01557.x,biography,list,True,False,True,1,successful,False,b7963de828a1e283d9ed
+a59169c7004d5aa6203a,54779466,Chronic diseases and cancers linked to infectious microbes,10.1101/gr.126516.111,broad_topic,list,False,True,False,1,mixed,False,6484a762eba63c10a2dd
+b7e92239f0a2d3fac53d,52515523,Cindy Meston,10.1007/s10508-007-9175-2,biography,inline,True,True,False,2,successful,False,408571f358172f7e856d
+5b6ad29255eade02a1c0,52515523,Cindy Meston,10.1080/009262300278597,biography,inline,True,True,False,2,successful,False,9acb4f9a3f8b1116975c
+df58f9af6c6ba4eb2a5e,6258,Civilization,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,ccdf3ba5493fd6b8121f
+d8c863284201bde70872,54350981,Clean language interviewing,10.1371/journal.pone.0016782,broad_topic,list,False,False,False,1,successful,False,0b9a89293e752c6169a6
+22b9f01f572f0bec6fe5,24774615,CLEC16A,10.1056/nejmoa073493,broad_topic,list,False,False,True,1,mixed|successful,False,5d3b43d304d226926c10
+35965abf7132ed75f22c,12474403,Climate change denial,10.1016/j.cognition.2014.08.006,broad_topic,inline,False,False,False,2,failed,False,0a368ce0f5b9e575b7fb
+44ea3f762587ec429c4d,12474403,Climate change denial,10.1177/0956797612449177,broad_topic,inline,False,False,False,2,failed,False,a22ca921e2f1af178915
+1960384cc0706e1772fb,46831763,Climate change in Mexico,10.1073/pnas.1002632107,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,441e811e80cc6531f519
+dfea86584d0f34b08f5c,1345201,Clusterin,10.1038/ng.439,biomedical,inline,False,True,False,1,mixed,False,641a43aaac52b271a8db
+6b636c3c086ce3dfcf32,1781678,Cocktail party effect,10.1080/17470215908416289,broad_topic,inline,False,False,False,1,successful,False,5b06c16d55243b95e573
+8cb888e8039d8f8a8a4a,35099585,Cognitive bias mitigation,10.1111/j.1467-9280.2006.01704.x,broad_topic,inline,False,False,False,1,failed|mixed,False,e6d3e64951a77c589fbf
+3977cf7c6e30c228bc69,169305,Cognitive dissonance,10.1126/science.1130726,broad_topic,inline,False,False,False,2,failed|successful,True,8d651a951bfd82585954
+dbcf63b8df7959ba0f52,169305,Cognitive dissonance,10.1126/science.1186799,broad_topic,inline,False,False,False,2,failed,False,620658dc4d35e7f099a3
+a565eeab2bc8ca4889a9,50416177,Cognitive ecology of religion,10.1111/j.1467-9280.2007.01983.x,broad_topic,inline,False,False,False,1,failed,False,8ff671b1944ab5153c1f
+2ef1008ce205bbee6dc4,1532957,Cognitive load,10.1037/0022-0663.100.1.223,broad_topic,inline,False,False,False,3,successful,False,def73c424da95bead286
+558bcb599d922db606c9,1532957,Cognitive load,10.1037/0022-0663.91.2.358,broad_topic,inline,False,False,False,3,failed,False,43a433bef56680b1ab31
+90dd7dd70e800856cd30,1532957,Cognitive load,10.1126/science.1238041,broad_topic,inline,False,False,False,3,failed,False,48f11ff7095110c0a4bc
+6bcd3cea49b2a5313a31,55452331,Cognitive social structures,10.1098/rspb.2011.1959,broad_topic,inline,False,False,False,1,failed,False,8d38f54586fd919f556f
+b9c423e646382458edfc,8725407,Coherence therapy,10.1038/nature01930,broad_topic,inline,False,True,False,1,failed,False,7ebaf18f96e61b171d11
+350bbb86d14542e25f2e,1822603,Cointegration,10.1002/jae.616,broad_topic,inline,False,False,False,1,successful,False,5a6cb1cdecbab731a7de
+6fd553596b9431bf16c7,170409,Colin Firth,10.1016/j.cub.2011.03.017,biography,inline,True,False,False,1,mixed,False,5acb44e036d01707c033
+e59123cf2e968724f9b6,8276451,Collective action problem,10.1037/0022-3514.73.4.733,broad_topic,list,False,False,False,1,failed|mixed,True,9761b4527ddef749590f
+22768fce8a359cf513aa,20756850,Collective intelligence,10.1126/science.1239918,broad_topic,inline,False,False,False,1,failed|mixed|successful,False,b03a3b3545eb7f8dfe6f
+dda1cd52bf4e634ea0ba,33567823,Colonial Origins of Comparative Development,10.1257/aer.91.5.1369,broad_topic,inline,False,False,True,1,"computational issues, robustness challenges",False,77dcfc2a483cb35109b2
+c6ef212f3e353c067ca2,7299,Colonialism,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,e003a00bbf93d48b5a9f
+d2af5985e5338031bc76,22623,Combined oral contraceptive pill,10.1098/rsbl.2004.0174,broad_topic,inline,False,True,False,1,failed,False,11feaf548e56c7d6142b
+9af2d022ab1efbd3a213,657286,Comic Sans,10.1016/j.cognition.2010.09.012,broad_topic,inline,False,False,False,1,failed,False,cadff5f8b24914f3fb64
+a67eba56621b8e44c561,8476844,Common disease-common variant,10.1001/jama.2010.574,broad_topic,inline,False,True,False,1,mixed,False,2aa0f67aa08febdbf12a
+d6dd9e14cf0cff3b3b7c,2318057,Common ownership,10.1111/jofi.12698,broad_topic,inline,False,False,False,1,failed,False,f2b70a9a43cba8a7531f
+17145bc75dca8ddbfdd0,62018,Comparative advantage,10.2307/1923892,broad_topic,inline,False,False,False,1,"computational issues, robust",False,338dfd9b9e509cfd42ef
+a3ddd3cd402585f10487,327443,Compassion,10.1002/bdm.492,broad_topic,inline,False,False,False,2,failed,False,2928b374c1024eabde77
+1522fd319089f7438c60,327443,Compassion,10.1023/a:1007744326393,broad_topic,inline,False,False,False,2,mixed,False,597135fffe0580631782
+c6a202e972c2dd0adea7,33617435,Competing endogenous RNA,10.1016/j.cell.2011.09.029,broad_topic,inline,False,False,True,2,failed,False,9476cdb55373a7fa884a
+6f5d5c21db6f3701e372,33617435,Competing endogenous RNA,10.1038/nature09144,broad_topic,inline,False,False,False,2,mixed,False,f65ac2f73fbcf529cba8
+bab4340f12d54725879a,1149539,Complement receptor 1,10.1038/ng.439,broad_topic,inline,False,True,False,1,mixed,False,ed1410a8da2d90c60b95
+c502fdd264ee0020e592,764891,Concealed ovulation,10.1098/rsbl.2004.0174,broad_topic,inline,False,False,False,1,failed,False,dbcf32040f7d1fb64fe1
+e545ca8686838cc91a94,72710,Conceptual metaphor,10.1371/journal.pone.0016782,broad_topic,inline,False,False,False,1,successful,False,e9404311f196ddf500e3
+e4135ef99eeb4c548d4a,2973525,Confidence,10.1162/qjec.122.3.1067,broad_topic,inline,False,False,False,1,successful,False,ab8b492173cd7e057732
+6b028102b4f198084b76,59160,Confirmation bias,10.3758/bf03197186,broad_topic,inline,False,False,False,1,failed|mixed,True,9219d0cff1830308984b
+b1270a5ad575a7edc6e7,11391242,Confirmatory factor analysis,10.1080/10705519909540118,broad_topic,inline,False,True,False,1,mixed,False,5d1854477a668996f03e
+f665cf8b2f5135963397,37294273,Conflict (process),10.1037/pspp0000096,broad_topic,inline,False,False,False,1,successful,False,55e56a93a39739b264a3
+4d3dd482871a40b93cbe,20757984,Conformity,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,3,mixed,False,a9631700e8c90a39a162
+c4c558494178d45b85a7,20757984,Conformity,10.1037/h0040525,broad_topic,inline,False,False,False,3,mixed,False,eeed912f6d4ea67aa3c1
+ba4e61215857c86ec84d,20757984,Conformity,10.1037/h0062326,broad_topic,inline,False,False,False,3,successful,False,e91d3e9c91842ea5ccb3
+4d26c78e0ce548688c0d,732729,Conjunction fallacy,10.1111/1467-9280.00350,broad_topic,inline,False,False,False,1,mixed,False,e8b45500e9418e688223
+9f355261ef8af15caf7b,18314899,Connectomics,10.1038/mp.2015.109,broad_topic,inline,False,True,False,1,failed,False,0c01f1b7cdaebc4134c2
+4279a946b3862846d2d3,654433,Conscientiousness,10.1037/0022-3514.93.5.880,broad_topic,inline,False,True,False,1,successful,False,9fd50eee34099fd2491f
+ee2b141efa8ebf6040ce,5664,Consciousness,10.1007/s11098-009-9439-x,broad_topic,inline,False,False,False,2,successful,False,6de4bd8159905f532fc0
+7463e26f07447b1a760c,5664,Consciousness,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,2,failed,False,cdf4548857354dda23ca
+0dcb64c5f8446a93dab2,6675,Conservatism,10.1111/j.1467-9280.2008.02124.x,broad_topic,inline,False,False,False,1,failed,False,537faf7d8403af062f3a
+1becda0b27e067175421,3118432,Constant elasticity of substitution,10.1162/rest.89.1.183,broad_topic,inline,False,False,False,1,"computationally reproducible, robust",False,16be4241f4b523c2d167
+f79c226776cde2b2a7d8,11132321,Construal,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,1f6297c7ccd036678fc7
+8aea8f605ea3da637543,27797792,Construal level theory,10.1037/0022-3514.75.1.5,broad_topic,inline,False,False,False,3,failed,False,d1f3282ac56ac3318fdf
+5e3aa8d5a16b9c28b2b9,27797792,Construal level theory,10.1037/0096-3445.135.4.641,broad_topic,inline,False,False,False,3,failed,False,ef864a0cca749a630b24
+a387edfbf9140c61518e,27797792,Construal level theory,10.1111/j.1467-9280.2006.01698.x,broad_topic,inline,False,False,False,3,failed,False,6e0a8c77bd7bcad800fb
+5be8c4c45166883b3c35,754957,Consumer behaviour,10.1086/669476,broad_topic,inline,False,False,False,1,failed,False,0d8fee4c3820d63e53ae
+b264eaf8b8e2d53d1c70,21312301,Context-dependent memory,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,False,False,1,failed,False,e4949ff3c84a9c2fbb59
+167e18dfc37f8662dd0d,1029178,Contextualism,10.1111/j.1468-0068.2010.00795.x,broad_topic,list,False,False,False,1,successful,False,ffb4f476f3791c1359e1
+1eb263e8eabdeb11265f,60913393,Control by deprivation,10.1037/0022-3514.95.1.18,broad_topic,inline,False,True,False,1,failed,False,8e52cf45c0d85523bcd9
+cca7ce545f617d4a514c,511556,Cooperation,10.1126/science.288.5467.850,broad_topic,inline,False,False,False,1,successful,False,99202fe5f055082589f0
+342f84fc299b36ac1a30,4839105,Cooperation (evolution),10.1126/science.288.5467.850,broad_topic,inline,False,False,False,1,successful,False,b86c7c711980d827ff87
+197edb74b4aeadea98ad,18948365,Copyright infringement,10.1086/511995,broad_topic,inline,False,False,False,1,failed,False,6fd0da8d62f82bf6228d
+5c531b2a71aedaf05af4,235657,Corporate governance,10.1111/0022-1082.00115,broad_topic,list,False,False,False,1,"computational issues, robustness challenges",False,f18c593d7069ab76388f
+dfb7e7d95a717e316c59,65877174,Corporate sociopolitical activism,10.1002/smj.2682,broad_topic,inline,False,False,False,1,mixed,False,b04a0a2c6976d237456b
+44ac08f2659ae1ce1d5f,162577,Corvidae,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,2fd7fbbdb1751b43ac16
+ef229f7a45cfefeb01d6,4917604,Corvus,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,12cd6353277855d2945a
+b1b1b38319dc468cb120,60654095,Costly signaling theory in evolutionary psychology,10.1086/673256,broad_topic,inline,False,False,False,1,failed,False,61791565f5262e55735d
+6de16b5a6cacc659d8a3,17286936,Counterfactual thinking,10.1037/0033-295x.93.2.136,broad_topic,inline,False,False,False,1,successful,False,4b71359817082dfcccd3
+b12ccf3c2c7d163f2d03,13633817,Counterproductive norms,10.1037/0022-3514.58.6.1015,broad_topic,list,False,False,False,1,mixed,False,e3a93e6e598aaa8e7350
+332015cfe4515a8b0216,53099197,CRACD-like protein,10.1038/sj.mp.4001437,biomedical,inline,False,True,False,1,successful,False,316086493779b65c22af
+641b1ea60ba993b6ffd0,36932543,Craig B. Thompson,10.1016/j.ccr.2010.01.020,biography,inline,True,True,False,2,successful,False,ac37192b4383515eb69d
+caf31f67b302d3d5347f,36932543,Craig B. Thompson,10.1038/nature10860,biography,inline,True,True,False,2,mixed,False,3bb9b1c71986f665424a
+f9a1340eb1c3bf1cbd21,938586,Creativity techniques,10.1177/0956797612446024,broad_topic,inline,False,True,False,1,failed,False,994f3a0eaa7ee7b20ab6
+bdd74e6a2a6c6d79d48c,54697184,Crime drop,10.3386/w8004,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges|computationally reproducible, robustness challenges",False,f67d49ef5a9e73722a39
+b73281e46df51f5a97ee,24083702,Criticism of multiculturalism,10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,0b6ca035384bb82d6a30
+55859d0336d6ea7a3a67,2367207,Cue-dependent forgetting,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,list,False,False,False,1,failed,False,8d35c0dd13242a45997a
+4aee01133ab6f6fe7c96,74373581,Cultural attractor theory,10.1038/nature06176,broad_topic,inline,False,False,False,1,successful,False,6e6354ec146b81b25f67
+a007fd828c5fae4c9b0b,1502499,Cultural capital,10.1002/tea.21227,broad_topic,inline,False,False,False,1,successful,False,624d39681c0300ce7953
+46fda072f2fb006ec946,11359053,Cultural economics,10.1006/game.1995.1027,broad_topic,inline,False,False,False,2,successful,False,df93b28937f7eedf5113
+eb4da1977c84a4b87b39,11359053,Cultural economics,10.1093/qje/qjt005,broad_topic,inline,False,False,False,2,"computation not checked, robust",False,76c69263fe7088e1c5ad
+98b0d76efa4052915027,7745490,Cultural universal,10.1177/0956797611434537,broad_topic,inline,False,False,False,1,failed,True,d9eb62f77b8539336998
+f6a614406b09910f01d0,35009581,Curse of knowledge,10.1037/0096-1523.1.3.288,broad_topic,inline,False,False,False,2,failed|successful,False,696f6dd2a81273d28cbc
+68aa4f85a7bc4b673d47,35009581,Curse of knowledge,10.1111/j.1467-9280.2007.01909.x,central_effect,inline,False,False,False,2,failed,False,5f8e33d8671972890fa2
+20341c534e5822b7d53d,5001414,Customer base,10.1037/0022-3514.71.2.230,broad_topic,inline,False,False,False,1,failed,False,63398b6914c4c47b74f1
+11204fedc5e27c068d8a,2675164,Cyberpsychology,10.1098/rspb.2011.1959,broad_topic,inline,False,False,False,1,failed,False,b017db333dadceb5c1aa
+24272d41fa7f69dcf149,7327445,Dacher Keltner,10.1073/pnas.1118373109,biography,inline,True,False,False,1,failed|mixed,False,f57b8c67f335d4e6d5f0
+854582c61f6645ec6599,52211377,Damon Centola,10.1073/pnas.1722664115,biography,inline,True,False,False,1,failed,False,253c136ef7adf63fdc88
+849b70ac2dd5827f4704,8774721,Dan Ariely,10.1111/1467-9280.00441,biography,list,True,False,False,3,failed,False,39eb12e37d3f37724095
+a95062e7f0fbadee91f0,8774721,Dan Ariely,10.1111/j.0956-7976.2004.00757.x,biography,list,True,False,False,3,mixed,False,ac3ef5366e209fa0d2db
+f81509863b27e1df1e51,8774721,Dan Ariely,10.1509/jmkr.45.6.633,biography,inline,True,False,False,3,failed,False,325f605d94d33181fe52
+a8fa56d34182fb0c918c,2238286,Daniel Goldstein,10.1126/science.1091721,biography,inline,True,False,False,1,successful,False,63096855948a28327859
+4bc85acad3e60f9de06c,165492,Daniel Kahneman,10.1037/0033-295x.93.2.136,biography,inline,False,False,False,1,successful,False,4d67b078bd42a92f8b5a
+074bc07b4bcff1d22641,2749117,Daniel Levitin,10.3758/bf03206733,biography,inline,True,True,False,1,successful,False,dfe1b386657e481b2268
+90ec1b438d425d074c70,39918669,Daniela Schiller,10.1038/nature01930,biography,inline,True,True,False,1,failed,False,d53aaab1a4ae802620f4
+c2759ed3488cfe310ba3,46710043,Daphne Bavelier,10.1038/nature01647,biography,inline,True,False,False,1,failed,False,55df49fc8ee274b43f86
+e12874c0a1aa7c3b7da3,18280830,Dark triad,10.1016/j.paid.2007.11.003,broad_topic,inline,False,True,False,1,mixed,False,4204d0646632d8404c04
+166f984ca1ad1d9e3770,1803497,Daron Acemoglu,10.1257/aer.91.5.1369,biography,inline,True,False,False,1,"computational issues, robustness challenges",False,a99902ed6de344ae4fe3
+bcb6681350eea7cb5b68,364117,Daryl Bem,10.1037/a0021524,biography,inline,True,True,True,1,failed|mixed,False,5b268872ac536ce67f09
+a1b24668031fe07d7b40,73415202,Dating preferences,10.1037/0022-3514.94.2.245,broad_topic,inline,False,False,False,1,successful,True,55ffee86162b68535892
+445ac5fe933669aa8b3d,45410635,David A. Hafler,10.1056/nejmoa073493,biography,list,True,True,False,1,mixed|successful,False,0dc1cff9a995cfabf9d8
+333df4545f47d5ed055c,71847251,David A. Pizarro,10.1037/a0015960,biography,list,True,False,False,1,failed,True,de1eba175bd7aea41527
+fa991703921fbf0151de,1621653,David Buss,10.1007/s12110-004-1010-z,biography,inline,True,False,False,1,mixed,False,3cb235d305d6306c73e5
+03c79477f30cbdbb640f,61340549,David Deming (economist),10.1257/app.1.3.111,biography,inline,True,False,False,1,mixed,False,e50c6e53ed16e4647877
+cadf0ec75818a8e7977e,21040083,David G. Rand,10.1037/a0025391,biography,list,True,False,False,3,failed,False,803f1f55e08751d6b809
+b0c528ab4dfbecb362ae,21040083,David G. Rand,10.1038/nature11467,biography,list,True,False,False,3,failed,False,1e0f2e6048e102598bea
+2a8e796d53ebe3ffeedd,21040083,David G. Rand,10.1257/aer.102.2.720,biography,list,True,False,False,3,successful,False,d55a74d28c27b1bfec7e
+39f82bb3fcdebf6d6c32,54867376,David Mustard (economist),10.1086/467988,biography,inline,True,False,False,1,"computationally reproducible, robust",False,b8716dbbc81ac17eaa78
+0cc0ab6fcd09ac07c8e3,69570495,David N. Weil,10.2307/2118477,biography,inline,True,False,False,1,successful,False,0d8fdb4b11d1c7a131f1
+357f5c75368a5fee02cb,568631,Daydreaming,10.1177/0956797612446024,broad_topic,inline,False,True,False,1,failed,False,01a36ee21a0ded26819b
+11a0247f540f9f4c9c01,151604,Deception,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,9902a418aa1fd24d5a4e
+71d21f46f725bb3a5e9e,299145,Deepak Chopra,10.1017/s1930297500006999,biography,inline,True,True,False,1,mixed,False,a76e7b67444273610c54
+40fd0f609decd698e343,40941210,Default effect,10.1023/a:1015044207315,central_effect,inline,False,False,False,2,failed|mixed,False,e8e38d8609262ee08e31
+2654544787ead829adc4,40941210,Default effect,10.1126/science.1091721,central_effect,inline,False,False,False,2,successful,False,41d6376ab5fa2bd34a31
+6452b9f43512238f2d32,804964,Dehumanization,10.1073/pnas.1705238114,broad_topic,inline,False,False,False,1,successful,False,29ff751dff4e8366c25a
+a2e55f1149b58a3e2364,54375684,Democratic backsliding,10.1038/s41562-023-01594-w,broad_topic,inline,False,False,False,1,successful,False,2f9c75a6b5fc3e1eef0e
+fa577f6a3f6f89102501,57568707,Deniz Başkent,10.1016/j.heares.2013.12.003,biography,inline,True,True,False,1,failed,False,0545ae2c84cd78ec023e
+ec545211e812d08fc419,747259,Dependency theory,10.1111/j.1468-0297.2011.02482.x,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,9eb253c2c99b0db165d3
+94a12721261aebb86ac8,1411925,Development aid,10.1111/obes.12012,broad_topic,inline,False,False,False,1,mixed,False,f3ffcca580f30f29ccc9
+6135e2d9fb3da8d78bb5,9014,Developmental psychology,10.1038/358749a0,broad_topic,inline,False,False,False,1,successful,False,f193d986996e68fe9cf2
+329c50284ba7c26746b6,32036278,Dichotic listening,10.1080/17470215908416289,broad_topic,inline,False,True,False,1,successful,False,3f9fda631f829516e734
+58d911620f3eeb250d6f,1556970,Dictator game,10.1002/soej.12223,central_effect,inline,False,False,False,3,failed,False,7f15236e16dea292d6ab
+b5cf47f82109fba039e6,1556970,Dictator game,10.1006/game.1995.1027,broad_topic,inline,False,False,False,3,successful,False,3c117a94e8a70cfa44b1
+8adf2ad6145ab2d90ded,1556970,Dictator game,10.1007/s10683-011-9283-7,broad_topic,inline,False,False,True,3,"computation not checked, robustness challenges",False,566583d3d40c95c4f5ed
+9948dd6ce0bfd1bbc6fd,76146846,Diego A. Pizzagalli,10.1016/j.biopsych.2004.11.026,biography,inline,True,True,False,1,failed,False,deff2448006c509a09a1
+3c95bf655e8821e51fb6,102867,Digit ratio,10.1016/j.earlhumdev.2003.12.002,broad_topic,inline,False,True,True,2,failed,False,f5531bcdedbf5c67260d
+2e17804c8897f8b5afea,102867,Digit ratio,10.1111/j.2047-2927.2012.00013.x,broad_topic,inline,False,True,False,2,failed,False,7b4d2c5792a035700a92
+578cea546db66610df98,48746120,Dimensional Obsessive–Compulsive Scale,10.1037/1040-3590.14.4.485,broad_topic,inline,False,True,False,1,successful,False,dd9f21b40a97ad8c9b6e
+a1378c4da00f97387adf,65376326,Disinformation attack,10.1371/journal.pone.0181640,broad_topic,inline,False,False,False,1,failed,False,ac467e2ac07eb54e8534
+4c2760be8ede928f05e3,13987523,Distinction bias,10.1037/0022-3514.86.5.680,central_effect,inline,False,False,False,1,mixed,False,88108d37b979e8728033
+7f6a0776247eb2fc6d12,52324876,Distress tolerance,10.1016/j.beth.2005.03.002,broad_topic,inline,False,True,False,1,successful,False,72fddf09d9bd505a0e18
+985e13ed3c2c2e1e7d31,75565127,Distributional data analysis,10.1198/016214501753168235,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,650f116c3f75806ebcdf
+893406162c10a7711582,66992826,Do-gooder derogation,10.1016/j.jesp.2017.11.005,broad_topic,inline,False,False,False,2,successful,False,ca9102d38e42c600350f
+fa563a0d3423831cbb17,66992826,Do-gooder derogation,10.1037/0022-3514.95.1.76,broad_topic,inline,False,False,False,2,failed,True,c5bf2c6a116103e90240
+deea14e6af722112b290,7118482,Dog behavior,10.1007/s10071-012-0510-1,broad_topic,list,False,False,False,1,successful,False,505bd1d3e32359698920
+5f262f58de75723b5c60,65122016,Doomscrolling,10.1073/pnas.1908369116,broad_topic,inline,False,True,False,1,successful,False,165889dc867c50a9a149
+d49ea93d5996e77246ad,4279209,Door-in-the-face technique,10.1037/h0076284,central_effect,inline,False,False,False,1,successful,False,3d2bc9cc37732a728389
+8f29be4b2593a54b2c59,59518311,Doughnut (economic model),10.1177/0956797611429579,broad_topic,inline,False,True,False,1,mixed,True,14429d369b02e3baeb9a
+53815513bb1d04066e91,408288,Douglass North,10.1257/aer.91.5.1369,biography,inline,False,False,False,1,"computational issues, robustness challenges",False,f8f9112bae84332b846c
+5dabed34a950ee62b504,14834924,Dr. Fox effect,10.1097/00001888-197307000-00003,broad_topic,inline,False,True,True,1,mixed,False,576f642e87b953410a7b
+6147df2e20a860e5e826,8544,Drawing,10.1037/1931-3896.2.1.8,broad_topic,inline,False,False,False,1,failed,False,1bacf935433467a657ff
+4283cbf8d5f6dccecc1a,13075744,Drive theory,10.1037/h0028063,broad_topic,inline,False,False,False,1,mixed,False,0edbf9a63e1af3ec0ab4
+63b2d99d45331d1fab41,6240358,Dual process theory,10.1002/bdm.656,broad_topic,inline,False,True,False,1,successful,False,11c39d90e06cdeeb90fb
+c3feee5a2572b76951ba,42621632,Dual process theory (moral psychology),10.1016/j.cognition.2007.11.004,broad_topic,inline,False,False,False,1,failed,False,d7eac241793af1f0f6f9
+c2cc166034907872f498,6396743,Dysbiosis,10.1101/gr.126516.111,broad_topic,inline,False,True,False,1,mixed,False,0fb96fc6cb171765961d
+b92a1303b0989e7fab3e,54880779,Economic anxiety,10.1177/0956797615625640,broad_topic,inline,False,True,False,1,failed|mixed,False,c333731ae0c339c014fb
+a76aa025ab869c68e001,65869118,Economic evaluation of time,10.1037/a0027407,broad_topic,inline,False,False,False,2,successful,False,3e38654e3d395137a4ed
+e6272ae9192553deda4a,65869118,Economic evaluation of time,10.1126/science.1132491,broad_topic,inline,False,False,False,2,mixed,False,a84cdbbc21a08dbac25d
+240d393334c12a59bb52,69415,Economic growth,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,2,"computational issues, robustness challenges",False,8e332a229e657857b207
+ae78149b8815eb6631c3,69415,Economic growth,10.2307/2118477,broad_topic,inline,False,False,False,2,successful,False,4df77154ea9daccb9171
+19d3e9ed4061ed0dfb5b,64082648,Economic impact of the COVID-19 pandemic in the United States,10.1016/j.jom.2014.11.002,broad_topic,inline,False,False,False,1,mixed,False,5280e9231f3db57d44d3
+4e632a46dc93f067953e,46885960,Economics of networks,10.1086/500990,broad_topic,inline,False,False,False,1,successful,False,74d2286a7153139e8b31
+732ed9806dff0dcb29df,12113,Economy of Greece,10.3386/w15639,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,42ec4286078992ee8599
+d7f8e7e822e8d81dd26d,23807334,Eddie Harmon-Jones,10.1037/0022-3514.94.1.1,biography,list,True,False,False,1,failed,True,9a53c587519847cbff24
+e73ccc3ff1d7e5d3272b,210105,Edmund Gettier,10.5840/philtopics2001291/217,biography,inline,False,False,False,1,failed,False,963688ba7c7766994829
+684580de112a006c8d61,57153491,Education reform in the United States,10.1257/mac.3.3.92,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,f7ef352e14bf9e0bb9d0
+73dbebec3cb758f92758,33144061,Edward Miguel,10.1111/j.1468-0262.2004.00481.x,biography,list,True,True,True,1,"computational issues, robustness challenges",False,debafa0b180b81db1ad0
+4a112d24fac4592aaf29,36903454,Effective altruism,10.4324/9780203865972-24,broad_topic,inline,False,False,False,1,successful,False,41eb838df05553e1397d
+1c0d06de9c8a2c3c44bc,5672733,Effects and aftermath of rape,10.1111/j.0956-7976.2005.00810.x,broad_topic,list,False,True,False,1,failed,False,cdcb2a87d8a958a47a12
+7ceb55839127b0d26d5f,83662633,Effects of video games on behavior,10.1038/nature01647,broad_topic,inline,False,True,False,1,failed,False,fbfd22a4fc416ffd5879
+404f46222ee9643c0c79,164602,Efficient-market hypothesis,10.1111/j.1540-6261.1997.tb03808.x,broad_topic,inline,False,False,False,1,failed,False,8dc2b938cf766f5ca543
+e5241c104da40417f539,1451995,Egocentrism,10.1126/science.1107621,broad_topic,inline,False,False,False,1,mixed,False,48306c82717c6a5a12d8
+cc01936b2835e0ab5cdf,1034602,Eicosane,10.1021/acscentsci.8b00879,broad_topic,inline,False,False,False,1,successful,False,8fdce50195efd82d816f
+e71e8db3838767b9872c,2176826,Elaboration likelihood model,10.1177/0093650215609676,broad_topic,inline,False,False,False,1,failed,False,f1f2f5e5a1d9f85daee7
+37b86baa1e6d80ed229c,5902168,Elasticity of substitution,10.1162/rest.89.1.183,broad_topic,list,False,False,False,1,"computationally reproducible, robust",False,67b7c0e0064d68d49f61
+4fecc2e2f15d41e5c3cb,35594519,Eldar Shafir,10.1162/003355397555208,biography,inline,True,False,False,1,successful,False,fad9cefd7acbfcbb9a2e
+3d6282391d272b78ad6c,39717451,Elicitation technique,10.1257/0002828054201387,broad_topic,list,False,False,False,1,failed,False,f46cfe65f89a885647f1
+cf624638c37a07db7540,45155414,Embodied bilingual language,10.3758/bf03196313,broad_topic,inline,False,False,False,1,failed,False,ef089ce5e6c77e8b2983
+c7bf9683b5e5b25d7cc8,33034640,Embodied cognition,10.1016/j.cogbrainres.2005.02.020,broad_topic,inline,False,True,False,6,failed,False,b90f101775f3e0fd2ebe
+30fc3d81d49917f5769a,33034640,Embodied cognition,10.1037/0022-3514.54.5.768,broad_topic,inline,False,True,False,6,failed|mixed,False,0677716e9bdece3bd6f2
+7c4a266261dfeddc4b8e,33034640,Embodied cognition,10.1111/j.1467-9280.2009.02426.x,broad_topic,inline,False,True,False,6,failed|mixed,True,0e6f37d9ac2a425821b3
+2ba56f2cb897fa508087,33034640,Embodied cognition,10.1126/science.1162548,broad_topic,inline,False,True,True,6,failed,False,098afa135e851219942b
+75f03efc2091099aeba2,33034640,Embodied cognition,10.3758/bf03194043,broad_topic,inline,False,True,False,6,failed,False,b9a5829c8a47240968ba
+ecf41f2ac90f2f3205c8,33034640,Embodied cognition,10.3758/bf03196313,broad_topic,inline,False,True,False,6,failed,False,7a2309aec2fc96577d6b
+d8c21641d4e886678345,75137033,Emily Pronin,10.1177/0146167202286008,biography,list,True,False,False,1,successful,False,ae3cf3a4349ffe00f7c2
+0b396e6e609079345020,21312317,Emotion and memory,10.1177/1754073908100432,broad_topic,inline,False,False,False,1,successful,False,cc2dc3666c77e6e545a0
+670071097060b572b77a,37940820,Emotion perception,10.1037/h0054651,broad_topic,inline,False,False,False,1,successful,True,1e64a7cc775344c73222
+8616c22f699593ab419d,96009,Emotional intelligence,10.1037/a0034755,broad_topic,inline,False,False,False,1,successful,False,8a7f6e93561a2d0301da
+002dcb673c43a5ba1cee,17476149,Emotional self-regulation,10.1177/0956797611418350,broad_topic,inline,False,True,False,1,successful,False,6cb5cbddecc22b8f9aaf
+48275e386bf671ecaadb,302319,Empathy,10.1007/s10071-012-0510-1,broad_topic,inline,False,True,False,4,successful,False,967e952621f5b2dc85b1
+4eb2035861abc205d842,302319,Empathy,10.1080/00224545.2020.1796567,broad_topic,inline,False,True,False,4,mixed,False,bb6592e120f454cb41cd
+2c52f5e90faab696d9c6,302319,Empathy,10.1111/j.1467-9280.2006.01705.x,broad_topic,inline,False,True,False,4,failed,False,057e50b5458520da98be
+9c8a232399845ec72641,302319,Empathy,10.1111/j.1467-9280.2006.01824.x,broad_topic,inline,False,True,False,4,failed,True,17be2758e25dca7c113a
+b40f4042fad5699fdace,70504579,Empathy in literature,10.1126/science.1239918,broad_topic,inline,False,False,False,1,failed|mixed|successful,False,6522fdd0a4b48418c77c
+13f9e3605c98923c1ca7,8770941,Empathy-altruism,10.1016/j.obhdp.2006.01.005,broad_topic,inline,False,False,False,1,failed,False,3d5c0c241046a531c601
+441c4b02239be8f07381,2811532,Employment discrimination,10.1086/511799,broad_topic,inline,False,True,False,2,mixed,False,ebfd6a36ae41b7c04260
+22161e61bd02eeb2de3f,2811532,Employment discrimination,10.1093/qje/qjt005,broad_topic,inline,False,True,False,2,"computation not checked, robust",False,3e183e8e6b0008976e65
+4892a987b3d33c85ec18,63606143,Enclothed cognition,10.1016/j.jesp.2012.02.008,central_effect,inline,False,False,True,2,failed,False,577d83c85847c88306a7
+aa59fdfdb7788ef0a180,63606143,Enclothed cognition,10.1037/h0054651,broad_topic,inline,False,False,False,2,successful,True,1e01ab6cf3a6915a7fbb
+e4eaf247d79a0a380b8d,33106880,Encoding specificity principle,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,False,False,1,failed,False,c09a0934802c57e64100
+e8d1b8b878730ca7ea01,804737,Endowment effect,10.1257/0002828054201387,central_effect,inline,False,False,False,1,failed,False,1717b99dda8bfe96e25b
+5e56caacb13976590ef3,31905395,Energy in Sweden,10.1257/pol.20170144,broad_topic,inline,False,False,False,1,"computation not checked, robust",False,4b3f6c4db78645052669
+b7b75520c90ec4aedaa7,61978638,Ensemble coding,10.1111/j.1467-9280.2008.02098.x,broad_topic,inline,False,False,False,1,successful,True,d61afaba35351eb2c933
+906e4d8af0833fe8c548,45314567,Entrepreneurial orientation,10.1002/smj.4250100107,broad_topic,inline,False,False,False,1,successful,False,ac177e687195c684747a
+ba1d07f0e6959adddcef,72161,Environmental determinism,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,c1467a050950a1a019da
+a149f174320e7f861259,20270864,Environmental enrichment,10.1037/a0033010,broad_topic,inline,False,True,True,1,successful,False,b1b72519f2d0f28d2131
+b812e7e7cd813f8b86da,14763387,ERAP1,10.1038/ng.2520,biomedical,inline,False,False,False,1,failed,False,7fa379f3cbef21d7193e
+1f3f5859690fd7115465,2625993,Erdős–Bacon number,10.1016/j.cub.2011.03.017,broad_topic,inline,False,False,False,1,mixed,False,08c2c950deff88e06d09
+beb8201ba66b5d629d60,53106336,Erica Field,10.1257/app.1.4.140,biography,inline,True,True,False,1,mixed,False,e9227b3ea5758482af3c
+f2e2c2c1f790e40ead5b,16719122,Erkki Ruoslahti,10.1126/science.1183057,biography,inline,True,True,False,1,failed,False,e0f53051f8fa950eb019
+290df3e33facbd71e353,14231342,Error management theory,10.1111/j.1467-9280.2008.02092.x,broad_topic,inline,False,False,False,1,failed,True,bf70c43f7b2476abc20d
+c2a9e57296a38a916d8e,27318965,Error-related negativity,10.1037/a0027586,broad_topic,inline,False,False,False,2,failed,False,e06bee22052926f1c89d
+4296d90313cb5016fd3c,27318965,Error-related negativity,10.1111/j.1467-9280.2008.02053.x,broad_topic,inline,False,False,False,2,failed,False,392adda5b6204ae7cdfb
+700faaaee7254768a779,341107,Ersatz good,10.1177/0956797616640705,broad_topic,inline,False,False,False,1,successful,False,43e7a01d2071acd345ef
+1bdb2e025f6cc3368249,69481760,Escherichia coli NC101,10.1126/science.1224820,broad_topic,inline,False,False,False,1,mixed,False,7adf7f8b22770a40d5a8
+0dc09561719be21f2861,2857195,Ethics of eating meat,10.1177/0146167211424291,broad_topic,inline,False,True,False,1,successful,False,116b2e2fdd270a3e4531
+cce7586784f90b527ed7,48069113,Eugene Rosenberg,10.1073/pnas.1009906107,biography,list,True,False,False,1,failed|mixed,False,603c9bc2cef98e8ccf39
+836d139d7ac03c094f64,195802,Eurasian magpie,10.1371/journal.pbio.0060202,broad_topic,list,False,False,False,1,failed,False,3403058741998f88ad9e
+8b096cdbd9d0356841ae,75324622,Evidence Action,10.1111/j.1468-0262.2004.00481.x,broad_topic,inline,False,True,True,1,"computational issues, robustness challenges",False,638c3d575e260c5dc170
+42d9ecf3855bf894eff7,9897,Evil,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,e27a6472a039301ad57b
+41a56a1dd01a275121df,21312284,Exceptional memory,10.1177/1754073908100432,broad_topic,inline,False,True,False,1,successful,False,629879ebd2f798ed82c3
+228e8deffa9ac8b11e44,78498369,Exceptionality effect,10.1037/0033-295x.93.2.136,central_effect,inline,False,False,True,1,successful,False,c8e2f7b5247495baa3ad
+6eb8a603cf3dd6a17e7c,21312269,Executive dysfunction,10.1037/0096-3445.136.2.241,broad_topic,inline,False,True,False,1,failed|successful,False,1eda7be178d30cdba032
+b6dd2f280b0d843b60a0,51602014,Exeter Prize,10.1257/aer.102.1.337,broad_topic,inline,False,False,False,2,successful,False,497715492cb46106126c
+fc7d7bc49f953fb8dbd4,51602014,Exeter Prize,10.1257/aer.20160425,broad_topic,inline,False,False,False,2,mixed,False,219a4d4ff6b26d80f859
+e064315166ae8441b270,42363753,Expectation confirmation theory,10.2307/3250921,broad_topic,list,False,False,False,1,successful,False,40545b46bf4c6e41f752
+42d5d74a88626c481191,3961839,Experience machine,10.1080/09515080903532290,broad_topic,inline,False,False,False,1,successful,False,6255e5732cd08294910f
+8b68b5d4ea35d970dfae,548102,Experimental economics,10.1257/aer.101.2.819,broad_topic,inline,False,False,False,1,failed,False,cb7f52752695bcf1ee5c
+4519f2cd22ec31cc5a4e,1842799,Experimental philosophy,10.1016/j.cognition.2003.10.003,broad_topic,inline,False,False,True,5,failed|mixed,False,ce2cebe07e20939b0293
+ae45a2d79f39b56738b6,1842799,Experimental philosophy,10.1080/09515080307771,broad_topic,list,False,False,True,5,successful,False,fd529e0d989e01dae2b5
+c4f68ddc465ffdae74a4,1842799,Experimental philosophy,10.1080/0951508042000202354,broad_topic,list,False,False,True,5,successful,False,d328242c14095df99ba3
+7b2e61925620b1aeee01,1842799,Experimental philosophy,10.1093/analys/63.3.190,broad_topic,inline,False,False,True,5,successful,True,3a9f747ab6255bf42148
+6130cf1ee68a6bd78ea6,1842799,Experimental philosophy,10.5840/philtopics2001291/217,broad_topic,list,False,False,True,5,failed,False,09198cdd853deb9d6411
+8e85ebfc241bdc8d1894,364299,Experimental psychology,10.2307/1412188,broad_topic,inline,False,False,False,1,successful,False,f73fa04cbb70fc0b7061
+e1af58c5d6cfb0ac065b,862904,Expressive language disorder,10.1523/jneurosci.5996-10.2012,broad_topic,list,False,True,False,1,failed,False,2341450cd5836264c26c
+c56b9a31082b826927c5,81162675,Expressive responding,10.1093/poq/nfx042,broad_topic,inline,False,False,False,1,successful,False,36ac293d5feb9706f846
+15e082bc67461aa5da3d,50309606,External memory (psychology),10.1126/science.1207745,broad_topic,inline,False,False,False,1,failed,False,b756e3dd86d6053a3ec6
+50ff4519491fa452c85b,2785756,Extinction (psychology),10.1002/jaba.106,broad_topic,inline,False,False,False,1,successful,False,4107546f2a127273dcba
+f101ff6b5c34d871b513,43476921,Extracellular vesicle,10.1038/nm.2753,broad_topic,inline,False,True,False,1,failed,False,61592714a4d1cc288dce
+da688c22c57a9231ea2f,24050915,Extraversion and introversion,10.1037/0022-3514.83.6.1409,broad_topic,inline,False,False,False,2,mixed,False,39fc2f3744138ae77474
+f728bcf6209feb5b128f,24050915,Extraversion and introversion,10.1037/0022-3514.84.6.1236,broad_topic,inline,False,False,False,2,successful,False,c86f94579394bb808f75
+332d0d83c68c29a56b0b,18190064,Eyewitness testimony,10.1037/0278-7393.4.1.19,broad_topic,inline,False,False,False,1,successful,False,f732446343d2beddb933
+5f196bfc8ed1dac50b0c,485309,Face perception,10.1093/scan/nsn046,broad_topic,inline,False,False,False,2,successful,False,3028dbee04f95c41a2f8
+4518da300cd5b88f8d23,485309,Face perception,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,2,failed,False,08ac6b8d2c6751e6ef80
+8e2cde0d1b658257169b,7529378,Facebook,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,7b5ccc8b57d60c75450d
+cad1bd5a3129c1b1e367,242760,Facial expression,10.1037/0022-3514.54.5.768,broad_topic,inline,False,False,False,1,failed|mixed,False,a8d557fa2d66830d4736
+a9833b865f1809fd2aba,9284012,Facial feedback hypothesis,10.1037/0022-3514.54.5.768,central_effect,inline,False,False,True,1,failed|mixed,False,4dc173eca72da617da86
+9eb6289e8510c51b2c97,56143259,Factor investing,10.1086/374184,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,565ac1a065573452d75a
+cc0d5a62b137dca054c0,1299771,Failure to appear,10.1126/science.abb6591,broad_topic,inline,False,False,False,1,successful,False,2b9481a09a2ff50c2322
+94408f80e4649dbb311e,52881503,Fake news,10.1177/0956797620939054,broad_topic,inline,False,False,False,2,"computational issues, robustness not checked|mixed",False,1c768a09b4492d2c2993
+17a54e29267e962ba85f,52881503,Fake news,10.1371/journal.pone.0175799,broad_topic,inline,False,False,False,2,failed,False,6f4c7c3c84892e7cc8ed
+bceebb52c446e3736c26,14983819,False memory,10.1177/09567976221108944,broad_topic,list,False,True,False,1,successful,False,54615ffdab6dc4641013
+51dafea7c53ed4291394,56968840,False-uniqueness effect,10.1037/0022-3514.77.2.221,broad_topic,inline,False,False,False,1,successful,False,bfa6e82456ddcde81743
+d746b4898eeb6b729616,18499106,Fama–French three-factor model,10.1111/j.1540-6261.1997.tb03808.x,broad_topic,inline,False,False,False,1,failed,False,e350cefbd70e78988c4a
+727fd9709b346a700232,7735247,Fama–MacBeth regression,10.1086/260061,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,40556e21b56af47b4246
+8e40992fffbde67614b2,235562,Fatigue,10.1152/japplphysiol.91324.2008,broad_topic,inline,False,True,False,1,failed,False,c6b9d963a45aa5d99e8c
+771af2829adf13cd1244,593155,Federal Open Market Committee,10.1257/aer.20161923,broad_topic,inline,False,False,False,1,"computationally reproducible, robust",False,7a5c256d35ca8564d4a0
+bd969c1eedb4cde6846e,67361927,Feedback informed treatment,10.1037/cou0000131,broad_topic,inline,False,True,False,1,successful,False,f85e684fd8bfbd17b272
+7cd7686805b4e8507502,67113934,Fei Xu,10.1037/0033-295x.114.2.245,biography,inline,True,False,False,1,successful,False,4dd8c72ecb0b43439eb6
+89bdfbee16717cd7f050,55234564,Female education in STEM,10.1073/pnas.0910967107,broad_topic,inline,False,False,False,1,successful,False,a2f9ab54c91def003fe4
+5948aca2821a4efe89d9,1305037,Field experiment,10.1016/j.jue.2008.02.004,central_effect,list,False,True,False,3,mixed,False,3a678d76d338b4b325f2
+3b95af53321c276d5672,1305037,Field experiment,10.1037/h0076284,broad_topic,list,False,True,False,3,successful,False,3f4721b9a33538a67dbd
+b40134932aa11096be06,1305037,Field experiment,10.1162/0033553041502153,broad_topic,inline,False,True,False,3,successful,False,e48ce292d18bb273f19a
+64992cf90c5630880536,31776562,First impression (psychology),10.1177/0956797610388048,broad_topic,inline,False,False,False,1,mixed,False,d4826ec7d90a69b0dda0
+3712684a6ca375a9ab30,713491,Five stages of grief,10.1001/jama.297.7.716,broad_topic,inline,False,True,False,1,mixed,False,4e4215d4d848b65a65fa
+020940bae15907b53b11,361953,Folk psychology,10.1006/jesp.1996.1314,broad_topic,inline,False,True,False,1,successful,False,9774df230fcf28606fb3
+b586c23387944bd103a2,25532085,Foreign language anxiety,10.1111/j.1540-4781.1986.tb05256.x,broad_topic,inline,False,True,False,1,mixed,False,45d613cf18edd0cff2a0
+aea947d7a0150bba4bbe,60757785,Forward testing effect,10.1126/science.1191465,broad_topic,inline,False,False,False,1,successful,False,d2330eed6503683c5338
+424aaeb1d3595f03c636,14131597,FOXO3,10.1073/pnas.0801030105,biomedical,inline,False,False,False,1,mixed,False,8a41cb6a0734a37343b3
+4bd92da7c9ed55fb678b,14755313,FOXO4,10.1073/pnas.0801030105,biomedical,inline,False,True,False,1,mixed,False,61689568e24bdd81059f
+f094a2f8cca287f7c792,10438439,Framing (social sciences),10.1093/jcr/ucw044,broad_topic,inline,False,False,False,3,"computational issues, robustness not checked",False,60b67134d9e1ddbdd49e
+8f97cbcbdcdeb0571053,10438439,Framing (social sciences),10.1126/science.7455683,broad_topic,inline,False,False,False,3,successful,True,ced207b3f4768fb327c4
+e77f1c6e7c8abdbfee9c,10438439,Framing (social sciences),10.1177/0956797612449177,broad_topic,inline,False,False,False,3,failed,False,a1bee6ed35b6255e067c
+92a920b197578da07c6f,20666057,Framing effect (psychology),10.1002/bdm.656,broad_topic,list,False,True,False,2,successful,False,317ef3292d5a56dd84ed
+88c7ab36d97af3fe5a2c,20666057,Framing effect (psychology),10.1126/science.7455683,broad_topic,list,False,True,False,2,successful,True,fb7543495ab21b3265b1
+a4a8e22e3920a0af98bb,53822718,Francesca Gino,10.1073/pnas.1209746109,biography,inline,True,False,False,1,failed,False,0945dfe8c06a9fabc066
+2c13672c114c88b5ef30,11461,Francis Crick,10.1176/appi.ajp.160.11.1965,biography,inline,False,True,False,1,failed,False,84fcf0b97bfa4707f9c1
+e86c9fb160331b6c098f,47921,Free will,10.1111/j.1467-9280.2008.02045.x,broad_topic,inline,False,False,True,3,failed,True,2f4c61b55b37c5666edd
+fdd7fbfe074b0b1d71ea,47921,Free will,10.1111/j.1475-4975.2007.00158.x,broad_topic,inline,False,False,False,3,successful,False,4dc3ab441ebc293e91f1
+b8875cc5af9fa177e84f,47921,Free will,10.1177/0146167208327217,broad_topic,inline,False,False,False,3,mixed,False,0cd365ead73e6b325a03
+29ff3d2a2254b533324d,6872931,Frisch Medal,10.3982/ecta6248,broad_topic,inline,False,True,False,1,"computationally reproducible, robust",False,0fdc338ff21eb0d3070e
+63c80075cae86594630e,61067930,Fritz Strack,10.1037/0022-3514.54.5.768,biography,inline,True,False,True,1,failed|mixed,False,1fa7b3b342330db493a6
+4e59b692a04650a845e6,3496971,Frown,10.1037/0022-3514.54.5.768,broad_topic,inline,False,False,True,1,failed|mixed,False,58621812264c4fb1e8ea
+a35a059c53cd2b8c69c6,10631756,FTO gene,10.1038/ng2048,biomedical,list,False,True,False,1,successful,False,468ae8cdda9f55ffed6d
+1ace7af762cf0b18e059,55870791,Functional accounts of emotion,10.1037/0022-3514.94.4.600,broad_topic,inline,False,False,False,1,failed|mixed,True,03b4867fea267ca6920c
+0e2b1c760813cb70db7b,58630220,Future self,10.1037/0022-3514.90.2.197,broad_topic,inline,False,False,False,1,mixed,False,c56cb8660b97d7ac415e
+bb7e6856a31d39c6b872,27864034,Fuzzy-trace theory,10.1002/bdm.656,broad_topic,inline,False,False,False,3,successful,False,6c4b74b6091dadbb9904
+49bcc123007d1088ffef,27864034,Fuzzy-trace theory,10.1017/s1930297500000966,broad_topic,inline,False,False,False,3,failed,False,6ed702b7003e1d8e08b0
+09d576caf6c5f5d0779b,27864034,Fuzzy-trace theory,10.1126/science.7455683,broad_topic,inline,False,False,False,3,successful,True,717a8e6c5784047c4efc
+69cb4b8f416099996712,12970,Gambler's fallacy,10.1017/s1930297500001170,broad_topic,inline,False,False,False,1,successful,False,cd797cd983531ff59102
+e1771579ca3ad1e16f38,11924,Game theory,10.1006/game.1995.1027,broad_topic,inline,False,False,False,1,successful,False,a47a8737afaf1bbadce5
+8776e9f3cc437ae3453a,51041610,Gateway belief model,10.1371/journal.pone.0175799,broad_topic,inline,False,True,False,1,failed,False,79f07566c4b1f4fd9177
+58f437ebfdf540421d05,78136774,Gender and disability,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,ab409088959951962b03
+1a16ae2a41fb147adca4,43775537,Gender diversity,10.1177/000312240907400203,broad_topic,inline,False,True,False,1,"computational issues, robustness not checked",False,52f750ab6d8052e549c0
+b5af5e0d7ab018af6068,46628283,Gender in public administration,10.1093/jopart/muu006,broad_topic,list,False,False,False,1,failed,False,a3734c09e3a223865c13
+32d8026f751b03e4a2ba,14520306,Gender inequality,10.1073/pnas.1211286109,broad_topic,inline,False,False,False,1,failed,False,533bded3d3c14ca7ca6f
+b6dfa634aedf0815b170,3349493,Gender pay gap in the United States,10.1037/0022-3514.37.3.433,broad_topic,inline,False,False,True,4,successful,False,7f5017687a2a1fc59b52
+0e802573421e9a132f86,3349493,Gender pay gap in the United States,10.1073/pnas.1211286109,broad_topic,inline,False,False,False,4,failed,False,7e721264265677f9b8d3
+ffb3cd938fa0850f8a46,3349493,Gender pay gap in the United States,10.1086/511799,broad_topic,inline,False,False,False,4,mixed,False,a2926c242db562c7aba9
+30f7de74c786bbeb0ebf,3349493,Gender pay gap in the United States,10.1111/1467-9280.00111,broad_topic,inline,False,False,False,4,failed|mixed,False,4d3eeb56a633a80ef5c4
+deec53d5aecc286091a6,43094,Gender role,10.1037/0022-3514.83.1.44,broad_topic,inline,False,False,False,1,successful,False,d259d871a099769b7bf3
+830aced982ed6381227d,35778656,Gendered sexuality,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,907991d6b22d593f172a
+9a19a6ca1b2cc6c1bc5a,3947034,General knowledge,10.1037/0022-3514.74.4.865,broad_topic,inline,False,False,False,1,failed,False,c24009b311853793efce
+b5c0239de2387083a85f,67529434,Generalized exchange,10.1126/science.288.5467.850,broad_topic,inline,False,False,False,1,successful,False,d4e53c20d4c8e7ed15ac
+8c1537551d7c6e6ae733,6874571,Generative second-language acquisition,10.1177/0267658310386439,broad_topic,inline,False,False,False,1,statistically successful but flawed,False,c6ef2bed990c7fe1d708
+d60f046a5a45ce974128,2135548,Generosity,10.1037/a0020092,broad_topic,inline,False,False,False,2,failed,False,05ba001a1490656ebc3f
+c12df1fea0d3dc63d045,2135548,Generosity,10.1073/pnas.1511536112,broad_topic,inline,False,False,False,2,failed,False,9a5d9e91bde0465d4cee
+014441b98060707c731d,32706791,Genome instability,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,de404b9ef64ddfc8e4c3
+46d647e98a7fcb7c6938,20722644,Genopolitics,10.1017/s0022381608080638,broad_topic,inline,False,False,False,1,mixed,False,cb185ea5e31beb130a36
+7426cf55b9fe3f5d182a,10185278,Geography and wealth,10.1093/qje/qjt005,broad_topic,inline,False,False,False,3,"computation not checked, robust",False,c07baaa6d86d44f29fea
+d8b3236480b3ba64a327,10185278,Geography and wealth,10.1162/qjec.121.1.73,broad_topic,inline,False,False,False,3,failed,False,08b2458339bd77027322
+2b155320c7c485aabf95,10185278,Geography and wealth,10.1257/aer.101.7.3221,broad_topic,inline,False,False,False,3,mixed|successful,False,8b675ddabee3d598e19a
+3e4d78238cd5d4725876,56835318,Georg Weizsäcker,10.1257/aer.100.5.2340,biography,inline,True,False,False,1,"computation not checked, robustness challenges",False,13a2a270c15d8990067d
+a193952cbb0e2576d04a,3421369,Geraint Rees,10.1016/j.cub.2011.03.017,biography,inline,True,True,False,1,mixed,False,79b9defd507b834e7086
+0a76c29eecd5c4fbaea6,823320,Get out the vote,10.2307/2585837,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges|successful",False,9d9b646a60c2ba62f000
+27bead666c6fa225fe44,246176,Gettier problem,10.5840/philtopics2001291/217,broad_topic,inline,False,False,True,1,failed,False,5c7232546eb5472f370e
+42313d510c935331913e,1466015,Gibrat's law,10.1257/0002828043052303,central_effect,inline,False,False,False,1,"computation not checked, robustness challenges",False,c9d8c06770a1ee002d82
+199ef7e8a25b0b1e16c1,62819770,Gift-exchange game,10.1006/game.1995.1027,broad_topic,inline,False,False,False,1,successful,False,f11fc976eef3bf8933d7
+f3440f3a566913dee2b8,54571940,Giovanni Peri,10.1111/j.1468-0297.2007.02027.x,biography,inline,True,False,False,1,"computationally reproducible, robust",False,95de69e748d95f165adb
+2e2b915de64ea217645c,78076472,Giving Multiplier,10.1017/s1930297500006185,broad_topic,inline,False,False,False,2,successful,False,a93d4a17b4dfd9696c1c
+384921e6e7a2b2e2f4da,78076472,Giving Multiplier,10.1126/science.1253932,broad_topic,inline,False,False,False,2,successful,False,e7142edca11d3824bb23
+e62dd73b29e2eedc618d,12950,Glucose,10.1111/j.1467-9280.2008.02077.x,broad_topic,inline,False,True,False,1,failed,True,b1b5aabe325732d54a10
+881b2a79429fb4252d47,29326123,Goal orientation,10.1111/j.1467-8624.2007.00995.x,broad_topic,inline,False,False,True,1,failed,False,0a1f588c42ef4658fbb6
+6f80d17a9021cdb5c091,48214271,Goal pursuit,10.1006/cogp.1998.0708,broad_topic,inline,False,False,False,1,successful,False,adaf40732cbe68670fdc
+71f7353bd7d06e2e2c12,1055344,Goal setting,10.1126/science.1250830,broad_topic,inline,False,False,False,1,successful,False,4b039a9ca6b4449eee3c
+5c6905f79af9e8643198,32639051,Google effect,10.1038/s41562-018-0399-z,broad_topic,inline,False,False,False,3,failed,False,1a98cbfac980543681db
+e986aa8a5f02ff92dc2d,32639051,Google effect,10.1126/science.1207745,broad_topic,inline,False,False,True,3,failed,False,828931fa61845eceed57
+b343c0fb66513241bb4d,32639051,Google effect,10.1177/0956797614559285,broad_topic,inline,False,False,False,3,mixed,False,a5a2432d7da03d85f2f4
+bc4af4b4ee6491753fd3,1501010,Gordon G. Gallup,10.1126/science.167.3914.86,biography,list,False,False,False,1,failed,False,d47e2277d332890274ca
+6dde18b858014d3b29b5,12229,Government,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,4615d856b58b4502f5b4
+4081552f51b9746f94ca,1180710,Gratitude,10.1037/0003-066x.60.5.410,broad_topic,inline,False,True,False,1,mixed,False,beac14cbd59ccdf2e2ac
+f8b1402279b08ba1b5e9,32871335,Gratitude journal,10.1037/0003-066x.60.5.410,broad_topic,inline,False,True,False,1,mixed,False,600a31e6bc3cb55a9ec6
+0b06a0a41f2271acf423,7391958,Great Divergence,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,854ec308a9cd6c7928a2
+4b4dd55cad9176583116,453982,Greg Mankiw,10.2307/2118477,biography,list,True,False,False,1,successful,False,581e57c544b69e8af7fc
+0488b2d96512c6209a74,234798,Grief,10.1001/jama.297.7.716,broad_topic,inline,False,True,False,1,mixed,False,75f5b308ec3a91fe360c
+a73cb0fc9869bf0784ad,23849064,Grit (personality trait),10.1177/1362168820921895,broad_topic,inline,False,False,False,1,successful,False,c593ddc9da4d7303ba4f
+b615bac95fe300b1ca8b,157894,Group dynamics,10.2307/1412188,broad_topic,inline,False,True,False,1,successful,False,69707374b37683ceb190
+64d3bd06948b5726e03e,39156192,Growth in a Time of Debt,10.1093/cje/bet075,broad_topic,inline,False,False,True,2,"computation not checked, robustness challenges",False,dddd916c3c940e04c9b3
+d06b812ce968a627e7f8,39156192,Growth in a Time of Debt,10.1257/jep.26.3.69,broad_topic,inline,False,False,False,2,"computation not checked, robustness challenges",False,82662fa9da453d37fdeb
+368afc57c348cd5ff904,7800201,Gun violence in the United States,10.1086/467988,broad_topic,inline,False,True,False,1,"computationally reproducible, robust",False,95147e3755982210dc1b
+6d423e577c7566c9eef1,106086,"Guns, Germs, and Steel",10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,6b74a78f7152ef3a9376
+201c3864b05db668a68e,13149599,Habit,10.3389/fpsyg.2014.00444,broad_topic,inline,False,False,False,1,successful,False,e44020ca1b9928af7c7b
+1db1659a297bf0820817,7597203,Haettenschweiler,10.1016/j.cognition.2010.09.012,broad_topic,inline,False,False,False,1,failed,False,ee334ad34ff808b3cc8f
+aa8f3cd5f107c81c38ac,52428052,Hal Pashler,10.1111/j.1467-9280.2008.02136.x,biography,inline,True,False,False,1,successful,False,686bb412228b8b04f35f
+663316f120741ea39e59,673294,Halo effect,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,a1a92167fae3ed5b5679
+7e59a3ee124384679f7c,428502,Hand washing,10.1126/science.1130726,broad_topic,inline,False,True,False,1,failed|successful,True,7e6d5577df2df1e4a5a8
+7cfa48ce7b1f55770ade,437067,Hate group,10.1111/j.1467-9280.2008.02100.x,broad_topic,inline,False,False,False,1,successful,True,e4fc8518f72e9eb48cc3
+b72d3fc0c4925021b09b,267383,Head Start (program),10.1257/app.1.3.111,broad_topic,inline,False,True,True,1,mixed,False,af046077b23c0bd3990c
+80e2c7ab0a20ff722ba1,1789188,Heart rate variability,10.1073/pnas.1908369116,broad_topic,inline,False,True,False,1,successful,False,182816eb048e840b2e29
+37eb6463d0159d45c33f,60844742,Heejung Kim,10.1037/0022-3514.77.4.785,biography,inline,True,False,False,1,successful,False,0784bf248a51b89a8862
+85ebcc88366a65224548,47962111,Heidi Williams,10.1162/qjec.2010.125.2.591,biography,list,True,False,False,1,"computation not checked, robustness challenges",False,0e5298f05a10787b3ec9
+066a57de8b7ccf083efe,971658,Helminthiasis,10.1111/j.1468-0262.2004.00481.x,broad_topic,inline,False,True,False,1,"computational issues, robustness challenges",False,006aaf48582a85e2849d
+90d2f257a47624146a5d,1277702,Herd mentality,10.1037/h0093718,broad_topic,inline,False,False,False,1,successful,False,0171f4edaf1fc1fc4f9a
+69ec2887439783120a8f,285909,Hernando de Soto (economist),10.1016/j.jpubeco.2010.06.002,biography,inline,True,False,False,1,"computationally reproducible, robust",False,8f4f34bdb80f04387bdc
+ff825c0ef65054624fc4,27988760,Heuristic (psychology),10.1037/0022-3514.37.10.1660,broad_topic,inline,False,False,False,1,failed,False,62797a4c5738dc84b1cf
+c9cfccc8d1c0e7fe1eeb,29790364,HEXACO model of personality structure,10.1016/j.paid.2009.11.002,broad_topic,inline,False,False,True,1,successful,False,eefecf5689ee600d7942
+7c18d65905bef36c6e77,34864435,Hierarchical structure of the Big Five,10.1037/0022-3514.93.5.880,broad_topic,inline,False,False,False,1,successful,False,d9f100d7bc3c85978e46
+33becf2124f28a8bb8f4,410804,Hindsight bias,10.1037/0096-1523.1.3.288,central_effect,inline,False,False,False,1,failed|successful,False,822d044f2a2789421ef4
+c2bc8e6cc807a27385ad,4440593,Histone methylation,10.1038/nature10860,broad_topic,inline,False,True,False,1,mixed,False,35ca15b6d8dd9f8c6497
+e2e16f29228ddb44f984,22785026,History of macroeconomic thought,10.2307/2118477,broad_topic,inline,False,False,False,1,successful,False,9b2d590326ebd9847908
+0741cc9d24be16bfc56e,79034123,History of public health in the United States,10.1162/qjec.121.1.73,broad_topic,inline,False,True,False,1,failed,False,9dc4d459c49074451798
+4cdb894a725b41a100af,17264574,History of the British Raj,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,ba0f3f4bf96f33379c47
+aba66437e8232019eecd,1080344,History of the Southern United States,10.1162/qjec.121.1.73,broad_topic,inline,False,False,False,1,failed,False,384893d02c049a47968f
+106f226818e775342a8a,13085107,HMGA,10.1038/ng2121,biomedical,inline,False,False,False,1,successful,False,686d7240e2cbcc5acd8a
+7ffb678fb72ae8dea20a,46803794,Holiday in the Protectorate,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,5862d3e0b0ebb98933cb
+00e0e704d5cf91c6b385,34920670,Hologenome theory of evolution,10.1073/pnas.1009906107,broad_topic,inline,False,False,True,1,failed|mixed,False,c05b4d97ebae179ccf25
+a50d6157e1fcf72e4a07,58515659,Hookworm,10.1162/qjec.121.1.73,broad_topic,inline,False,True,False,1,failed,False,72532b66b91521f5a795
+faf9a3f31dc05210aa7d,1079203,Hookworm infection,10.1162/qjec.121.1.73,broad_topic,inline,False,True,False,1,failed,False,08fb312c4f42fc825d43
+61b2e4bb6a6147f0f4e5,56359388,Hoyt Bleakley,10.1162/qjec.121.1.73,biography,inline,True,True,False,1,failed,False,ea3ef14930e07933050b
+bd28680d1718c443e069,77975860,Human auditory ecology,10.1177/1754073908100432,broad_topic,inline,False,True,False,1,successful,False,ee535da7fbfa3c440d0e
+ce5f212552a1f013b02d,188432,Human capital flight,10.1257/app.20150517,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,fdf29026b9cd209def71
+3634864422fdcb3217b8,29176704,Human Connectome Project,10.1016/j.neuroimage.2013.05.039,broad_topic,list,False,True,False,1,successful,False,f97035bd5ff1bfc6c9d4
+8b4098d1a3fcac4e5879,20014929,Human female sexuality,10.1007/s10508-009-9559-6,broad_topic,inline,False,False,False,2,successful,False,73e049101c3e2a71c203
+a5a8f7e1656bf6ea833b,20014929,Human female sexuality,10.1037/0022-3514.94.2.245,broad_topic,inline,False,False,False,2,successful,True,39a93085aa3c990089b3
+3cc983abfab8ef2dede2,168191,Human intelligence,10.1017/s0140525x07001185,broad_topic,inline,False,False,False,2,successful,False,1eee287cf60f23ec24cf
+98da6fbf88e8d3257afe,168191,Human intelligence,10.1177/0956797616639727,broad_topic,inline,False,False,False,2,failed,False,e0cadd0e6b0772026049
+eea80cfd0e6d892e96f8,14337,Human sexual activity,10.1007/s10508-007-9175-2,broad_topic,inline,False,True,False,1,successful,False,73a2ba8e16ac5b209cb0
+9ebdf589182c497a9820,447842,Human subject research,10.1037/h0040525,broad_topic,inline,False,True,False,1,mixed,False,c8a3cfe7223c216aaa7b
+dcad9082ab9d851d583a,434679,Humanitarian aid,10.1257/aer.104.6.1630,broad_topic,inline,False,True,False,1,"computationally reproducible, robust",False,063e4ba3dad01bb27a79
+ee2630e3383a0353207c,38407,Humour,10.1016/j.evolhumbehav.2005.06.002,broad_topic,inline,False,True,False,1,successful,False,58485819224c1dbca09e
+a8a09ceb7a0908371e77,18842088,Hypocrisy,10.1111/j.1467-9280.2007.01961.x,broad_topic,list,False,False,False,2,failed,False,81505bc76eae6e92a4ee
+df7a2f4ce092793b518e,18842088,Hypocrisy,10.1177/0956797616685771,broad_topic,inline,False,False,False,2,mixed,False,95a4e3190c199247ed5c
+3b322f4893d938401468,734667,Iconic memory,10.1037/h0093759,broad_topic,inline,False,False,False,1,successful,False,f73ab0bbe7b34508437c
+5f54858df860acfe8902,24024923,Identifiable victim effect,10.1002/bdm.492,broad_topic,inline,False,True,False,4,failed,False,a805e7685d3e748bddca
+904e259dc4379a3533d1,24024923,Identifiable victim effect,10.1016/j.obhdp.2006.01.005,central_effect,list,False,True,False,4,failed,False,aa2841b127918d4288b4
+fa60c033beed56f6f952,24024923,Identifiable victim effect,10.1016/j.obhdp.2009.11.001,broad_topic,inline,False,True,False,4,failed,False,f5700863120c012cc1dd
+232360e3be99e6f15357,24024923,Identifiable victim effect,10.1023/a:1007744326393,broad_topic,inline,False,True,False,4,mixed,False,c57d291e4a27bb2a29ad
+083b8b668ea856506232,69248246,Identity safety cues,10.1037/0022-3514.94.4.615,broad_topic,inline,False,False,False,1,failed,False,74ee15f98f4b723bd9ea
+b2e8caf2220f87fc6a42,41933696,Ideology of the Chinese Communist Party,10.1093/acprof:oso/9780190205782.001.0001,broad_topic,inline,False,False,False,1,successful,False,d5d0f6e850f2a5f2e64c
+a2cf57b8d775229b2069,549136,Illusion of control,10.1037/0022-3514.32.6.951,central_effect,inline,False,False,False,1,mixed|successful,False,c314c7d6d0173208faf2
+1ade122df2b4d5fd8eb2,17644927,Illusory superiority,10.1037/0022-3514.77.2.221,broad_topic,inline,False,False,False,1,successful,False,1b31a392ae32cf11cefb
+90e63cc7e23def9de882,34705871,Imagined contact hypothesis,10.1016/j.jesp.2010.05.014,broad_topic,inline,False,False,False,1,mixed,False,ffaee918daff4d4daabb
+798da230da7f49b639c3,577858,Imitation,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,2,mixed,False,07a33ff037b642835dc1
+c05b2d9d9b2149a7a543,577858,Imitation,10.1126/science.198.4312.75,broad_topic,inline,False,False,False,2,failed,False,db9f2cb8a3ab2ef277b9
+ab4df8b217f3cd97a6c4,889591,Impact bias,10.1037/0022-3514.86.5.680,broad_topic,list,False,False,False,1,mixed,False,fcb2288067c4f1ee4f6e
+4fa7344d9685ac3303c5,37968797,Impact of microcredit,10.1086/250037,broad_topic,inline,False,True,False,1,"computation not checked, robustness challenges",False,6acfbd14096eb1974013
+62823199e4e81a0cbe0d,56632455,Impact of war on children,10.1126/science.1238041,broad_topic,inline,False,False,False,1,failed,False,8c3573addde1b21738d1
+994d66417d27933611a4,20533589,Implicit attitude,10.1037/0022-3514.89.3.277,broad_topic,inline,False,False,False,3,mixed,False,533439b356a0b16d588a
+b3af1e98e8c9dca5f673,20533589,Implicit attitude,10.1037/0022-3514.94.1.16,broad_topic,inline,False,False,False,3,failed|successful,True,4331c14d7bbc404a9788
+5d150899d6b25f0313f4,20533589,Implicit attitude,10.1111/1467-9280.00376,broad_topic,inline,False,False,False,3,mixed,False,ca79ed58caa0f1cd4d74
+51f26fc8bc20e2be3699,54830261,Implicit bias training,10.1126/science.aaa3841,broad_topic,inline,False,False,False,1,failed,False,8a35fa5734af98ddba88
+e5890df232c31856331e,10271359,Implicit cognition,10.1177/0956797610364762,broad_topic,list,False,False,False,1,mixed,False,0f5f376df301a5737c87
+701446906c202dff111f,8534246,Implicit personality theory,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,3305d4b7053985a674ad
+01ff5f0a3ddeb21f26f1,31881841,Implicit stereotype,10.1037/0022-3514.83.1.44,broad_topic,inline,False,False,False,3,successful,False,bc5d6147a85a7d5f5425
+4c266147624eddd85298,31881841,Implicit stereotype,10.1037/a0035663,broad_topic,inline,False,False,False,3,failed,False,e0846cac5a02efa008ec
+adaad5a37dbeb85a7595,31881841,Implicit stereotype,10.1073/pnas.1211286109,broad_topic,inline,False,False,False,3,failed,False,f41fad13b278aac33100
+42ce1609dcd6ded89bee,44523981,Implicit theories of intelligence,10.1111/j.1467-8624.2007.00995.x,central_effect,inline,False,False,False,1,failed,False,88046c79c32280901811
+a548562fed8c7fcf8097,1791156,Implicit-association test,10.1037/0022-3514.89.3.277,broad_topic,inline,False,False,False,2,mixed,False,0a5639815121ed5f4ba5
+78121c3566a36fbee76b,1791156,Implicit-association test,10.1177/0956797610364762,broad_topic,inline,False,False,False,2,mixed,False,55273194e9a0d8d7b1a8
+84ec193bfd19ad392a04,21844112,Impression formation,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,96e89819c8dc293527da
+5a0027262c65a5b65e42,14511650,Impulsivity,10.1037/0012-1649.26.6.978,broad_topic,inline,False,True,False,2,mixed,False,2371492b1d2c6bc730c6
+f0bb48ff666bc822ae9a,14511650,Impulsivity,10.1037/a0012833,broad_topic,inline,False,True,False,2,failed|mixed,True,9de80ebcb3d0671334d2
+1d38c0c85556604b35f7,2533750,In-group and out-group,10.1073/pnas.251541498,broad_topic,inline,False,False,False,1,successful,False,2c2ce36db770853c893d
+8d2f5752bfd6922ef467,860010,In-group favoritism,10.1016/j.jesp.2018.08.007,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,5a785b63ab59434f7c5f
+276b9e290501e4f7c1eb,422023,Incentive,10.1111/j.0956-7976.2004.00757.x,broad_topic,inline,False,False,False,1,mixed,False,cb3174543d976e47fae3
+b6f0dfc8c83eceed51ba,18685654,Infant cognitive development,10.1002/dev.420050403,broad_topic,inline,False,False,False,4,mixed,False,e4bd80644b62b6ad2be8
+89e4c2a4ab867d9c48e7,18685654,Infant cognitive development,10.1038/nature06288,broad_topic,inline,False,False,False,4,failed|mixed,False,300a52da2f7688d83c2f
+c3684dabd22fe53e9607,18685654,Infant cognitive development,10.1111/j.1467-7687.2011.01098.x,broad_topic,inline,False,False,False,4,mixed,False,fa9985015e4150b88c7c
+be4149cfdc9ecadf9b27,18685654,Infant cognitive development,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,4,failed,False,44c9933318aed7959667
+05f95c611f0b642cdad7,22670237,Influence of seasonal birth in humans,10.1093/jamia/ocv046,broad_topic,inline,False,True,True,1,successful,False,6bda6be2808899fceaf6
+cb02e9213d34228e420b,2740971,Inhibition of return,10.1037/0096-1523.15.4.673,broad_topic,inline,False,False,True,1,failed,False,cac02c62daff719f4450
+f920f354935fbb7e0b4d,118450,Innovation,10.1257/aer.20180338,broad_topic,list,False,False,False,1,successful,False,75450f1fec1c859f5959
+1cf92d97b9661f0e890d,18546373,Inoculation theory,10.1371/journal.pone.0175799,broad_topic,inline,False,True,False,1,failed,False,93641ca6ca3853c6d9f1
+3365ea57f7f48dfc5f88,13991053,Insulin receptor substrate 1,10.1096/fj.07-9261com,broad_topic,inline,False,False,False,1,successful,False,0a3f61d544f4bafc7b57
+b539fb1c49d6e266c537,46536057,Intelligence and personality,10.1037/0022-3514.93.5.880,broad_topic,inline,False,True,False,2,successful,False,fd902483cdb7a7e0b73b
+8c1f17770f7d0ba5710f,46536057,Intelligence and personality,10.1037/a0034755,broad_topic,inline,False,True,False,2,successful,False,5beae3ec5263a2d582b6
+a8e48fc2462014c8004a,44525775,Intention,10.1006/jesp.1996.1314,broad_topic,inline,False,False,False,1,successful,False,99fa3e1fd45d15be2811
+9d6fc778b519d038282e,56238882,Intergroup relations,10.1037/a0020092,broad_topic,inline,False,False,False,5,failed,False,73bcd852c11394e52fcf
+185a507dff86260e124d,56238882,Intergroup relations,10.1037/h0093718,broad_topic,inline,False,False,False,5,successful,False,dd3b0091bb825e65d10e
+2a6cb76ba76a67bbb373,56238882,Intergroup relations,10.1073/pnas.1516047113,broad_topic,inline,False,False,False,5,failed,False,f190f7a1541153075ed8
+6fb682e36dc303bbc6be,56238882,Intergroup relations,10.1073/pnas.1707719114,broad_topic,inline,False,False,False,5,successful,False,a1793b40245840085562
+1203f9028b772faf52a2,56238882,Intergroup relations,10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,False,False,5,"computationally reproducible, robustness challenges",False,6023eef9d10a9573a50f
+f26e166365718e444306,57430974,Internal working model of attachment,10.2307/3333827,broad_topic,inline,False,False,False,1,mixed,False,99eb0aad8cc1d8240af2
+4d4bf137b4194a00c51c,50375,Internet relationship,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,ab17cae5e261e47fd082
+f87f74070fe90d20423c,1052154,Interpersonal attraction,10.1037/0022-3514.94.2.245,broad_topic,inline,False,False,False,1,successful,True,ad2001dde55b01a2ee3e
+b9ea47784b74f76f3836,45342231,Interpersonal influence,10.1037/h0062326,broad_topic,inline,False,False,False,1,successful,False,ef1c9fca991efdc6c26f
+ff37d8c0b232b7618195,1943640,Intersectionality,10.1073/pnas.1516047113,broad_topic,inline,False,False,False,1,failed,False,c9bc760f70e995a61759
+80a34f22f9e6a5663d44,1056700,Intimate relationship,10.1007/s10508-007-9175-2,broad_topic,inline,False,False,False,1,successful,False,1ba4e1f6f787450aee7e
+fc43d1aaa04ac56f7a05,23469564,Introspection illusion,10.1037/0022-3514.94.2.245,broad_topic,inline,False,False,False,1,successful,True,1fa303758d78a4f06d33
+505206127b4cfbb7568a,57091071,Intuitive statistics,10.1037/0033-295x.114.2.245,broad_topic,inline,False,False,False,2,successful,False,beb675170b05445a3790
+11c1039c6906487afc97,57091071,Intuitive statistics,10.1126/science.283.5398.77,broad_topic,inline,False,False,False,2,failed,False,a9e9392af43f2389a0c4
+09c71cf38ddee8d2fb0d,91388,Inverse gambler's fallacy,10.1017/s1930297500001170,broad_topic,inline,False,False,False,1,successful,False,2f82409e18cf551b6c67
+5cbdd1a409c30be9282d,55432426,IRGD peptides,10.1126/science.1183057,broad_topic,inline,False,True,False,1,failed,False,8f6b13df4cf2a986245c
+9d956e29f4d0f15e900f,19676867,Irrelevant speech effect,10.3758/bf03211160,broad_topic,inline,False,False,False,1,mixed,False,b65e205269bff5efd69f
+24ff34fd2d3e340e1d95,4162372,Islam in Europe,10.1016/j.ssresearch.2014.08.001,broad_topic,inline,False,False,False,1,mixed,False,702f1f9707cd6ec45a7d
+44371afd15787204c3c8,1232957,Isocitrate dehydrogenase,10.1016/j.ccr.2010.01.020,biomedical,inline,False,False,False,1,successful,False,f2aaef9032fa767c05c8
+7981835590ad4b111417,3069720,Jacques Mehler,10.1073/pnas.0811323106,biography,inline,False,False,False,1,failed,False,11f5fcdc63a5d84ab8c2
+66476aad827b4a3ae65c,11551652,James H. Fowler,10.1017/s0022381608080638,biography,list,True,True,False,1,mixed,False,a4e24912c68b00b7e06e
+f3b297557e3370f7fed2,82034919,Jan Eeckhout,10.1257/0002828043052303,biography,inline,True,False,False,1,"computation not checked, robustness challenges",False,082289effdea13061043
+862fa140da0a5112fcdb,74848138,January–March 2012 in science,10.1126/science.1217697,broad_topic,inline,False,False,False,1,failed,False,fd2ab2b9c562b06dde7e
+07be136537242b7c11bc,170586,Jealousy,10.1007/s12110-004-1010-z,broad_topic,inline,False,False,False,1,mixed,False,b25c06bde0b7a7badf9a
+294c91ebc8c5e107a276,56666893,Jere Behrman,10.1257/000282802760015757,biography,inline,True,False,False,1,"computation not checked, robustness challenges",False,e50848b58331fce18ed6
+4697269076fc3ebe32ec,75250791,Jessica Pan,10.1093/qje/qjv001,biography,inline,True,False,False,1,failed,False,eca69e10badd4b8ff6d8
+2bf113d8fadcd8188324,55968863,Jessica Payne,10.1111/j.1467-9280.2008.02157.x,biography,inline,True,False,False,1,failed,False,baf5d6debe3f248791d5
+e6d153347aad7a7a9f52,28778228,Jo Handelsman,10.1073/pnas.1211286109,biography,inline,True,True,False,1,failed,False,3fc3723f26a769ba71a0
+32c0bd663e2b298f8ae2,1803590,Job interview,10.1111/j.1467-9280.2008.02085.x,broad_topic,inline,False,False,False,1,successful,True,531592a147a269b590c0
+4ece741b163d47fb90f7,10593970,John Bargh,10.1037/0022-3514.71.2.230,biography,inline,True,False,True,7,failed,False,fe5295ad818ad7c35285
+10a01066a814b5e148c5,10593970,John Bargh,10.1037/0022-3514.76.6.893,biography,inline,True,False,False,7,mixed,False,ba1f7459c7864c928c15
+400c882e729c15be5554,10593970,John Bargh,10.1037/0022-3514.81.6.1014,biography,inline,True,False,True,7,failed,False,e260b6608480366288e8
+dd2a7b0aa71fa4b66d35,10593970,John Bargh,10.1037/a0023527,biography,inline,True,False,False,7,failed|mixed,False,b109b763270aa7fa8053
+7e6436f311d516e90fcc,10593970,John Bargh,10.1126/science.1162548,biography,inline,True,False,True,7,failed,False,ff69b8a15398fb85767c
+d33c29395ed0d94307ca,10593970,John Bargh,10.1126/science.1189993,biography,inline,True,False,False,7,failed|successful,False,3a86213ab3058e8465fa
+fab1e734778fc8819a54,10593970,John Bargh,10.1177/0146167299025002007,biography,inline,True,False,True,7,failed,False,f147c4ace12cf886a513
+cc888ce74b21abd1c964,58276236,John Hoddinott (economist),10.1016/j.jdeveco.2013.11.009,biography,inline,True,True,False,1,"computationally reproducible, robust",False,14c17388b7b3763d226c
+03b73f9eadeca1bdb476,1061719,John Ridley Stroop,10.1037/h0054651,biography,inline,False,False,False,1,successful,True,208d11491bbaaf3e62bd
+953366096d11b5bef8d1,57119571,Jonah Rockoff,10.1257/aer.104.9.2593,biography,inline,True,False,False,1,successful,False,7b1f3f22f6158306d8cd
+696b92349312181b12c4,13256822,Jonathan Haidt,10.1037/a0015141,biography,inline,True,False,False,1,failed,False,c5b40fb2a759b745d936
+4e5a3c22e061215aeee3,30483032,Jordan Peterson,10.1037/0022-3514.93.5.880,biography,inline,True,True,False,1,successful,False,a1fbaef485dd874f1a62
+e977a07b6575044bed0a,2599396,Joseph Berger (sociologist),10.1086/511799,biography,inline,False,False,False,1,mixed,False,fc3d352fabea7251744d
+be5b39266914f1c6c3ad,56625980,Joseph Doyle (economist),10.1162/qjec.2010.125.2.591,biography,inline,True,True,False,1,"computation not checked, robustness challenges",False,73b3ab0cb8e19212fb33
+5f69fa65e98bc2f96774,14441269,Joshua Angrist,10.1257/aer.99.4.1384,biography,inline,True,True,False,1,"computationally reproducible, robustness not checked",False,cae8f8afd99030728865
+35e76e82223278497fb8,41175714,Joshua Greene (psychologist),10.1016/j.cognition.2007.11.004,biography,inline,True,False,False,1,failed,False,e84a693e1096aaa9bcc2
+4e4fe538016bca030436,10416781,Journal ranking,10.25300/misq/2013/37.4.01,broad_topic,inline,False,False,False,1,mixed,False,82ded89d7714646c5c7d
+f087c3793b9d7a3aa7b5,55930383,Jude Cassidy,10.2307/3333827,biography,inline,True,True,False,1,mixed,False,5e3d040288d67251b1e6
+4bec92cbd38ea1af269d,82568634,Justice technology,10.1126/science.abb6591,broad_topic,inline,False,False,False,1,successful,False,2100b43a58bc388084ce
+022716adf277edc74dc1,348729,Juvenile delinquency,10.1037/h0093718,broad_topic,inline,False,False,False,1,successful,False,095a82104433d8dae8fe
+fc47d41d497cd24e15d4,34888588,Karen Wynn,10.1038/358749a0,biography,inline,True,False,False,2,successful,False,b713468a1376e5ba4ede
+c6baa7839bcbbb99407a,34888588,Karen Wynn,10.1038/nature06288,biography,inline,True,False,False,2,failed|mixed,False,f9fec7c31ad87513eaa1
+b8e7a6cd5694f07ed067,64432546,Kata Csizér,10.1111/lang.12140,biography,list,True,False,False,1,failed,False,c45352b696f8c14d6d80
+1b0a799bd5dd02df4b36,65092790,Katherine A. Rawson,10.1126/science.1191465,biography,inline,True,False,False,1,successful,False,95dec0be66ef8691a1d1
+68495aca2b0f150614c2,49796591,Kathryn L. Shaw,10.1086/209825,biography,list,True,False,False,1,mixed,False,c2d5d41edf2451b5cedd
+aac021c3e8917e643ce3,246043,Kindness,10.1126/science.1150952,broad_topic,inline,False,False,False,2,mixed,False,f897d7c569a77d35d90b
+aba1c7b900ce5c6654b2,246043,Kindness,10.1126/science.1239918,broad_topic,inline,False,False,False,2,failed|mixed|successful,False,efe70c665ed5a6453d0a
+861b9b57833c02a409f0,34980327,Lady Macbeth effect,10.1126/science.1130726,broad_topic,inline,False,False,True,2,failed|successful,True,d85ec16c3698bbba818e
+74255681e935227ab079,34980327,Lady Macbeth effect,10.1126/science.1186799,broad_topic,inline,False,False,False,2,failed,False,3bd2f43d75a2202bb808
+bf1ff4039e4c74516965,41591912,Lane Kenworthy,10.1093/ser/mwm006,biography,list,True,False,False,1,successful,False,254468474d40ef0852f3
+8475baa99c2c0893d7d2,2383086,Language development,10.1073/pnas.1113380109,broad_topic,inline,False,False,False,1,successful,False,2afe7fd2c42fbdc5328e
+840f50a2cb83406ee6e9,62327008,Lara Aknin,10.1126/science.1150952,biography,list,True,False,False,1,mixed,False,04134f7795aa037689a5
+4780e12553f8b8dcd09a,15023676,Laurie A. Rudman,10.1037/0022-3514.83.1.44,biography,inline,True,False,False,1,successful,False,d4d711214a3a37d7afb3
+bd3de0ae04d69ea45127,183403,Learning,10.1038/srep38427,broad_topic,inline,False,False,False,1,failed,False,dc5ee68f84534d64a6f2
+cbaba8431ecfbbfc4953,881920,Lee Ross,10.1037/0022-3514.90.2.197,biography,list,False,False,False,1,mixed,False,3095781b776d8b7c66c2
+752a4903c727bd61131c,64968125,Leidy Klotz,10.1038/s41586-021-03380-y,biography,inline,True,False,False,1,successful,False,10e9a7fb8dde3e88f542
+bbb9e3d0e73e1872dc68,169300,Leipzig Declaration,10.1371/journal.pone.0175799,broad_topic,inline,False,False,False,1,failed,False,352d184090041cbbd45b
+7330bb108a381c85c728,30930484,Levitin effect,10.3758/bf03206733,broad_topic,inline,False,False,True,1,successful,False,e80d6e7570ead1065828
+e07595402c12df41e3ec,61889341,Liking gap,10.1037/0022-3514.49.6.1621,broad_topic,inline,False,False,False,1,successful,False,72f3dc978d1c48ad8d1c
+c0fc56e4c677cd8c908b,62311381,Linda Argote,10.1016/j.obhdp.2009.11.001,biography,inline,True,False,False,1,failed,False,6965d0d75b70713f867a
+82ffd96747b54d4802ac,26915,Linguistic relativity,10.3758/pbr.17.5.644,broad_topic,inline,False,False,False,1,mixed,False,50fef81c644e0d419aa5
+59c0d766cf4da09c2415,13551707,Liquidity crisis,10.1016/j.jfineco.2004.06.007,broad_topic,inline,False,True,False,1,failed|mixed,False,45f91f79dfeddf6d1f33
+c0ec79347ce81bccbda8,1134291,Liquidity risk,10.1016/j.jfineco.2004.06.007,broad_topic,inline,False,False,False,1,failed|mixed,False,536fe524fab4c8f25bcc
+bc9100486893dafefd86,63497260,Lise Vesterlund,10.1162/qjec.122.3.1067,biography,inline,True,False,False,1,successful,False,0a31f435d85997b462c3
+48c1f5d796ac93a89d7c,510791,List of cognitive biases,10.1037/0022-3514.54.4.569,history_list,inline,False,False,False,7,successful,False,247039a6665d4d76aa7c
+d002c0648f67a08a1429,510791,List of cognitive biases,10.1037/0022-3514.77.2.221,history_list,inline,False,False,False,7,successful,False,fbb08b58fda5e1cf1598
+9847f5c8beefaaf3533c,510791,List of cognitive biases,10.1037/0022-3514.86.5.680,history_list,inline,False,False,False,7,mixed,False,94af2eeef6c8ac0df427
+cf499d86909151fbd33a,510791,List of cognitive biases,10.1037/h0040525,history_list,inline,False,False,False,7,mixed,False,d6da45b981e1ccf1f5ad
+94da14c2b142265f2ab3,510791,List of cognitive biases,10.1038/s41586-021-03380-y,history_list,inline,False,False,False,7,successful,False,608d9bc2ba64c922b56a
+cb004d84131f41223d62,510791,List of cognitive biases,10.1126/science.7455683,history_list,inline,False,False,False,7,successful,True,e16afc6a12a11ce09736
+e7a5d2648c80813c8b7e,510791,List of cognitive biases,10.1177/0956797613497969,history_list,inline,False,False,False,7,failed,False,a5170d73fad758db6ba4
+558a76e9dd6407a8e450,78730923,List of common misconceptions about arts and culture,10.1038/365611a0,history_list,inline,False,False,False,1,successful,False,045d72d455f17a1974eb
+7d53a3ae7f8f425cfab6,1449144,List of Ig Nobel Prize winners,10.1017/s1930297500006999,history_list,inline,False,True,False,4,mixed,False,6e8b138764dbd9570e99
+f84ff1fe303855ec730c,1449144,List of Ig Nobel Prize winners,10.1037/0022-3514.54.5.768,history_list,inline,False,True,False,4,failed|mixed,False,635ff764ee9d94396495
+7b3d33cc48f39207c3b6,1449144,List of Ig Nobel Prize winners,10.1038/oby.2005.12,history_list,inline,False,True,False,4,successful,False,4b19a7fa5d4f900c6bba
+2fd9886968cf6c26751b,1449144,List of Ig Nobel Prize winners,10.1073/pnas.1118373109,history_list,inline,False,True,False,4,failed|mixed,False,d693a24e73b3ed76dc5e
+7b6a4cd7c4c5cc388de1,27683037,List of Israeli inventions and discoveries,10.1126/science.7455683,history_list,inline,False,False,False,1,successful,True,b2aaaffa3b605c5339b2
+f4202b889751f5f76e95,35083537,List of medical ethics cases,10.1037/h0040525,history_list,inline,False,True,False,1,mixed,False,99e80f8542f650ab73f1
+e7e84753ffb6f764e1c9,42686458,List of solar storms,10.1038/s41561-020-00674-0,history_list,list,False,False,False,1,failed,False,738d662753c682ce0430
+4c339e4145ba17c093ed,81286071,Log transformation (statistics),10.1257/0002828043052303,broad_topic,list,False,False,False,1,"computation not checked, robustness challenges",False,ca21fe8511e06525df73
+7a9b959ae2c2e64b5d70,102476,Log-normal distribution,10.1257/0002828043052303,broad_topic,list,False,False,False,1,"computation not checked, robustness challenges",False,3aeeea09a79b4bcc90f4
+75c0fabfe561f05464f6,17860,Logarithm,10.1111/1467-9280.02438,broad_topic,inline,False,False,False,1,successful,False,4bb7164d8c1a0fe95bc8
+1a192eaf53d758271134,547827,Loss aversion,10.1002/jcpy.1156,central_effect,inline,False,False,False,2,mixed,False,a2617d6901a1b91d18f9
+ec76f61f200177d6d543,547827,Loss aversion,10.1257/aer.101.2.470,broad_topic,inline,False,False,False,2,failed,False,95da2ed97e44bb1f11f8
+0e066c29d7e376ed9185,3055274,Lost in the mall technique,10.3928/0048-5713-19951201-07,broad_topic,inline,False,True,False,1,successful,False,daeb1ecc0324cb7822cc
+e62bd0d2953b0161e6e6,35761468,Low-volatility anomaly,10.1086/260061,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,d41c5691ed18452d8807
+0932007df66a09db2e5e,17975655,Lucas paradox,10.1162/rest.90.2.347,central_effect,inline,False,False,False,1,failed,False,23fec35a4699b8ddbca4
+9c8d254ffe65bd022228,58574648,Lynn Fuchs,10.1037/0022-0663.97.3.493,biography,inline,False,False,False,1,successful,False,576da4b0e3938a161e5f
+33e5614d85b378409c25,61851709,Machiavellianism (psychology),10.1016/j.paid.2009.10.016,broad_topic,inline,False,False,False,1,successful,False,7506fa3e5c3a71d0bb79
+5f4c5070b65835b9350e,142879,Magpie,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,ca730f28d7ae62df2f37
+7a67f39aeca47ee39182,1264722,Malignant transformation,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,1c690199004fffce8f8c
+f9e1cef69fa270f7f12f,18838,Mammal,10.1126/science.167.3914.86,broad_topic,inline,False,True,False,1,failed,False,91b6db120b00d1050498
+c76e92915af79ae217f7,523104,Managerial economics,10.1162/qjec.122.3.1067,broad_topic,inline,False,False,False,1,successful,False,1a75581f150bc8f0ccc5
+429f28eec6510ed57405,42562023,Marianne Bertrand,10.1093/qje/qjv001,biography,inline,True,False,False,1,failed,False,1466c5e6461d80050279
+72a07193152c63608f41,56237807,Marit Westergaard,10.1177/0267658310386439,biography,inline,True,False,False,1,statistically successful but flawed,False,8eda91e903db9b1e4228
+946751e4a35b1ea8386f,38670743,Mark Carhart,10.1111/j.1540-6261.1997.tb03808.x,biography,list,True,False,False,1,failed,False,504157f3cfad762ce495
+d29401c5249bd49c2f88,20625213,Mark Lathrop,10.1038/nature06014,biography,list,True,True,False,1,successful,False,9c038140a8b59dee1a39
+9eb8f0a591131885eb54,56726251,Mark Rosenzweig (economist),10.1257/000282802760015757,biography,inline,True,False,False,1,"computation not checked, robustness challenges",False,e1574ffc196b8376e98a
+60837251f79f3fd7538a,1881005,Market anomaly,10.1111/j.1540-6261.1997.tb03808.x,broad_topic,inline,False,False,False,1,failed,False,5fe4439ef2db314c26b8
+afe1b7515b7b75d5981b,60698570,Marley hypothesis,10.1177/1948550617751583,central_effect,inline,False,False,True,1,failed,False,af03964b9fa20c324a08
+888700c497c82186d022,74023208,Martin C. Schmalz,10.1111/jofi.12698,biography,inline,True,False,False,1,failed,False,e95321d95c4e52fefb70
+9b5fb423c083642c0492,47365311,Mass deworming,10.1162/qjec.121.1.73,broad_topic,inline,False,True,False,1,failed,False,6fb2e78205212e351220
+a0181f9804bec90355ae,70324833,Mate choice in humans,10.1086/673256,broad_topic,inline,False,True,False,1,failed,False,d6685d4091141e71c792
+4fbeed4aa9a3bfe58ca3,40818461,Maternal wall,10.1086/511799,broad_topic,inline,False,True,False,1,mixed,False,94fde3f8e442babd4e06
+a9871d1f83b9accf56b6,8111444,Mathematical anxiety,10.2307/749455,broad_topic,inline,False,True,False,1,successful,False,da9923cb715ae8f559f6
+21a97be2c3637d63411a,54616634,Matt Bruenig,10.4159/9780674369542,biography,inline,True,True,False,1,mixed,False,77cd1ae7e8e31f87e3da
+ac4d4cbe2230269799ff,1233715,Median voter theorem,10.1162/0033553041502153,broad_topic,inline,False,False,False,1,successful,False,6ee112a9a77897568136
+7baf09bdee38fd8ae200,79126976,Medical exploitation of Black women in the United States,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,3669e469987f1ca51693
+1c6343fa067de328cc16,69191713,Medical racism in the United States,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,2,failed,False,5dc2793f72de0b6ff17b
+6afbbc4b6709115dc034,69191713,Medical racism in the United States,10.1097/00001888-200203000-00007,broad_topic,inline,False,True,False,2,mixed,False,335bf17d1edf08ced518
+c12d6ff2597d8a950d68,716631,Melanoma,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,712b00c587cd8035ee3d
+891dd4874d836a536bd2,12737621,Melioration theory,10.1901/jeab.1981.36-141,broad_topic,list,False,False,False,1,successful,False,a0d597b8dace5ecdc7fb
+7e7a2f4f679fc4eacfa6,17897307,Memory confusion protocol,10.1073/pnas.251541498,broad_topic,inline,False,False,False,1,successful,False,58ff22aa8549c1880a0b
+db56709d0c93ffd17fc1,40618504,Memory erasure,10.1073/pnas.1218472110,broad_topic,inline,False,True,False,1,failed,False,75108284b8f5ec7eee94
+e462dc2bdce5cf9b619e,36023552,Memory implantation,10.3928/0048-5713-19951201-07,broad_topic,inline,False,True,False,1,successful,False,834fb40aa1551eac0b01
+abb3bec9a47c6132fcad,33100194,Menstruation (mammal),10.1098/rsbl.2004.0174,broad_topic,inline,False,False,False,1,failed,False,bc1bf0cdebeaadce8e51
+e74fa14c45cf41f6ed5f,1024314,Mental accounting,10.1126/science.7455683,broad_topic,list,False,False,False,1,successful,True,f1afb5d1f30be800bfbf
+23e65337901919c13d41,4778196,Mental chronometry,10.1037/h0054651,broad_topic,inline,False,False,False,1,successful,True,2183a60cb96d1dbbe630
+da89886dfe3deaa706d1,32315242,Mental health in the Middle East,10.1111/j.1467-9477.2007.00176.x,broad_topic,list,False,True,False,1,"computationally reproducible, robustness challenges",False,7352cd801ad60768a1bd
+7133dd21187296dfc9ee,599917,Mental image,10.1016/j.visres.2006.11.013,broad_topic,list,False,False,False,1,failed,False,111f1a5e2669d684cdd3
+e878034c98812a064553,25953948,Mental time travel,10.1111/j.1467-9280.2008.02043.x,broad_topic,inline,False,False,False,1,successful,True,a4100beffe2e4f5518d1
+ed21faced35b98070816,57530133,Mental timeline,10.1038/nn1066,broad_topic,list,False,False,False,1,failed,False,4d79d39b69d34805228c
+717dd49376748c021917,21312273,Metamemory,10.1037/0096-1523.1.3.288,broad_topic,inline,False,False,False,1,failed|successful,False,de31abb93bf2613d9533
+051e6f127eefd23295ba,20518,Metaphor,10.1371/journal.pone.0016782,broad_topic,inline,False,False,False,1,successful,False,b4384eae7459c49090c0
+7f4cc19dce053033b9d6,69253952,Metaphorical framing,10.1371/journal.pone.0016782,broad_topic,inline,False,False,False,1,successful,False,6cc8c7aa5c0c5554fbf6
+60b03b620da2d3b7fe33,53147698,Metascience,10.1098/rsos.160384,broad_topic,inline,False,False,False,2,successful,False,63018d0e50ce460defcf
+e48d23b3843c0a661d35,53147698,Metascience,10.3389/fnhum.2017.00468,broad_topic,inline,False,False,False,2,successful,False,8e27814c50fb3b333cf5
+d609a71e40c0f260e581,652127,Mexicans,10.1177/0003122410378232,broad_topic,inline,False,True,False,1,mixed,False,3e444a8ea44026afd51d
+92b511a71fe9b38a575a,36027040,Michael Clemens,10.1111/j.1468-0297.2011.02482.x,biography,inline,True,False,False,1,"computationally reproducible, robustness challenges",False,b42a8db35eb8d8a05e00
+33404e66d2b05b673539,83848104,Michael Kirchler,10.1038/s41562-018-0399-z,biography,inline,True,False,False,1,failed,False,7f55e769396e9c88afcd
+2e4aef747904c7df57ce,83261356,Michael Kraus (psychologist),10.1016/j.jesp.2015.01.005,biography,inline,True,False,False,3,successful,False,f081bc8afb25904b6011
+7dd99df028fb46654c97,83261356,Michael Kraus (psychologist),10.1037/a0020092,biography,list,True,False,False,3,failed,False,a4a0948510a6f31b04e0
+241ec13cf70ed6958580,83261356,Michael Kraus (psychologist),10.1073/pnas.1707719114,biography,inline,True,False,False,3,successful,False,4b04f98684930ebd6cb3
+e4cde52e6bf877bea4b9,6640245,Michael Kremer,10.1111/j.1468-0262.2004.00481.x,biography,inline,True,True,False,1,"computational issues, robustness challenges",False,77ed68b51c488b55e19e
+b3f27da827bd0d8b0c4f,6339568,Michael Oppenheimer,10.1073/pnas.1002632107,biography,inline,True,False,False,1,"computational issues, robustness challenges",False,ec282c28ee02637b8359
+1adcda551bb79b54d603,3666675,Michael Wallerstein,10.1093/ser/mwm006,biography,inline,False,False,False,1,successful,False,5a62c7a94ceb90ef7515
+bfcee66fdc8853e56294,46638993,Microbiome in the Drosophila gut,10.1073/pnas.1009906107,broad_topic,inline,False,True,True,1,failed|mixed,False,7075c3a41338cca9e140
+ab631e51bb5f2561b5d7,8210419,Mid-20th-century baby boom,10.2307/2061139,broad_topic,inline,False,True,False,1,mixed,False,f9582b92e8d4d951729b
+cb3c1f26a7b07b840f36,19009,Milgram experiment,10.1037/a0010932,broad_topic,inline,False,False,False,2,successful,False,5086923246aabbe02741
+9ff06bdb3d429157307f,19009,Milgram experiment,10.1037/h0040525,broad_topic,inline,False,False,False,2,mixed,False,80d76bbd5638f04b9fbb
+3beb9a8a43634fc70372,14970425,Military sexual trauma,10.1037/tra0000276,broad_topic,inline,False,True,False,1,successful,False,f41b75724b4caba44d07
+de878bdcb394b2e1f36f,6331719,Mind-wandering,10.1177/0956797611431465,broad_topic,inline,False,True,False,1,failed,False,99f8d4129a4f058fad2e
+412d1b2bc34161a074e0,419463,Mindpixel,10.1111/j.1467-9280.2008.02041.x,broad_topic,inline,False,False,False,1,successful,True,1c69fbe7c0ff8957bf16
+051eafdc5660770b357b,20545,Mirror,10.1371/journal.pbio.0060202,broad_topic,list,False,False,False,1,failed,False,a319add4b0ab79f4503a
+e2e9a04f3d9d517b7bbf,1168317,Mirror neuron,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,1,mixed,False,94165ac15080a4358de8
+1b8381391337825b0983,976335,Mirror test,10.1002/dev.420050403,broad_topic,inline,False,False,True,3,mixed,False,ca0167e3e3fe9b8e0bc6
+f27a8d11cc8b8ca85cbd,976335,Mirror test,10.1126/science.167.3914.86,broad_topic,inline,False,False,True,3,failed,False,743732719232c7122de6
+81b626794756781910a1,976335,Mirror test,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,3,failed,False,c513b61bec38a78e185e
+350b3888365c96472f71,9875832,Mirroring,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,1,mixed,False,0be768b0f1470cd5dfc0
+e9017155ea48769947d3,11130010,Misattribution of arousal,10.1037/h0037031,broad_topic,inline,False,True,False,1,failed,False,0e586f015cb00e3bff54
+af24e73ef104a26265c1,31133385,Misattribution of memory,10.1037/0022-3514.89.3.277,broad_topic,inline,False,True,False,2,mixed,False,67344abad3d8b993076e
+46a20afb5bf94a7b9ab1,31133385,Misattribution of memory,10.3928/0048-5713-19951201-07,broad_topic,inline,False,True,False,2,successful,False,0d3878b52a30dcb7d1ea
+132ceff074f5466a469c,2203174,Misinformation,10.1057/s41599-019-0279-9,broad_topic,inline,False,False,False,2,successful,False,59cf098ee6ded299c0f9
+290b9afc5c2f3741489f,2203174,Misinformation,10.1371/journal.pone.0175799,broad_topic,list,False,False,False,2,failed,False,f7ede13abc7c73705362
+f556657e786b721e903f,33106911,Misinformation effect,10.1037/0278-7393.4.1.19,central_effect,inline,False,False,False,1,successful,False,877a281e56124bf75389
+84851576db1436a9e7f0,22818988,Missing women,10.1093/qje/qjr029,broad_topic,inline,False,True,False,1,successful,False,ba208e48b2f3ab3e24ac
+cddf3290d4ebddb0e4ca,39974331,MMEL1,10.1038/ng.1040,broad_topic,list,False,True,False,1,mixed,False,d58f5846bad4beabdf9f
+6ac712a58dd4668c8724,735854,Model minority,10.1177/0146167207309195,broad_topic,inline,False,False,False,1,successful,False,83644f1ef6666b869def
+dcaebad614cf590f87ce,1041023,Money illusion,10.1162/003355397555208,central_effect,inline,False,False,False,1,successful,False,0dca90ec2ebfef194781
+a5c5e7c523c018540d45,74194159,Monica Gagliano,10.1038/srep38427,biography,inline,True,False,False,1,failed,False,a55fb0cff9c066ce63bf
+76d27a959479f174028a,620925,Monroe's motivated sequence,10.1016/j.cognition.2025.106257,broad_topic,inline,False,False,False,1,successful,False,84f9a667a54aae0a84d9
+fae441d23024e3bce1bd,1017748,Moral agency,10.1037/a0013748,broad_topic,inline,False,False,False,1,mixed,True,030a9d946595015b7812
+69109fd3107f44088bf3,43770701,Moral blindness,10.1111/j.1467-9280.2009.02306.x,broad_topic,inline,False,False,False,1,failed,False,4928ae64f2f76f0102d6
+cedadb3f135a52d43b36,419842,Moral character,10.2307/2786238,broad_topic,inline,False,False,False,1,failed,False,42c7c0b3117dfedca435
+6fdb2ca619c84194cda9,78561308,Moral cleansing theory,10.1111/j.1467-9280.2009.02326.x,broad_topic,inline,False,False,False,4,failed,False,c44715963402f19fc042
+92d113f13f79e9543833,78561308,Moral cleansing theory,10.1126/science.1130726,broad_topic,inline,False,False,True,4,failed|successful,True,242b0cc106526b9ba5fa
+3245936a8b597fd9414f,78561308,Moral cleansing theory,10.1126/science.1186799,broad_topic,inline,False,False,False,4,failed,False,5d1d403dc83d6b8367b8
+1464593ff345dad2e056,78561308,Moral cleansing theory,10.1509/jmkr.45.6.633,broad_topic,inline,False,False,False,4,failed,False,5c54e5f4d3edcae3b881
+616f9e1aefc0de3c30c4,60583118,Moral emotions,10.1073/pnas.1618923114,broad_topic,inline,False,False,False,1,successful,False,63336ce9e852564aaeb0
+7ca67e48cb2a956dcdcd,37315653,Moral foundations theory,10.1037/a0015141,broad_topic,inline,False,False,True,1,failed,False,ab5218a304f4e894a1f7
+1b27967c57f48e26cbc2,1040741,Moral psychology,10.1037/0022-3514.81.1.33,broad_topic,inline,False,False,False,3,failed,False,999460a1b635b01c726c
+6d85af96f13f15e07331,1040741,Moral psychology,10.1037/a0015141,broad_topic,inline,False,False,False,3,failed,False,ea34437c89ba693d0710
+8bd345c9b03167a1aa9a,1040741,Moral psychology,10.1037/h0040525,broad_topic,inline,False,False,False,3,mixed,False,ef4d8453a2be01ac891b
+d904af94582f0794693d,397689,Moral reasoning,10.1006/jesp.1996.1314,broad_topic,inline,False,False,False,6,successful,False,98aca44c7241fb49e46f
+481a4ac1e6305a6102a1,397689,Moral reasoning,10.1037/a0015141,broad_topic,inline,False,False,False,6,failed,False,0d61d9f5922ba792b9a2
+ec9aa1b3d90ee0c08008,397689,Moral reasoning,10.1080/09515080307771,broad_topic,inline,False,False,False,6,successful,False,483711fde5c8a6469179
+2b326dab5baf29d0f923,397689,Moral reasoning,10.1093/analys/63.3.190,broad_topic,inline,False,False,False,6,successful,True,41e973f95f0f0876bfa8
+a4e75e7fd4c821095c02,397689,Moral reasoning,10.1111/j.1468-0017.2006.00297.x,broad_topic,inline,False,False,False,6,mixed,True,f66ee437dd4490fcbed1
+8853d41918a974cb422a,397689,Moral reasoning,10.1177/0956797611402514,broad_topic,inline,False,False,True,6,failed,False,c6068beccb5eeb8ae2b5
+7b6947af9be62e1ff93e,98691,"More Guns, Less Crime",10.1086/467988,broad_topic,inline,False,False,True,1,"computationally reproducible, robust",False,05d5a0992098b7a0e823
+30d3404e13fd30915169,37325133,Motherhood penalty,10.1086/511799,central_effect,inline,False,False,False,1,mixed,False,563784b07a2dd28d1122
+f8e3641601a101ffbc76,26685627,Motivated forgetting,10.1037/0022-006x.62.3.636,broad_topic,inline,False,True,False,1,successful,False,20e8c41732018224e46e
+e070c60ab83f78780e56,19316440,Motor cognition,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,2,mixed,False,e9fb8cd61f7dafa5c60a
+9d96486a060d87ac6613,19316440,Motor cognition,10.3758/bf03194043,broad_topic,inline,False,False,False,2,failed,False,6cacad8e4dc0dc87eb80
+6e306aa9f01672391296,2843988,Motor control,10.1523/jneurosci.14-05-03208.1994,broad_topic,inline,False,True,False,1,failed,False,86f9f621af6d76b30395
+72bf4f8d3b3a141cb4e3,20429570,Motor imagery,10.1126/science.1195701,broad_topic,list,False,True,False,1,successful,False,7377db540e52eb1c620a
+8a6dcb7ac00c7dc0774a,1375776,Mozart effect,10.1038/365611a0,broad_topic,inline,False,True,False,1,successful,False,1d3129d47305b1864b08
+6987907189dcd9078593,929962,Mr. Monopoly,10.1177/09567976221108944,broad_topic,inline,False,False,False,1,successful,False,b3f3bc9db89214bf9e75
+4d5939b8a0df7ceb1d5f,51885,Multiculturalism,10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,False,True,1,"computationally reproducible, robustness challenges",False,138d4b77a358ec99a433
+c881dbc0b9eba7e31297,62207342,Multilevel regression with poststratification,10.1111/ajps.12004,broad_topic,inline,False,False,False,1,mixed,False,ae4e756d8ca9b88bbcbb
+48237e00b30e132e7b7f,1570983,Multilingualism,10.1111/j.1467-7687.2004.00351.x,broad_topic,inline,False,False,False,1,failed,False,15dd1f339dffdd8d60cf
+b2bda6541ede9e0f8207,1619306,Multisensory integration,10.1016/j.cub.2004.01.029,broad_topic,inline,False,False,False,1,failed,False,588e3c8b19929cb3ee2e
+f3e9f9783f77f2962046,60509862,Muriel Niederle,10.1162/qjec.122.3.1067,biography,inline,True,False,False,1,successful,False,4536d1dd4db43d3f82d1
+d8af81b732dc33242361,21777295,Museum of Bad Art,10.1111/j.1745-6916.2006.00007.x,broad_topic,inline,False,False,False,1,failed,False,f04ae398c9f94c552e3c
+15fba669c2602e32a417,12653094,Music genre,10.1037/a0022406,broad_topic,inline,False,False,False,1,successful,False,15876fcd503caaffab1e
+879fd5e54644558d4209,20358,Music lesson,10.1038/365611a0,broad_topic,inline,False,False,False,1,successful,False,f7dec17559c3c4435796
+d69d41f51e8705776d10,21312279,Music-related memory,10.3758/bf03206733,broad_topic,inline,False,True,False,1,successful,False,374635defc7fc9129c9e
+408ad4fa88a11da80e8e,33351217,My Wife and My Mother-in-Law,10.1038/s41598-018-31129-7,broad_topic,inline,False,False,False,1,statistically successful but flawed,False,54a6badaa7c9886f07f9
+05a03b11dfc887d85ddc,7076870,Myc,10.1016/j.cell.2011.08.017,biomedical,inline,False,False,False,1,mixed,False,0816629fd19c8dd08aa1
+d94ce17354beb5c64481,47041618,Myth of meritocracy,10.1016/j.jesp.2015.01.005,broad_topic,inline,False,False,False,1,successful,False,d8caa1b50c8ce7fadcdc
+cf0234a41071d78e839e,14295551,Name-letter effect,10.1002/ejsp.2420170402,broad_topic,list,False,False,False,1,successful,False,ff8589b3dc7c60bd6b10
+3ebfe6c10768543d34d6,56497813,Nancy Qian,10.1257/aer.104.6.1630,biography,inline,True,False,False,1,"computationally reproducible, robust",False,6623c8a50db198a9415f
+f10e2234de5639d0cb45,56607783,Nathan Nunn,10.1093/qje/qjt005,biography,inline,True,False,False,2,"computation not checked, robust",False,f6f3d9936fd22b593545
+3ef6d0a420e89983b95b,56607783,Nathan Nunn,10.1257/aer.101.7.3221,biography,inline,True,False,False,2,mixed|successful,False,5573cd4a3a8aa70552d1
+a93fbb99037403c24f7b,1378125,National accounts,10.2307/2118477,broad_topic,inline,False,False,False,1,successful,False,0091957e38036c36a005
+0ee95384eda088b3dde5,10801720,Nature deficit disorder,10.1016/j.jenvp.2005.07.001,broad_topic,inline,False,True,False,1,failed,False,b9cadaf5921473c2dd04
+c73d5f150dd98277ea38,34988078,Naïve cynicism,10.1037/0022-3514.74.1.53,broad_topic,inline,False,False,False,1,successful,False,00f1d56171083c5f50e0
+48f43d47bd3d3b847631,34987714,Naïve realism (psychology),10.1177/0146167202286008,broad_topic,inline,False,False,False,1,successful,False,334ec0be9bce69be94c7
+121b04d27f5706263de0,70197321,NcRNA therapy,10.1038/nm.2284,broad_topic,inline,False,True,False,1,failed,False,7cedc04594a5251099bc
+631afa2b3590732a767d,1368351,Necator americanus,10.1162/qjec.121.1.73,broad_topic,inline,False,False,False,1,failed,False,88a3cff704cdffb216ec
+c4383a33044504da9ad0,55145032,Negative evidence in language acquisition,10.1016/j.cognition.2006.12.015,broad_topic,inline,False,False,False,2,successful,False,0fed6b5d257ab95be151
+921309cec676e91b62db,55145032,Negative evidence in language acquisition,10.1037/0033-295x.114.2.245,broad_topic,inline,False,False,False,2,successful,False,910c2668bf20be9708a5
+d5e123c63df04b08d5d4,9445847,Negativity bias,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,e95d19095edeba457a11
+48d6d56c9c9c2db3663b,22083,Negotiation,10.1037/0022-3514.86.1.57,broad_topic,list,False,False,False,1,successful,False,b69440755d488a756352
+331d7d0e9903db748afd,487922,Neocortex,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,806aff4de95dd2d74a68
+bf47064df8ab4c1a7791,639115,Neolithic Revolution,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,24836ccd4ba2328efe94
+d1c690ba0603b2fba5ed,1236730,Neoplasm,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,942c15a5d6e9ebc9ca8f
+2448c499ed6235fcddbe,1943428,Net migration rate,10.2307/1923917,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,bc61e4039357c58985a9
+55d1d34484cdbbc23bdd,36242833,Neuropolitics,10.1016/j.cub.2011.03.017,broad_topic,inline,False,True,False,2,mixed,False,50bb077bd28798c279db
+74f6a3d4fe0f912b2481,36242833,Neuropolitics,10.1038/nn1979,broad_topic,inline,False,True,False,2,failed,False,cc684ed35ee89f24e5d0
+4ac262571fb2762cfdfb,1305044,Neuroscience and intelligence,10.1017/s0140525x07001185,broad_topic,inline,False,False,False,1,successful,False,f5874efab9cf9f5359a5
+ee6fefa8254f5bc17d8e,26565579,Neuroscience of free will,10.1111/j.1467-9280.2008.02045.x,broad_topic,inline,False,False,False,1,failed,True,8d3abbab87078684b6cd
+4f794c70ebf281ba3cce,42182598,Neville Moray,10.1080/17470215908416289,biography,inline,False,False,False,1,successful,False,d45a587df0f778cb9158
+deae941a57983e2bcb00,80327,New Keynesian economics,10.1162/154247603770383415,broad_topic,inline,False,False,False,1,"computational issues, robust",False,3bf0fc341fcc4dd25f62
+e4747f875c74afb772c0,344859,New media,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,43e121f88bafb6a0c822
+a9699dadc27ff2c5d401,43599879,Nicholas Bloom,10.1093/restud/rdv039,biography,inline,True,False,False,3,"computational issues, robustness challenges",False,7bea2b247988d302b7c1
+e6e767fdab8144bcc4a1,43599879,Nicholas Bloom,10.1257/aer.20180338,biography,inline,True,False,False,3,successful,False,4bef3765fcbaca676317
+f39d33f123581a8e5a15,43599879,Nicholas Bloom,10.3982/ecta6248,biography,inline,True,False,False,3,"computationally reproducible, robust",False,f58f6deb33de459e7eb7
+8fdc8cb56858fb295111,21566523,Nicholas Christakis,10.1038/nature15392,biography,inline,True,True,False,1,successful,False,d0d057387a4333441c42
+b489cf5711a039d936b0,365558,Nicotinamide adenine dinucleotide,10.1038/nature01960,broad_topic,inline,False,False,False,1,failed,False,281d3f86e2d4d2f8c414
+7bfd461593f5c679258f,81505829,Non-consequential reasoning,10.1111/j.1467-9280.1992.tb00678.x,broad_topic,inline,False,False,False,1,mixed,False,f62fe3ff2fa8f92ad127
+9a0301d3414fcc395a3d,49670316,Non-resident citizen voting,10.1177/0010414014546331,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,00f64869d9547e1b0ddc
+d13830752b93e7bf254d,49362413,Norman Fenton,10.1109/32.879815,biography,list,True,False,False,1,successful,False,ae1bc31c9bb5f782357b
+cb1ffda85b9ea6d333d9,11132183,Normative social influence,10.1037/h0062326,broad_topic,inline,False,False,False,2,successful,False,d2f4dccbd99306c1a19e
+bf451b9e1004e156797e,11132183,Normative social influence,10.1037/h0093718,broad_topic,inline,False,False,False,2,successful,False,428039cbfb4a12b6571f
+399829a5a12fcb34aa9b,1699819,Note-taking,10.1177/0956797614524581,broad_topic,inline,False,False,False,1,mixed,False,47e8f791fe44a1603663
+9f8814204cdb736165d2,170508,Notebook,10.1177/0956797614524581,broad_topic,inline,False,False,False,1,mixed,False,c7aac3e1486acfc186cd
+dd4303e421448c88ed84,193132,Nuclear family,10.3982/ecta12987,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,812657aa334e112e733c
+d67d38c9853c25cefd91,46728528,Numerical Stroop effect,10.1037/h0054651,broad_topic,inline,False,False,False,1,successful,True,cbdc4a741f522033c4be
+ed44ee3e2d664ca02799,358677,Obedience,10.1037/a0010932,broad_topic,inline,False,False,False,2,successful,False,b226080b3ed6e848b4c8
+5941e78dba87f816e0db,358677,Obedience,10.1037/h0040525,broad_topic,inline,False,False,False,2,mixed,False,6af1c0f21e26a0854f53
+d78f69ce477176a36195,16752177,Obedience to Authority: An Experimental View,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,f97a4a720b086a1e989a
+7b1e77cfa4b17164e287,20082214,Obsessive–compulsive disorder,10.1037/1040-3590.14.4.485,broad_topic,inline,False,True,False,1,successful,False,b4289e3d7e6aa9d5a67a
+f64d4b270b69806479a6,14546141,Occupational inequality,10.1086/511799,broad_topic,inline,False,True,False,1,mixed,False,1a248cf9553f229ae873
+28ca45069a4c86b78f73,4740425,Omission bias,10.1016/j.joep.2006.12.001,broad_topic,inline,False,False,False,2,statistically successful but flawed,False,6946289ed13673ac204e
+89683c462b7f7c9072a9,4740425,Omission bias,10.1037/0033-295x.93.2.136,broad_topic,inline,False,False,False,2,successful,False,b2646c42665fe194e6b3
+16e9fb65f7a10cc5949b,43846,Organ donation,10.1126/science.1091721,broad_topic,inline,False,True,False,1,successful,False,03600e952b24620efb1c
+7e77cb0953b0c4e5954d,33079593,Organizational information theory,10.2307/2392469,broad_topic,list,False,False,False,1,mixed,False,cd1792e80be067668118
+9604d7027e84aa9c3f83,620396,Origin of language,10.1126/science.167.3914.86,broad_topic,inline,False,False,False,1,failed,False,0f7092b58dee699041a1
+2bf03eeee9ecf79c4277,53427212,ORMDL sphingolipid biosynthesis regulator 3,10.1038/nature06014,broad_topic,inline,False,False,False,1,successful,False,9768ca387e3b7d004cce
+2e556e22fe56fb1cf6b7,250910,Ouija,10.1016/j.concog.2012.01.016,broad_topic,inline,False,False,False,1,failed,False,0689da8395815cbe2f70
+e83fa0ec47fae9baa987,4723495,Outcome bias,10.1037/0022-3514.54.4.569,central_effect,inline,False,False,False,2,successful,False,0329b247cd86728ad966
+d6bc57905df5db6c86f5,4723495,Outcome bias,10.1287/mnsc.2014.1966,central_effect,inline,False,False,False,2,successful,False,989da6b9a81a9c2f3e6b
+e17d2def7b105dfe53c4,64276649,Outcome Questionnaire 45,10.1037/cou0000131,broad_topic,inline,False,True,False,1,successful,False,14832200b322235d340a
+38fe22971fd9b5daaf61,75145287,Outgroup favoritism,10.1016/j.jesp.2018.08.007,central_effect,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,094a66234e2535bce7ae
+2d0492cd8665418ea176,3080323,Overconfidence effect,10.1037/0022-3514.77.2.221,broad_topic,inline,False,False,False,1,successful,False,8ab61d6eb5c0cf7790e4
+3974a6222c09fbc5a823,161856,Ovulation,10.1098/rsbl.2004.0174,broad_topic,inline,False,False,False,1,failed,False,0a662686c098347d2fc9
+2eaa29a8da7a3a6b4867,55907997,Ovulatory shift hypothesis,10.1098/rsbl.2004.0174,broad_topic,inline,False,False,False,1,failed,False,fad76ec3d9dc44100d6f
+649f3d690423026070e6,222300,Oxytocin,10.1523/jneurosci.5538-09.2010,biomedical,inline,False,True,False,1,successful,False,201115954674e97fc316
+d6c81c02b7d8e90e043d,52536759,Oxytocin (medication),10.1523/jneurosci.5538-09.2010,biomedical,inline,False,True,False,1,successful,False,7696a83f06b1059dc4fe
+3a6afbbd1753c5a424ea,19814850,P600 (neuroscience),10.1162/089892998563121,broad_topic,inline,False,False,False,1,successful,False,d1ce66fa6ad358047c4e
+277a8f8d1b8b9170c68b,24373,Pain,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,1ba50919b9e6d2e157b6
+5f38d49e52443f3d6700,417111,Pain management,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,1b921cc3f018654be1a1
+fa810d2125600a87fd21,11902021,Pain tolerance,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,38ba801a4be5df69c9ec
+1723c31962d8d39b5f3b,69304362,Paltering,10.1037/pspi0000081,broad_topic,inline,False,False,False,1,successful,False,07957afbd2125584cf8b
+3acff5d9206b54c82c52,63512221,Paola Giuliano,10.1093/qje/qjt005,biography,inline,True,False,False,1,"computation not checked, robust",False,e41942f79baa53eeb554
+dd2718cfd768173accbc,6275558,Paper density,10.1126/science.1189993,broad_topic,inline,False,False,False,1,failed|successful,False,bb1060b23bc96ba4170b
+1ccce7a1eebaa263f27a,23273,Patent,10.1257/aer.20180338,broad_topic,list,False,False,False,1,successful,False,5b6178e1667afc38d632
+8acbb0413aa5b7ab5bc4,32440734,Pathogenic Escherichia coli,10.1126/science.1224820,broad_topic,inline,False,True,False,1,mixed,False,2da937f74b273d3ce5b7
+a5421a62772de2f5c467,23266996,Patriarchy,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,2fb0f233349d3c5f17cb
+dce87af214e77059387e,41578765,Paul Glimcher,10.1073/pnas.1217854110,biography,inline,True,True,False,1,failed,False,7e16aec8f83cb70f6b8e
+a4cdb47cbb9e61a9a192,82520903,Paul Piff,10.1037/a0020092,biography,inline,True,False,False,2,failed,False,b5afbd93c4908f022d28
+f1562758a48b640cf4d5,82520903,Paul Piff,10.1073/pnas.1118373109,biography,inline,True,False,False,2,failed|mixed,False,2181c5d32429a2f7d537
+85574453d318cee44101,4028538,Pay it forward,10.1037/a0031047,broad_topic,inline,False,False,False,2,failed,False,3775dbcc3238d99d6fda
+1e3773afe2f24bba2a2d,4028538,Pay it forward,10.1111/j.1467-9280.2006.01705.x,broad_topic,inline,False,False,False,2,failed,False,a5a916f11d7e7eaac458
+0dbc837e075e8b66cf13,14764001,PDLIM5,10.1038/sj.mp.4001437,broad_topic,list,False,True,True,1,successful,False,dd3b21c8091a0c5f9c48
+e453f4e7eac1ef7561b1,404505,Peace treaty,10.1177/0022002712449328,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness not checked",False,696004f46256069e1549
+b5ad0ef1f3a6cd235c91,19629641,Pederasty,10.1080/016396299266524,broad_topic,inline,False,False,False,1,mixed,False,4a2f2bfdecb17612fbae
+4343c423db6f14e96271,40739899,Pedophile advocacy groups,10.1080/016396299266524,broad_topic,inline,False,False,False,1,mixed,False,eefc48ecc65de0b9f5ba
+cc4b551db1aa63d1b010,25140,Perception,10.1111/j.1467-6494.1949.tb01241.x,broad_topic,inline,False,True,False,1,mixed,False,b6c0ded89d40377a67a2
+5a83b71e3c35ad84c995,16091477,Perception of English /r/ and /l/ by Japanese speakers,10.1121/1.1894649,broad_topic,list,False,False,False,1,mixed,False,676799c9a29c5e57400c
+10b9b1c318c26537f987,17473376,Perception training,10.1037/a0032028,broad_topic,list,False,False,False,1,failed,False,bee8b599a9fa8888de39
+0867ebfb7b41f682d9d4,4295768,Perillaldehyde,10.1021/acscentsci.8b00879,broad_topic,inline,False,False,False,1,successful,False,56323f4b5b65dff573c1
+415a17e00d443678af1e,45694885,Perseverative cognition,10.1111/j.1745-6916.2006.00007.x,broad_topic,inline,False,True,False,1,failed,False,9f3639632ad17624c8f0
+d3fcac17527ec36beaaf,76403399,Persistence studies,10.1162/003355302320935025,broad_topic,inline,False,False,False,2,mixed,False,b5770ff9a86c1ade955e
+f9b59b72b93754d9d85c,76403399,Persistence studies,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,2,"computational issues, robustness challenges",False,64675f2183c42a4d744b
+9d4b18e55805c1eb4e89,34171748,Personal identity,10.1016/j.cognition.2013.12.005,broad_topic,inline,False,False,False,1,successful,False,da240c244bf163828089
+f9bfef781db543eb494d,177648,Personality,10.1037/0022-3514.93.5.880,broad_topic,inline,False,False,False,1,successful,False,09a7be8f1562c551977a
+2516c644ccaaae69b8ae,34947960,Personality judgment,10.1037/0022-3514.35.9.656,broad_topic,inline,False,False,False,1,successful,False,3bba4bfefde6e2b95801
+a30266f0945278c086cc,75377115,Personality neuroscience,10.1037/0022-3514.93.5.880,broad_topic,list,False,False,False,1,successful,False,65ca5795cee5e45ad1a5
+1ea2bcdd4c0d2287d21c,62546938,Petra Todd,10.1086/675910,biography,list,True,False,False,1,"computationally reproducible, robustness not checked",False,0b32539661f073689c94
+6ba4ca5e3810a9bf32e6,19443058,Philosophical Psychology (journal),10.1080/09515080307771,broad_topic,list,False,True,False,1,successful,False,c8d19b33e964e476d3ff
+53134252f81ba761d531,6880370,Philosophy of language,10.1111/j.1467-9280.2007.02028.x,broad_topic,inline,False,False,False,1,failed,False,0d3359b65c988f5f9092
+21cfbc05878b7ded530f,37691878,Phonemic restoration effect,10.1016/j.heares.2013.12.003,broad_topic,inline,False,False,False,1,failed,False,98916ce3aea0934d6caf
+e866e1ecbb0bb593fbf9,40297992,Phubbing,10.1177/0265407512453827,broad_topic,inline,False,False,False,1,failed,False,4d803fa59d9468d1b2df
+0fda18591bffb00bebc7,53850852,Phylosymbiosis,10.1073/pnas.1009906107,broad_topic,inline,False,False,False,1,failed|mixed,False,0f0be275aeeefea8fc66
+5df37881a3ccb55ffd29,1053447,Physical attractiveness,10.1007/s10508-009-9559-6,broad_topic,inline,False,False,False,3,successful,False,db1ddbfaab2cd3520d51
+ce2efebb45590c63c635,1053447,Physical attractiveness,10.1037/0022-3514.94.2.245,broad_topic,inline,False,False,False,3,successful,True,b1e8b9b9c97e24a5897b
+906a3ba06af56752f2ff,1053447,Physical attractiveness,10.1177/0956797610388048,broad_topic,inline,False,False,False,3,mixed,False,de5af0323d0db3fefb46
+91a6145d0d37a2a8ccd7,64145846,Plant memory,10.1038/srep38427,broad_topic,inline,False,False,True,1,failed,False,f7bc9acad90a14dbc2fd
+3c924fbc46d03240b675,42276189,PLEKHA7,10.1038/ng.2390,biomedical,inline,False,False,True,1,failed,False,88d6d164436dd1d1241d
+5e0ae7af6bf2364e9d8c,519775,Political campaign,10.2307/2585837,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges|successful",False,b532a683b118f5cbf5bf
+5469790be3e79bf2c381,61937871,Political cognition,10.1177/0956797611413935,broad_topic,inline,False,False,False,1,successful,False,adf24d590ed27df33c67
+338aea27ac948151a1f3,21431793,Political history of the world,10.1037/0003-066x.54.6.408,broad_topic,inline,False,False,False,1,failed,False,7a60f52f897a071bd7de
+04cef6c7bd2f16dc3f5a,23490,Political spectrum,10.1016/j.cub.2011.03.017,broad_topic,inline,False,False,False,1,mixed,False,be155065350f2f122873
+2eacb7bb190c6ae04d18,229719,Popularity,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,69142e00f8c6b83cef6f
+3f334fe09d3b9e3e0c03,211484,Populism,10.1177/0956797614527113,broad_topic,inline,False,False,False,1,failed,False,7cab1be53b6846d02042
+8ae7ecd1c42737d7869c,9468719,Positive illusions,10.1002/ejsp.2420170402,broad_topic,list,False,True,False,3,successful,False,3140bc99cfb95bc55842
+098f4d519687b4aed607,9468719,Positive illusions,10.1037/0022-3514.49.6.1621,broad_topic,list,False,True,False,3,successful,False,eebead6a063eeeee997a
+56cb2612b28eac4d7fb7,9468719,Positive illusions,10.1037/0022-3514.77.2.221,broad_topic,list,False,True,False,3,successful,False,08de96245b8aa8e23b03
+d175479fa14370c5cf5a,78838213,Positive psychology of relationships,10.1111/1467-9280.00415,broad_topic,inline,False,False,False,1,successful,False,9976afe0e51f125b835e
+bd65822288d4a2f41d87,52328746,Positive stereotype,10.1111/1467-9280.00111,broad_topic,inline,False,False,False,1,failed|mixed,False,dd076ce48cf4164d620b
+efcca9aa566628b99016,64959,Poverty,10.1126/science.1238041,broad_topic,inline,False,False,True,1,failed,False,68756f2c57aabf39247e
+d8579e4f64dcd9b4011c,55568418,Power posing,10.1177/0956797610383437,central_effect,inline,False,False,True,1,failed|mixed,False,52e128b03998e2388cc1
+17a74adbcb61fd4932f3,10614570,Precision bias,10.1111/j.1467-9280.2008.02057.x,broad_topic,inline,False,False,False,1,successful,False,d0eaec93080455853484
+b31fe088f839d3572560,40253,Precognition,10.1037/a0021524,broad_topic,inline,False,False,True,1,failed|mixed,False,6aa3c71c3e07f0ce3440
+779f46b0062128a3353a,43778895,Predictive genomics,10.1038/ng.2578,broad_topic,inline,False,True,False,1,mixed,False,bd4ed089d8863b27605b
+89b171d99ceddc0189b0,50340771,Prejudice from an evolutionary perspective,10.1073/pnas.251541498,broad_topic,inline,False,False,False,1,successful,False,efe2524e963aa7cec699
+fbfc9137d0d8b665be17,586404,Premenstrual dysphoric disorder,10.1038/tp.2017.146,broad_topic,inline,False,True,False,1,successful,False,ee1b5428f2b86e699022
+afb0a4184bb387732593,59031980,Preregistration (science),10.3389/fnhum.2017.00468,broad_topic,inline,False,True,False,1,successful,False,1e1aad8ddc2ad12419e2
+afccfcd4c88218adf981,420020,Preschool,10.1037/0012-1649.43.6.1428,broad_topic,inline,False,False,False,1,successful,False,3bb2eff5d08ba0849285
+c9722b73521d73084d8e,79036738,Pretty privilege,10.1007/s10508-009-9559-6,broad_topic,inline,False,False,False,1,successful,False,88609c801a7b5f309e64
+08bbf6106a165a0bd519,35795276,PREX2,10.1038/nature11071,biomedical,inline,False,True,False,1,failed,False,84ab5cc6db21aac888c2
+e970ef77dcc758488363,78506067,Price puzzle,10.1257/0002828042002651,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,acd88a41a82d85abf60c
+9a80ed0ec88ae488697b,21312306,Priming (psychology),10.1037/0022-3514.71.2.230,central_effect,inline,False,False,True,3,failed,False,008432853d03b1d0ab99
+3cd12104e070f0823407,21312306,Priming (psychology),10.1037/0022-3514.81.6.1014,central_effect,inline,False,False,False,3,failed,False,a08005b5b11653524fca
+be3dfef25a6156f0b608,21312306,Priming (psychology),10.1126/science.1162548,broad_topic,inline,False,False,False,3,failed,False,49cdc3a8d72081b7810c
+ecde37b16098d45235bf,730742,Principal–agent problem,10.1006/game.1995.1027,broad_topic,inline,False,False,False,2,successful,False,c55849f8fb8b8a3e4948
+3a58fa2f7cabd462572a,730742,Principal–agent problem,10.1257/aer.96.5.1611,broad_topic,inline,False,False,False,2,mixed,False,6332839ec277161e98fa
+c5771e3680be8f2b3712,31602166,Privacy concerns with social networking services,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,71f803f7aad4bd44e2d0
+7f140bba2366a88d192b,1467948,Problem solving,10.1038/s41586-021-03380-y,broad_topic,inline,False,False,False,1,successful,False,9394f175b8e65ad961f2
+00d11db5ecee3f800248,31883534,Problematic social media use,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,True,False,1,mixed,False,b2c9e951e4d9f944082b
+a5569923dcf490dd0601,28872327,Processing fluency,10.1037/0096-3445.136.4.569,broad_topic,list,False,False,False,1,failed,True,09e1fae7c90ad0dd2dee
+8654807f69ea550d8726,170501,Productivism,10.1016/j.jesp.2015.01.005,broad_topic,inline,False,False,False,1,successful,False,d2603c50649254d3dc4b
+59a880242a4d8e089b9f,40613126,Project MinE,10.1001/jama.2010.574,broad_topic,inline,False,True,False,1,mixed,False,5b00d4e6715d63e3f3d9
+873440f72c1da7c1dc67,508057,Property (philosophy),10.1037/0033-295x.84.4.327,broad_topic,inline,False,False,False,1,mixed,False,5b1be8578e4baafd8e75
+78eafdc00fc5b161c020,243390,Propinquity,10.1037/0022-3514.92.1.97,broad_topic,inline,False,False,False,1,mixed,False,0e760197bb0785e1eef9
+21ba37f9ef1433116946,12332599,Prosperity,10.1162/003355302320935025,broad_topic,inline,False,True,False,1,mixed,False,9411f5be8c29c49f8b3a
+2a949802761b7880a2cf,22415694,Protection motivation theory,10.1057/ejis.2009.6,broad_topic,inline,False,False,False,1,mixed,False,00eecdf55e82d6852faf
+7a8b529f0b730cb61bf1,816598,Protestant work ethic,10.1111/j.1468-0297.2009.02325.x,broad_topic,inline,False,False,False,2,successful,False,572ba3b2ff6115e3c208
+d78ac3b1d1d3457e1e8e,816598,Protestant work ethic,10.1162/qjec.2009.124.2.531,broad_topic,inline,False,False,False,2,"computationally reproducible, robustness challenges",False,fc46592e9bd5a721e4de
+590f591ffe4d6fb7f97b,26422250,Proteus effect,10.1037/0022-3514.35.9.656,broad_topic,inline,False,False,False,1,successful,False,718c7091719664e54b48
+3b4a0698959cad7b216f,578611,Proxy war,10.1177/0022002714547903,broad_topic,inline,False,False,False,1,"computational issues, robustness not checked",False,0f164d3c51842b6f9d57
+627440fe12495a136c05,1301785,Pseudocertainty effect,10.1126/science.7455683,broad_topic,inline,False,False,False,1,successful,True,0d26735ef885fa3b043b
+51510273a38b8a273dbc,232323,Pseudogene,10.1038/nature09144,broad_topic,inline,False,False,False,1,mixed,False,c9f5c755fbc717ed496f
+7e31381f3b288ceebc51,75073083,Psychological barriers to effective altruism,10.1017/s1930297500006185,broad_topic,inline,False,False,False,3,successful,False,a85025f4771cf6e624a5
+0085fc93f34a782c4015,75073083,Psychological barriers to effective altruism,10.1126/science.1253932,broad_topic,inline,False,False,False,3,successful,False,5f12cf7306a6c8d42e66
+9788c6ccf79642a72ecc,75073083,Psychological barriers to effective altruism,10.4324/9780203865972-24,broad_topic,inline,False,False,False,3,successful,False,259ee780cd415ff6120d
+a374777751dbf941dd36,22921,Psychology,10.1037/h0040525,broad_topic,inline,False,True,False,1,mixed,False,7d31eb83256e1a7a5a6d
+3f717724e6cf31aabbd3,62543365,Psychology of climate change denial,10.1016/j.cognition.2014.08.006,broad_topic,inline,False,False,False,1,failed,False,3e7826a51d4a01790bfb
+08429bcda2d64ea85c4e,47442082,Psychology of eating meat,10.1016/j.appet.2016.07.009,broad_topic,list,False,False,False,2,successful,False,764f45c3532a756bd82e
+2f58e8978ec66ce312b3,47442082,Psychology of eating meat,10.1177/0146167211424291,broad_topic,inline,False,False,False,2,successful,False,6a80ab180184367c9d4d
+468ad17d9ea45de55ba3,4390344,Psychology of music,10.1037/a0019006,broad_topic,inline,False,False,False,2,successful,False,629d2e2001d4ff1b5791
+56169e9aaeeeb162d575,4390344,Psychology of music,10.1111/j.1467-9922.2006.00374.x,broad_topic,inline,False,False,False,2,mixed,True,0b6a8584d07a2a1455ea
+c2f5b82c8d451b1b7bc2,37523519,Psychology of music preference,10.1037/0022-3514.84.6.1236,broad_topic,inline,False,False,True,3,successful,False,fccbb20165032e3e6d71
+103f33db27384130cb61,37523519,Psychology of music preference,10.1037/a0019006,broad_topic,inline,False,False,False,3,successful,False,d3198a7485155896cfb0
+4c7c90c5c9300dbed0ca,37523519,Psychology of music preference,10.1037/a0022406,broad_topic,inline,False,False,False,3,successful,False,84c3788b1e8c83545525
+497c311689ef44871bd0,19442735,Psychology of reasoning,10.1037/a0026099,broad_topic,inline,False,False,False,1,mixed,False,aa2b09b55f5b26ca71d5
+43258f84307aee5958e2,507197,Psychology of religion,10.1037/0022-3514.95.1.18,broad_topic,inline,False,True,False,1,failed,False,451cebf3d9ee52331b8b
+a4cc4f56eee1e531a439,65505093,Psychology of social class,10.1037/a0020092,broad_topic,inline,False,True,False,4,failed,False,8eb201a88105fc2bde9a
+07f63781fbd2770e8b0d,65505093,Psychology of social class,10.1073/pnas.1118373109,broad_topic,inline,False,True,False,4,failed|mixed,False,1f333300e8ce4496ec32
+3f1c6cdb2dd298702eb0,65505093,Psychology of social class,10.1177/0956797611434537,broad_topic,inline,False,True,False,4,failed,True,3e801686a622adb421a7
+9186bc5edc8513261334,65505093,Psychology of social class,10.1177/0956797616674999,broad_topic,inline,False,True,False,4,successful,False,b0ce1dbed7e90c065115
+b0fb3cf23cfce40820b8,15228388,PTENP1,10.1038/nature09144,broad_topic,inline,False,True,False,1,mixed,False,2f6804ba4eec9a418896
+00368e0afa64553d9729,1882343,Public goods game,10.1016/j.jpubeco.2017.03.002,broad_topic,inline,False,False,False,1,failed,False,58dc92ec19e41a35ecc7
+65ba0f538aa0d4ebf12d,82688676,Public informatics,10.1111/1540-6237.8402002,broad_topic,inline,False,False,False,1,failed,False,14aade56a392f63dba4c
+03ef2364c3ea59b1e1e3,24751,"Punjab, Pakistan",10.1093/ej/ueab089,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,5f5d6dfd0682c2e1c087
+8380962d697694e71aca,37178647,Pupillometry,10.1038/s41467-019-12048-1,broad_topic,inline,False,True,False,1,successful,False,c7416d434b93a9f5d9a6
+3a325a5a26717a82c37b,9252619,Qualitative variation,10.1037/0033-295x.84.4.327,broad_topic,inline,False,False,False,1,mixed,False,4cb5bc7300a825d9eb67
+bbc2465040e4f372831c,30138821,Quantum cognition,10.1111/j.1467-9280.1992.tb00678.x,broad_topic,inline,False,False,False,1,mixed,False,94168e2ad1f429c9a3c6
+8533da16c15de40a3db8,16939254,Race in the United States criminal justice system,10.1037/a0035663,broad_topic,inline,False,False,False,1,failed,False,5d192d56e376045e0dea
+5d6ffc38d8544e374747,33541929,Racial achievement gap in the United States,10.1126/science.1128317,broad_topic,inline,False,False,False,1,failed,False,2565baf6523bfacda2e0
+6c89dc5506112f481ae0,170945,Racial discrimination,10.1073/pnas.1516047113,broad_topic,inline,False,True,False,1,failed,False,b84d587fa42910581851
+1baf13bec7dab7f8aa01,25613,Racism,10.1073/pnas.251541498,broad_topic,inline,False,False,False,1,successful,False,673a0cca9a59d415387f
+79e9c2d59f6864261017,71669030,Rage-baiting,10.1073/pnas.1618923114,broad_topic,list,False,False,False,1,successful,False,61138edfb47b4c96759e
+6bfb76e5d4af9f4d0311,14797931,RBM10,10.1038/nature09208,biomedical,list,False,True,False,1,successful,False,c683115cf96aed8fed77
+4fabcae38ab10a7ed9dc,236809,Recall (memory),10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,False,False,1,failed,False,208ee8710edcab389ef9
+e6b2f0f6230157c6414e,27096032,Recall test,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,False,False,1,failed,False,c8c68e1bf19cd71c20b1
+e612a18fe0d5c1d09c98,1213355,Reciprocity (social psychology),10.1037/h0076284,broad_topic,inline,False,False,False,1,successful,False,7e0872f6a0cd8f8aeb0a
+12d86a045f910bb1d87a,21312318,Recognition memory,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,True,False,1,failed,False,bbbe147c05952da1990f
+946a7e1d692b84632cce,34908878,Red dress effect,10.1037/a0019689,broad_topic,inline,False,False,True,1,failed,False,149f84dff86b521b31b5
+8646ff13bf01806b304b,37857,Reformation,10.1111/j.1468-0297.2009.02325.x,broad_topic,inline,False,False,False,2,successful,False,0c3cc0fc0ef3533546c1
+c298186996405fb2b3d4,37857,Reformation,10.1162/qjec.2009.124.2.531,broad_topic,inline,False,False,False,2,"computationally reproducible, robustness challenges",False,63c9f566ab0720160820
+ad65359298b39d8be4c7,57785214,Refutational preemption,10.1037/h0042026,broad_topic,list,False,True,False,1,successful,False,cb69014080aed13b654a
+cddf9d86ac999398d0c8,16722187,Regression discontinuity design,10.1162/0033553041502153,broad_topic,inline,False,True,False,1,successful,False,6240ebdf89e1f5625a47
+78ae066f960b98817e78,1948426,Religiosity and intelligence,10.1038/s41562-018-0399-z,broad_topic,inline,False,False,False,2,failed,False,640d4bd8953fee50efa8
+ec200c471454ce5d4f62,1948426,Religiosity and intelligence,10.1126/science.1215647,broad_topic,inline,False,False,True,2,failed|mixed,False,1517b011e8e99a653c41
+e8fc53b7169ce31d35a7,8920983,Reminiscence bump,10.1086/209200,broad_topic,inline,False,False,False,1,mixed,False,34d8b2e74e3ea9606364
+e5048aea00e3907d4b63,22662552,Renée Baillargeon,10.1126/science.1107621,biography,list,True,False,False,1,mixed,False,6904125cea7706eba801
+3ff98dba6c666e8e5b71,44984325,Replication crisis,10.1037/0022-3514.71.2.230,broad_topic,list,False,True,True,5,failed,False,6e9f00f9186cef07c54d
+ee79c21dc0df04536469,44984325,Replication crisis,10.1037/a0021524,broad_topic,inline,False,True,True,5,failed|mixed,False,b8ea008dea335f1e8f62
+d127783119851eab9b79,44984325,Replication crisis,10.1038/s41562-018-0399-z,broad_topic,inline,False,True,False,5,failed,False,95279b19d1fda7af7c81
+9b8b080a4782fb4cc76f,44984325,Replication crisis,10.1098/rsos.160384,broad_topic,inline,False,True,False,5,successful,False,80f8e49e46689af919bb
+2aa61a64cbb959bfc121,44984325,Replication crisis,10.3389/fnhum.2017.00468,broad_topic,inline,False,True,False,5,successful,False,062c057891b67d7f190c
+50af0a3c095b56dfa125,46622063,Representative bureaucracy,10.1093/jopart/muu006,broad_topic,inline,False,False,False,3,failed,False,56dd61631001f12546bf
+885c33d7125f074f47af,46622063,Representative bureaucracy,10.1111/puar.12401,broad_topic,inline,False,False,False,3,failed,False,fa4d734b2f12b79579bb
+935c2814d52ea8159994,46622063,Representative bureaucracy,10.1111/puar.12649,broad_topic,inline,False,False,False,3,failed,False,8147af0781e253658443
+db89ab72d32727d96a92,509678,Repressed memory,10.3928/0048-5713-19951201-07,broad_topic,inline,False,True,False,1,successful,False,4816b72e2d8004867ecc
+5f9410b0cdaec5e420f6,1531457,Resource curse,10.3386/w5398,central_effect,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,5071f7fdb7e0e7f5ba3c
+e2d3cde4d7cf7618efe6,37689664,Resting state fMRI,10.1016/j.neuroimage.2013.05.039,broad_topic,inline,False,True,False,1,successful,False,de6e228fac5bc554c7b4
+74bdf8300571a184b232,6250226,Reverse racism,10.1177/0956797613508412,broad_topic,list,False,False,False,1,failed,False,5c29407b694493c3ea65
+b40dca73ba5769338bff,59754336,Reza Shadmehr,10.1523/jneurosci.14-05-03208.1994,biography,inline,True,True,False,1,failed,False,c08ca8ed6fe39a5afed9
+a11e240a297558936a98,34684270,RFX6,10.1038/ng.635,biomedical,list,False,True,False,1,mixed,False,e934c76928152093b84b
+9c144eedd419138a8863,34987291,Rhyme-as-reason effect,10.1111/j.1467-9280.2008.02062.x,broad_topic,inline,False,False,False,1,failed,True,7cebcc25e01e8e71a491
+edf1bfaf573be127f5d0,48233684,Richard A. Young,10.1016/j.cell.2012.08.026,biography,inline,True,True,False,1,mixed,False,77b4f765fe66f225a0f8
+2445954bfc85bb76729d,60168986,Richard McElreath,10.1098/rsos.160384,biography,inline,True,False,False,1,successful,False,d2a3b876776104a00444
+c023e67e37b0d05ff387,24462958,Risk,10.1257/000282802762024700,broad_topic,inline,False,False,False,1,mixed,False,d98414e2d8e576e1cd5c
+e8e3d0b9009efc14207a,41275963,Risk aversion (psychology),10.1111/1467-9280.00334,broad_topic,inline,False,False,False,2,failed,True,3911a0aa9bac15b00387
+2c845f2837b35d69f557,41275963,Risk aversion (psychology),10.1126/science.7455683,broad_topic,inline,False,False,False,2,successful,True,c886d8dc156eaef0db0a
+a1f9368f276efe77b5ac,914908,Risk compensation,10.1162/003465303772815754,broad_topic,inline,False,True,False,1,successful,False,3bcf1fa0ef98c5c9e01e
+26bdcb55418c26003261,615394,Robert D. Putnam,10.1111/j.1467-9477.2007.00176.x,biography,inline,True,False,False,1,"computationally reproducible, robustness challenges",False,868060b8635c64691b8c
+e191cc332d65f2332efe,4244163,Robert F. Stambaugh,10.1086/374184,biography,inline,True,False,False,1,"computationally reproducible, robustness challenges",False,07474075587535f7f00e
+82ae5effc2783f06eddf,83263373,Robert W. Livingston,10.1177/0956797611428079,biography,inline,True,False,False,1,failed,False,d18f330ffae3e5d21b1f
+031941afc02c35499460,42049106,Robin Burgess,10.1257/0002828054201242,biography,list,True,False,False,1,"computation not checked, robustness challenges",False,bdfe5d27cc38cd11cee8
+03d2b4c28d3b67e2102a,61939298,Robyn Guymer,10.1038/ng.2578,biography,inline,True,True,False,1,mixed,False,d269a8f806376a305a45
+18b1cb4274004eeec969,37846931,Romeo and Juliet effect,10.1037/h0033373,central_effect,inline,False,False,False,1,failed,False,1a766369d35af3b7ba95
+4fb9ac97965da6606eee,79623634,Roxana Moreno,10.1037/0022-0663.91.2.358,biography,list,False,False,False,1,failed,False,7b1a215438b1127eeaad
+afb2cf4a30ca4c7c2ac9,18158692,Rs1799913,10.1016/j.brainres.2005.11.046,broad_topic,inline,False,True,False,1,mixed,False,62e025ec1ade551fcc2a
+64f520f5d2362c9ee37f,78237976,Rural American history,10.1162/qjec.121.1.73,broad_topic,inline,False,False,False,1,failed,False,67433ad6e9c51b24e28e
+6a3d4439d50b88ecc138,54159860,Sander van der Linden,10.1057/s41599-019-0279-9,biography,inline,True,True,False,1,successful,False,3377e3203164adce8d67
+006e04cc8da2c9cf167e,1543160,School counselor,10.1177/2156759x0901300101,broad_topic,list,False,False,False,1,mixed,False,7a60366224e0d78cf7ec
+ffc6b7ffc6086e9d3a09,53994184,Science capital,10.1002/tea.21227,broad_topic,inline,False,False,False,1,successful,False,cd2bc5c8d9dbb2837211
+96c886be06651c90b842,36238592,Scientific integrity,10.1037/a0021524,broad_topic,inline,False,False,False,2,failed|mixed,False,caf82cd51c867f189b12
+06dbebb53dc41a379e31,36238592,Scientific integrity,10.1257/aer.20190687,broad_topic,inline,False,False,False,2,"computation not checked, robustness challenges",False,00dfbe83ceb27cc2081d
+1ecb30c23ccd20753d21,11749520,Seat belt laws in the United States,10.1162/003465303772815754,broad_topic,inline,False,False,False,1,successful,False,becb05440cad04ee6927
+66a3452e6226eacd46a7,925848,Seat belt legislation,10.1162/003465303772815754,broad_topic,inline,False,False,False,1,successful,False,a75a97e48ec3f1b8e3dc
+9227b02ecc200bcfac72,63503598,Sebnem Kalemli-Ozcan,10.1162/rest.90.2.347,biography,inline,True,False,False,1,failed,False,47bf9687edc7ca327bca
+f053106f6aa8fce4f695,58128495,SEC classification of goods and services,10.1257/aer.101.2.526,broad_topic,list,False,False,False,1,successful,False,d24504e3ae279c73c3ab
+1688a9c669bb23963ec3,1199964,Second-language acquisition,10.1017/s0272263197001034,broad_topic,list,False,False,False,1,successful,False,29e3c9661453f033f346
+22100e6dfd71e3326659,30954587,Second-language acquisition classroom research,10.1017/s0272263197001034,broad_topic,list,False,False,False,1,successful,False,099385d699c4b7837ded
+0be5c5de9ecf19b76559,422247,Self-awareness,10.1371/journal.pbio.0060202,broad_topic,inline,False,False,False,1,failed,False,25d6d5a88cf3643cac96
+ba159d18192c1eb81914,489334,Self-concept,10.1037/0022-3514.82.5.792,broad_topic,list,False,False,False,1,mixed,True,87a91d0fc5d42810d424
+ef25a4a6a433e4808a47,1875075,Self-control,10.1037/0012-1649.26.6.978,broad_topic,inline,False,False,False,2,mixed,False,997fe415ed330426636f
+15a8e0666aa874ba0ae1,1875075,Self-control,10.1126/science.1168450,broad_topic,inline,False,False,False,2,mixed,False,ab4ea3e1cfb033e85e33
+78e957247e18a629a3cd,14591595,Self-enhancement,10.1037/0022-3514.49.6.1621,broad_topic,list,False,False,False,2,successful,False,2bd2eeb60a935826fbdc
+4e557a2bd82ff9b4a57d,14591595,Self-enhancement,10.1177/0146167202286008,broad_topic,list,False,False,False,2,successful,False,149fff89613c33116d99
+889d84ee01bde1a7cad7,23332738,Self-image,10.1002/dev.420050403,broad_topic,inline,False,False,False,1,mixed,False,3620bd89c42cc1655ac4
+2764de2fd4cba60887e2,36681001,Self-licensing,10.1037/0022-3514.81.1.33,broad_topic,inline,False,False,False,3,failed,False,5bc6ef3686e3f617d88a
+e9172be25877a4912a87,36681001,Self-licensing,10.1111/j.1467-9280.2009.02326.x,broad_topic,inline,False,False,True,3,failed,False,81f35f7e2d219eac64c3
+8ab9942c1a9eb6377a84,36681001,Self-licensing,10.1509/jmkr.43.2.259,broad_topic,inline,False,False,False,3,failed,False,25ee97112d0277b68002
+d227b040454821defe74,6224065,Self-report inventory,10.1037/cou0000131,broad_topic,inline,False,True,False,1,successful,False,2220b44872efa4644311
+c545b5ff44e663b79712,39315849,Semiotics of fashion,10.1016/j.jesp.2012.02.008,broad_topic,inline,False,False,False,1,failed,False,76d6af94d132af7cfddb
+08a8db45a0859b595036,1285686,Sendhil Mullainathan,10.1126/science.1238041,biography,inline,True,False,False,1,failed,False,31dcf8afc854305f65b7
+829386cad3e49ae5aac6,5442380,Sensory cue,10.1111/j.2044-8295.1975.tb01468.x,broad_topic,inline,False,False,False,1,failed,False,eab02003506185cfba71
+529c99dbe4501017c08b,45464854,Sensory memory,10.1037/h0093759,broad_topic,inline,False,False,False,1,successful,False,73158e21cb47ff3cf91a
+bafb789b6d38dee24ae8,2534964,Sensory processing,10.1016/j.cub.2004.01.029,broad_topic,inline,False,False,False,1,failed,False,5b16809a7620c327b9f2
+0a1dbc68e3ed5440f605,59231239,Sequential bargaining,10.1016/0167-2681(82)90011-7,broad_topic,inline,False,False,False,1,successful,False,51ab2c1f6afacf550ea5
+169884229f7cfbec7ac7,3289553,Sequential bilingualism,10.1016/0010-0285(89)90003-0,broad_topic,inline,False,False,False,1,mixed,False,cdd52f25af203f40f670
+2351484cb56c37be7766,905684,Serial-position effect,10.1037/h0055756,broad_topic,inline,False,False,False,1,failed|mixed,False,6aae018701b1caf15764
+a6a95caa4608a6d78f7b,27165,Sexism,10.1086/511799,broad_topic,inline,False,False,False,1,mixed,False,be67933fc1fcd1acd1eb
+e8bde33a132c0b6547eb,211430,Sexual attraction,10.1037/h0037031,broad_topic,inline,False,False,False,1,failed,False,879e2d001e2108da7f69
+98369163e2b779105351,169191,Shape,10.1093/jcr/ucv049,broad_topic,inline,False,False,False,1,failed,False,e0aa741cc4915710ecc0
+5de8e744a599a6a04ed3,66431011,Similarity (philosophy),10.1037/0033-295x.84.4.327,broad_topic,inline,False,False,False,1,mixed,False,2777e9c0abc28e82f53c
+3ee1d28d12b61e50fa5c,1052199,Similarity (psychology),10.1037/0033-295x.84.4.327,broad_topic,list,False,False,False,1,mixed,False,f07503c4ff8a38acf2b3
+bbb1129a4d77ed3e5839,7667819,Situationism (psychology),10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,e8b8b0b2cf133769e4b2
+5370cb33b928721f6ab0,33501690,SLC2A13,10.1038/ng.485,broad_topic,list,False,True,False,1,mixed,False,67e9597f7a6006111e97
+86966ab6d1a21e1e5eb7,29538820,SLC45A3,10.1038/ng.485,broad_topic,list,False,True,False,1,mixed,False,da11bc97b8510b7bc036
+053e0b5d307fe496916b,55780567,Snake detection theory,10.1111/j.1467-9280.2008.02081.x,broad_topic,inline,False,False,False,1,failed,True,7f8f9c037527d70fbd32
+56ab2a4d5e946fc87af7,45802,Social capital,10.1111/j.1083-6101.2007.00367.x,broad_topic,list,False,False,False,2,mixed,False,c921b356e996b836607e
+d88e4fed557e5fcf0d65,45802,Social capital,10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,False,False,2,"computationally reproducible, robustness challenges",False,db37ff2da56a66849983
+b5db536b7c27a74c49db,243413,Social class in the United States,10.1016/j.jesp.2015.01.005,broad_topic,inline,False,False,False,1,successful,False,6b88f6937b60f171d0d6
+9943cd4531deb69b85c7,464804,Social cognition,10.1037/0022-3514.76.6.893,broad_topic,inline,False,False,False,2,mixed,False,a9df1b5608a08df17f3c
+b4fa31e9cfb72c29260e,464804,Social cognition,10.1037/0022-3514.83.5.1239,broad_topic,inline,False,False,False,2,successful,True,09a60ee6b021f3e4bc33
+9cd7abef0316ea9673f8,40626870,Social determinism,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,3c93826d9c889e1253f3
+67d6b2ae4a3b5c664390,58241517,Social entrepreneurship in South Asia,10.1257/0002828054201242,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,37e98b61f4e51c17e5a1
+c5c41a430ae867d90191,558722,Social environment,10.1007/s10508-007-9175-2,broad_topic,inline,False,True,False,1,successful,False,6aa89cf8ef4d7398a8f4
+8069b15296aee5cc113b,4039440,Social facilitation,10.1037/h0028063,broad_topic,inline,False,False,True,2,mixed,False,b2ae3756d480475b1bfb
+6597dc74526f04ccc1db,4039440,Social facilitation,10.2307/1412188,central_effect,inline,False,False,False,2,successful,False,fc61aa688694f2f5989e
+45ae76fbe73d5b8441b2,40941387,Social heuristics,10.1038/nature11467,broad_topic,inline,False,False,False,1,failed,False,9e907953ce303628d8de
+65005000fa3947d275a8,509500,Social influence,10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,d4b0fac06199370f60a0
+5bf30b9a94d71e070346,34071247,Social media and psychology,10.1086/691462,broad_topic,inline,False,True,True,1,failed,False,b96b7db7ba1f611fd3e0
+46316635c81a245b8266,325726,Social network analysis,10.1038/nature15392,broad_topic,inline,False,False,False,1,successful,False,cff85c965c65fa525aa0
+3dab2ed9585cd7d809d1,2041117,Social networking service,10.1111/j.1083-6101.2007.00367.x,broad_topic,inline,False,False,False,1,mixed,False,da55ae885a8d9b0ccc67
+4a6581e9151a9476338f,43851,Social norm,10.1037/0022-3514.58.6.1015,broad_topic,inline,False,False,False,2,mixed,False,28577a1a55222c47754e
+0cec02184d243fd53d0b,43851,Social norm,10.1037/0033-295x.93.2.136,broad_topic,list,False,False,False,2,successful,False,86774430b6737d2f42f5
+c8a455d3844c177bbf63,33126028,Social preferences,10.1006/game.1995.1027,broad_topic,inline,False,False,False,1,successful,False,47900cde5f93b0d83624
+f8571d8205909c939e0a,26990,Social psychology,10.2307/1412188,broad_topic,inline,False,False,False,1,successful,False,aec976218f60bdc9f56a
+4b23cded016e50d9c430,3006497,Social rejection,10.1111/j.1467-9280.2008.02187.x,broad_topic,inline,False,True,False,1,mixed,False,d94504ca0697af6eac68
+0f682fe46c1db9b345f0,645875,Social robot,10.1007/s12369-023-01076-z,broad_topic,inline,False,True,False,1,successful,False,4aa47ca15b4b97568f09
+ebb713dcbd89cd513215,14601332,Social value orientations,10.1037/0022-3514.73.4.733,broad_topic,inline,False,False,False,1,failed|mixed,True,cf9471c210bf0b09961c
+c0d3575aeeda45787347,9383123,Social vulnerability,10.1111/1540-6237.8402002,broad_topic,inline,False,True,False,1,failed,False,7a11453d894d9754e53d
+96c3e842946ddd8b35b6,17710634,Sociometric status,10.1177/0956797611434537,broad_topic,inline,False,False,False,1,failed,True,908a14388e1e816c3b14
+510a434bc120d2a7ddba,12009633,Sociophysiology,10.1126/science.1157627,broad_topic,list,False,False,False,1,failed,False,c969d2bc42a839e286dc
+a07c1fac5245929bc5e2,371490,Solomon Asch,10.1037/h0093718,biography,inline,False,False,False,1,successful,False,94adc184277c993f95da
+c05d88303a0cf3f80102,81402374,Solomon's paradox,10.1037/xge0000263,broad_topic,inline,False,False,False,1,mixed,False,feca1e8df02fb9b44698
+30778b02ce8f188f87f2,1913978,Solow–Swan model,10.2307/2118477,broad_topic,inline,False,False,False,1,successful,False,bc7b014222764fec095c
+c3cf3c3a33b35b660a37,18398577,Somatic evolution in cancer,10.1038/nature11071,broad_topic,inline,False,True,False,1,failed,False,26e95345ce63ad13d134
+eccf9588fde638cc89b4,21281976,Somatosensory system,10.1126/science.1189993,broad_topic,inline,False,False,False,1,failed|successful,False,11131603ec0573a6a708
+544dd7bff77c9f6975db,320393,Sound symbolism,10.1023/a:1008184423824,broad_topic,inline,False,False,False,2,successful,False,2c85bcd2d6beb16d91e3
+2571ab522f78cef78996,320393,Sound symbolism,10.1023/a:1027476132607,broad_topic,inline,False,False,False,2,mixed,False,ecd9e06a29e6a49facf2
+17df71a13c0ebf21d505,858937,Spatial memory,10.1037/0278-7393.21.4.1008,broad_topic,inline,False,True,False,1,failed|mixed,False,8bea75cf22682bc6302a
+ec9f3832b2db52802ae6,22434851,Speech shadowing,10.1080/17470215908416289,broad_topic,list,False,False,False,1,successful,False,0f4ae82501d1f014d31f
+f5867cbbb9b4600a1189,37737915,St. Casimir Church (Cleveland),10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,29a53a8336e99eed3a98
+5e9fafc1e0d58a1c1e2b,29506453,Stanford marshmallow experiment,10.1037/0012-1649.26.6.978,broad_topic,inline,False,True,True,1,mixed,False,42a8cca306bb9e080cb6
+5e2f40a269f4de01e90e,27628,Stanley Milgram,10.1037/h0040525,biography,inline,False,True,False,1,mixed,False,c7024d0c1550536a1877
+774f5d70cc151f72de75,37889300,State formation,10.1093/ej/ueab089,broad_topic,inline,False,False,False,1,"computationally reproducible, robustness challenges",False,e7bd44cfdcdd87427fe9
+2ae3b0c91ff97e370c51,13285876,Statement analysis,10.1002/acp.2959,broad_topic,inline,False,False,False,1,successful,False,795e2f7732f5d71d2a60
+90afe6008d34cb7cc020,56598823,Stefan Hofmann,10.1038/mp.2015.109,biography,inline,True,True,False,1,failed,False,61001f4ec8ee081bab93
+d7815e403ca735a2291d,32340176,Stephen L. Hauser,10.1056/nejmoa073493,biography,inline,True,True,False,1,mixed|successful,False,971ad7d6aa0fae3e07ab
+047bfd14e491143401b4,18956166,Stereotype,10.1037/0022-3514.35.9.656,broad_topic,inline,False,False,False,3,successful,False,71b13ca3f8d1c3d0588c
+fd2bb2b98ceac7d66cf5,18956166,Stereotype,10.1037/0022-3514.71.2.230,broad_topic,inline,False,False,True,3,failed,False,3cbd59ca6dfbb4adb02f
+bd9494f19fb5dc4faa17,18956166,Stereotype,10.1093/jopart/muu053,broad_topic,inline,False,False,False,3,successful,False,c39b15ca6162d51a687f
+1e54eed477a64825da2b,1809033,Stereotype threat,10.1037/0022-3514.94.4.615,broad_topic,inline,False,False,False,2,failed,False,3315ab41902a03667d71
+b71eb676ccdfbbc8317c,1809033,Stereotype threat,10.1126/science.1128317,central_effect,inline,False,False,False,2,failed,False,03df113c82596dd69ccb
+48d4d2fe4a2950563882,5966720,Stereotypes of Hispanic and Latino Americans in the United States,10.1037/0022-3514.66.1.37,broad_topic,inline,False,False,False,1,failed,False,15f86bde4b88ea0b5ba7
+475f1d52fd8651a29ab4,64094682,Steven D. Hollon,10.1111/1529-1006.00008,biography,inline,True,True,False,1,failed,False,8ffb998a51f72b19def9
+2562d260d448f809acab,1284586,Steven Levitt,10.1162/rest.90.1.158,biography,inline,True,False,False,1,successful,False,bad8e4afb19a95d62e25
+eeb68d9e02da18d6fb26,886330,Strategyproofness,10.1257/aer.20160425,broad_topic,inline,False,False,False,1,mixed,False,99f4ea6729d3959f409b
+ac37f06f407b40152cc7,255475,Stress management,10.1080/07421656.2005.10129441,broad_topic,inline,False,True,False,1,successful,False,e44378ede19aabbaf5f2
+ddc50e60783ea257ac99,22445549,Strong reciprocity,10.1007/s10683-011-9283-7,broad_topic,inline,False,False,False,1,"computation not checked, robustness challenges",False,b11ade15ae97d4784829
+fb6060f2aad1f73d29cf,1038051,Stroop effect,10.1037/h0054651,broad_topic,inline,False,True,False,1,successful,True,5f98d9a7e2748a5ebca6
+ad630215a81c70d3c546,14528980,Structural break,10.1002/jae.616,broad_topic,inline,False,False,False,2,successful,False,ee2172075de9d0cc12bf
+722441f50716b4204428,14528980,Structural break,10.1002/jae.659,broad_topic,inline,False,False,False,2,"computational issues, robustness not checked",False,1aa305b60d9476638a27
+37a955f747960583b652,2007748,Structural equation modeling,10.1080/10705519909540118,broad_topic,list,False,False,False,1,mixed,False,e0533c952acbddcf0e6e
+a7d1a7cdeb08a1a44d04,2351973,Study skills,10.1177/0956797614524581,broad_topic,inline,False,False,False,1,mixed,False,7d5b9715e2ef1effc882
+40608bf757e04b741b9b,2097760,Stylometry,10.1145/2382448.2382450,broad_topic,list,False,False,False,1,"computationally reproducible, robust",False,7f2ebd05d8ef40f94c91
+0a4507fadb6372120d8a,34104355,Subjective well-being,10.1177/0956797611434537,broad_topic,inline,False,True,False,1,failed,True,b38e2f12d398f225d001
+fc2684872cc9791167f9,421981,Substitute good,10.1177/0956797616640705,broad_topic,inline,False,False,False,1,successful,False,63b21b7838929bb837c2
+ce901bd3847ded3b6b24,1833073,Suicide by jumping from height,10.1037/0022-3514.41.4.703,broad_topic,inline,False,True,False,1,failed,False,d890e8f46c8537a02ff6
+1b546a5fd7784073e819,3363994,Summer learning loss,10.1177/000312240406900501,broad_topic,list,False,False,False,1,failed,False,e1710d59143ad8bd3c50
+3b3b84d0e4479ef62211,102913,Sunk cost,10.1126/science.7455683,broad_topic,list,False,False,False,1,successful,True,c80c56eedaa8408e64dc
+fca8a649393ed01618c2,21173144,Superstition,10.1177/0956797610372631,broad_topic,inline,False,False,False,1,failed,False,adf4f322ccd554377ba4
+3210d114a549f7301276,13437523,Survey (human research),10.18148/srm/2013.v7i3.5458,broad_topic,inline,False,True,True,1,successful,False,c0feb352d4bd35d95f95
+67af751ef6fbf7ea5d97,75912379,Susan Wendy Parker,10.1086/675910,biography,inline,True,True,False,1,"computationally reproducible, robustness not checked",False,b42ad1228c5912af6c5e
+b47f06105abf34c2b5f0,73098141,Susan Whitfield-Gabrieli,10.1038/mp.2015.109,biography,inline,True,True,False,1,failed,False,0a51424f3761c4ce9e99
+3e2cafef0cf95f498ebc,16492832,Sustainable diet,10.1093/jcr/ucw044,broad_topic,inline,False,True,False,1,"computational issues, robustness not checked",False,8bce40c232cfb9f80121
+6cc6610710cf38644f14,67040991,Suzanne Flynn,10.1177/0267658310386439,biography,inline,True,False,False,1,statistically successful but flawed,False,09b260cdd03c5106dfe5
+c6412f7f1d2459c90687,806023,Sympathy,10.1016/j.obhdp.2006.01.005,broad_topic,inline,False,False,False,1,failed,False,4fe414360363db960d8b
+cc82a2413ad5560b66eb,4933873,System justification theory,10.1002/ejsp.127,broad_topic,inline,False,False,False,1,failed,False,3beebc2726a1e0daf1e4
+eca1bd5797e44fa01bbc,61117,Taboo,10.1111/j.1467-9477.2007.00176.x,broad_topic,inline,False,True,False,1,"computationally reproducible, robustness challenges",False,31af2e1e10908b617279
+642dbca8b64544a1e40d,65124771,Tanya Chartrand,10.1037/0022-3514.76.6.893,biography,inline,True,False,False,1,mixed,False,901b7e15e169c188853a
+bf5d14c0169cd3c66886,3682632,TAS2R16,10.1371/journal.pone.0045232,biomedical,inline,False,False,False,1,failed,False,7312e363f6441e1856e7
+546fe218a80ab80ecb82,31366637,Task-invoked pupillary response,10.1038/s41467-019-12048-1,broad_topic,inline,False,False,False,1,successful,False,8d66a0c59c790722ec79
+29df02866269d3c6799f,11157092,TCF7L2,10.1038/ng1732,biomedical,inline,False,False,False,1,successful,False,045f89110fb82e3212af
+1663defa5e8d14c56648,2732718,Technology integration,10.1177/0956797614524581,broad_topic,inline,False,False,False,1,mixed,False,d0a761c05f26b4c4733d
+a1d833f5c5e2c0a72a12,18328662,Temperament and Character Inventory,10.1176/appi.ajp.160.11.1965,broad_topic,inline,False,False,False,1,failed,False,f602be8e96792f1141a5
+c2c98a3a70f005dcd4f8,2289941,Terror management theory,10.1037/0022-3514.67.4.627,broad_topic,inline,False,True,False,3,failed,True,713f5e2f825d1f495198
+c724f6c4ba96548b2bef,2289941,Terror management theory,10.1037/0096-3445.130.3.427,broad_topic,list,False,True,False,3,failed,False,3005242189e8531a14f6
+8e81798272c835c6dfc7,2289941,Terror management theory,10.1177/1948550611432938,broad_topic,inline,False,True,False,3,successful,False,1c7585fffb9e8ae5811c
+e8d0dbdb3968a1487be2,905659,Testing effect,10.1037/a0019902,central_effect,inline,False,False,False,2,successful,False,9f9087e0d9a54f4a54f7
+919464081995fd11f3c2,905659,Testing effect,10.1126/science.1199327,broad_topic,inline,False,False,False,2,successful,False,a628104f3006961f35b8
+add10f3110f9073434d9,30384,The Evolution of Cooperation,10.1126/science.1123633,broad_topic,list,False,False,False,1,successful,False,d6d146c2b5846e662298
+d699a0f079920b2cbee5,31560245,The Media Equation,10.1111/j.1559-1816.1999.tb00142.x,broad_topic,inline,False,False,False,1,failed,False,f9b33faebb23d724fd18
+6c55a83f2ded388416a4,488083,Theory of mind,10.1038/s41598-017-10669-4,broad_topic,inline,False,False,True,3,successful,False,c73bbf5cff735fca725e
+9a0462f95eda86dd036f,488083,Theory of mind,10.1126/science.1107621,broad_topic,inline,False,False,False,3,mixed,False,3b2b2d5d7eb9ee38e0f7
+fb708279c7a67880d6e3,488083,Theory of mind,10.1126/science.1190792,broad_topic,inline,False,False,False,3,successful,False,3c8e4d8e901dcfa45cc6
+1b66bec9ce5864e785eb,881902,Thomas Gilovich,10.1111/j.1467-9280.2006.01704.x,biography,inline,True,True,False,1,failed|mixed,False,32ff48b07bbe1f98d697
+fc9b2b0f5aaac777c64e,37080,Thought,10.1111/j.1745-6916.2006.00007.x,broad_topic,inline,False,False,False,1,failed,False,a5519542a9f5051a9d20
+a3b1da56c05e1bdea0f4,30640885,Tiger parenting,10.1177/0146167214524992,broad_topic,inline,False,False,False,1,failed,False,999e0161d53de21c1f70
+0b17a997dad16caa3584,67572411,Timeline of aging research,10.1073/pnas.0801030105,history_list,list,False,True,False,1,mixed,False,869bc267ae5405b886b8
+e7eabdec11d5a08b42d5,3129664,Timeline of psychology,10.1037/h0054651,history_list,inline,False,True,False,1,successful,True,38fe103df9da533a3c5b
+d176cf4fc57c3ef5aa8e,2928662,Timothy Wilson,10.1126/science.1250830,biography,list,True,False,False,1,successful,False,faed2e9fd9b8ced62755
+35c953d2cc2ad6b07507,68116254,Tobias Adrian,10.1257/aer.20161923,biography,inline,True,False,False,1,"computationally reproducible, robust",False,bb774eac6b2568beb393
+2c7e79f485b925ac8f63,520237,Trait ascription bias,10.1037/0022-3514.90.2.197,broad_topic,inline,False,False,False,1,mixed,False,fb5e1f964d88b9ec8d38
+b2eaced9392cf2e2c3d2,9886454,Transactive memory,10.1126/science.1207745,broad_topic,inline,False,False,False,1,failed,False,445fe6fea7668d7f4d56
+d21a78ee6bf14415ebb0,53517673,Transcriptional amplification,10.1016/j.cell.2012.08.026,broad_topic,inline,False,True,False,1,mixed,False,64159c96861b0b53af2a
+5e80e22997631462f5f5,44597344,Transposed letter effect,10.1177/0956797618806296,broad_topic,inline,False,False,False,1,successful,False,77644112b003c8a7890b
+a3ad2a01dc2daac12dd4,14817978,Trauma trigger,10.1016/j.jbtep.2018.07.002,broad_topic,inline,False,True,True,1,failed|mixed,False,16684b998266ee569e6a
+dc8f721b870a1b230515,850663,Trust (social science),10.1006/game.1995.1027,broad_topic,inline,False,False,False,1,successful,False,cd1008b54d6fcc5ac051
+c7dd49802470d2de7ce2,29753359,Tversky index,10.1037/0033-295x.84.4.327,broad_topic,inline,False,False,False,1,mixed,False,4e733de4dfd955a91f65
+f2f4acd2b0eb8e58a227,2239197,Two-factor theory of emotion,10.1037/h0037031,broad_topic,inline,False,False,False,1,failed,False,41bda1bb54ea3ee0ee62
+e179e65cc0f58c9205b5,28016652,Types of artificial neural networks,10.1037/0033-295x.114.2.245,broad_topic,inline,False,False,False,1,successful,False,c0f7a9120eccda894327
+6249fb14bff32c17b2fb,32778957,Ultraconserved element,10.1038/ng.974,broad_topic,inline,False,False,True,1,successful,False,f90912e9c90e0e03f73b
+718477e80f145de9aa97,44324487,Unacknowledged rape,10.1037/0033-295x.93.2.136,broad_topic,inline,False,False,False,1,successful,False,a6e95c47060a78ec548f
+a26ee56daad3a2e89e38,28848456,Unconscious thought theory,10.1111/j.1745-6916.2006.00007.x,broad_topic,inline,False,False,False,1,failed,False,0c27d8889b46cf1bf704
+1bc103bef225b7334a13,78819979,Unethical amnesia,10.1073/pnas.1523586113,broad_topic,inline,False,False,True,1,failed,False,2cdc1c923a12af13c778
+406cbc6246baa974dce9,40160485,Uri Gneezy,10.1126/science.1253932,biography,list,True,False,False,2,successful,False,7e2fd77af14141d49ad4
+e9f8df8ac60a916352db,40160485,Uri Gneezy,10.1287/mnsc.1110.1449,biography,list,True,False,False,2,statistically successful but flawed,False,b479abab92e2b85b0faa
+4b62b42b0d9bad7a67df,56869356,Uwe Sunde,10.1093/restud/rdr027,biography,inline,True,False,False,2,successful,False,f1202ad46f2473b0103b
+d07ea47420bfe3bd314f,56869356,Uwe Sunde,10.1257/aer.100.3.1238,biography,inline,True,False,False,2,failed,False,a9c417de89c3d7258b41
+c187de6cb2a912382a05,32473,Vaccination,10.1371/journal.pone.0181640,broad_topic,inline,False,True,False,1,failed,False,97e88922435e05fdbc03
+efc722a7005406c15e92,27136410,Values in Action Inventory of Strengths,10.1037/0003-066x.60.5.410,broad_topic,inline,False,True,False,1,mixed,False,8151cfe55edd03bc6109
+56d7e17749ebc810ec98,28771705,Vemurafenib,10.1038/nature08833,biomedical,inline,False,True,False,1,failed,False,6c4108b49bce0d998a62
+213e5c808fd28b5cf9df,548214,Vested interest (communication theory),10.1037/0022-3514.74.1.53,broad_topic,inline,False,False,False,1,successful,False,32a5b30cab7a940a9ed2
+a073261c1e575dd03929,24953689,Vicarious traumatization,10.1037/0003-066x.60.5.410,broad_topic,inline,False,True,False,1,mixed,False,7e478ef0ccab899a63e5
+aeb4b03da60346639d65,5363,Video game,10.1038/nature01647,central_effect,inline,False,False,False,1,failed,False,152d351e725ce930c38f
+1a7e49fd60825066beae,10858841,Video game content rating system,10.1038/nature01647,broad_topic,inline,False,True,False,1,failed,False,df6d3747b819e04c2686
+1ff358d16706ea3087a3,4373654,Video game culture,10.1038/nature01647,broad_topic,inline,False,False,False,1,failed,False,fe5e133e97d99a71baed
+d51f66ab1b799b4e02d0,4236583,Visual search,10.1111/j.1467-9280.2008.02081.x,broad_topic,inline,False,False,False,1,failed,True,1d7fd47ca0f5da33c79d
+b58b79016035554aaaf7,732493,Visual short-term memory,10.1037/h0093759,broad_topic,list,False,False,False,1,successful,False,c11a31496b834103fe1d
+15a6c9284db0a6e5609a,11068276,Vividness of Visual Imagery Questionnaire,10.1016/j.visres.2006.11.013,broad_topic,inline,False,True,False,1,failed,False,5dedb679d40d337a2915
+abe0172a156aaba35308,30874303,Volunteering,10.1126/science.1150952,broad_topic,inline,False,True,False,1,mixed,False,e46f3f091ffc062aaf51
+7fc499663b70e33df8db,31130713,Warm-glow giving,10.1086/261649,broad_topic,inline,False,False,False,3,failed,False,d70345c4a3305e70f72b
+c9fa71b16a47728414a2,31130713,Warm-glow giving,10.1086/691703,broad_topic,inline,False,False,False,3,"computationally reproducible, robustness not checked",False,530ea0d19e71384a60c2
+710ebee6a9fc35c98161,31130713,Warm-glow giving,10.1509/jmkr.43.2.259,broad_topic,inline,False,False,False,3,failed,False,f68e8fe49d744f328afe
+43bacd1ceb75d4bd7a41,16019404,WAY-100635,10.1176/appi.ajp.160.11.1965,broad_topic,inline,False,True,False,1,failed,False,1633acd378e67b748dc9
+28e3665d7c1a7065a37e,8328117,We Do What We're Told (Milgram's 37),10.1037/h0040525,broad_topic,inline,False,False,False,1,mixed,False,0c145968ce6a45f27e66
+7e567498f11d2fa359a4,27745133,Welfare cost of inflation,10.1257/aer.99.3.1040,broad_topic,inline,False,False,False,1,mixed,False,9932d10ec5b31fbcb6a4
+1ee52d350c8a78084abc,54301172,Well-being contributing factors,10.1037/0003-066x.60.5.410,broad_topic,inline,False,True,False,4,mixed,False,c59a8a04fed8d8625baa
+7b06cbfb6a04e0ab94c9,54301172,Well-being contributing factors,10.1111/j.1467-9280.2008.02124.x,broad_topic,inline,False,True,False,4,failed,False,10bf6bc31277617f7d9f
+5173e80ee88404dee78c,54301172,Well-being contributing factors,10.1126/science.1150952,broad_topic,inline,False,True,False,4,mixed,False,82692e9b423193727808
+a284d6f525d47e144a1c,54301172,Well-being contributing factors,10.1177/0956797611434537,broad_topic,inline,False,True,False,4,failed,True,6ebe5a6f2e1cdb438709
+04e7cccf28dbf491b1dc,33821,Whistleblowing,10.1016/j.jesp.2009.03.013,broad_topic,inline,False,False,False,1,failed,False,4992109cff1139f8a61a
+54381b1297d40ea4cda9,14220933,White Mexicans,10.1177/0003122410378232,broad_topic,inline,False,True,False,1,mixed,False,7c43091f9f886e063ef8
+86c8a16033b2302c0d89,166202,White people,10.1177/0003122410378232,broad_topic,inline,False,False,False,1,mixed,False,f6e7c7fce9f0176c6001
+34f46ba959a879448012,36632381,Why Nations Fail,10.1257/aer.91.5.1369,broad_topic,inline,False,False,False,1,"computational issues, robustness challenges",False,0914ef9bff35b266ff20
+758228b3b5179f864e7c,42548327,William Greene (economist),10.1086/260470,biography,list,True,False,False,1,successful,False,c1ebe4b047fef00990bc
+4ca34675eefac6d2b792,22435531,Willingness to accept,10.1257/0002828054201387,broad_topic,inline,False,True,False,1,failed,False,f2d704ff7cdd62aceb3d
+a2ba73bc690a8df2ec69,13233189,Wisdom of the crowd,10.1111/j.1467-9280.2008.02136.x,broad_topic,inline,False,False,True,1,successful,False,3db7e4078d44e9d7ba84
+d4e089651f53e42ff8dc,1209057,Wnt signaling pathway,10.1038/ng1732,biomedical,inline,False,False,False,1,successful,False,a1bf94c7520fec38b36c
+adc9e7b660f22ccfdfa9,3135183,Women in science,10.1073/pnas.1211286109,broad_topic,inline,False,True,False,1,failed,False,469a817dddad241ad631
+161e81ccac550398182f,36487460,Women in STEM,10.1073/pnas.1211286109,broad_topic,inline,False,False,False,2,failed,False,2cd496b39b663c9bac09
+1e751689609062e1fdb4,36487460,Women in STEM,10.1126/science.1195996,broad_topic,inline,False,False,False,2,"computationally reproducible, robustness challenges|mixed",False,c9f5668287e74ed71fd8
+a6e7f9a2497f3f2a247c,33912,Working memory,10.1037/h0021797,broad_topic,inline,False,False,False,1,mixed,False,12d71e10f4b627ac09f9
+cff666741f25adf8f38a,30691539,Working parent,10.1086/511799,broad_topic,inline,False,True,False,1,mixed,False,1c39910b122dd6e342c8
+0a1ee135312a8ef346ea,8252674,Work–family conflict,10.1086/511799,broad_topic,inline,False,True,False,1,mixed,False,c93daeef9f1d23a64974
+b91667af169f2250149c,889570,Worse-than-average effect,10.1037/0022-3514.77.2.221,broad_topic,inline,False,False,False,1,successful,False,5a5ce0db0c147955be28
+7d7019de2cb58b68c744,71897126,Yaacov Trope,10.1037/0022-3514.75.1.5,biography,inline,True,False,False,2,failed,False,3b16454491ef0c339865
+04b7da3a9348cf738fb7,71897126,Yaacov Trope,10.1126/science.1224313,biography,inline,True,False,False,2,mixed|successful,False,a38d9138f28c3579f5e0
+91ed4af49f74c11bdbe8,33740268,Yoga pants,10.1016/j.jesp.2012.02.008,broad_topic,inline,False,False,False,1,failed,False,c8787b8b45097f0a7fe4
+e7cfc15b55159278d87e,52687491,Zero-sum thinking,10.1177/0956797618818484,broad_topic,inline,False,False,False,1,mixed,False,ff65ef58e0f92ff28e91
+9e29d8745691940599ae,9456420,Zinc transporter 8,10.1038/ng.520,broad_topic,inline,False,True,False,1,mixed,False,ed74948c00730db7cf17
+c281f93adee0a8eacd54,17115928,Α-Hydroxyglutaric acid,10.1016/j.ccr.2010.01.020,broad_topic,inline,False,False,False,1,successful,False,d48fa8bd8ce6a7e601b1

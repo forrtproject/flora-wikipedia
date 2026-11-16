@@ -1,0 +1,236 @@
+{
+  "pilot_cards": {
+    "d8579e4f64dcd9b4011c": "Power posing (central effect; co-cited)",
+    "357f5c75368a5fee02cb": "Daydreaming (broad topic; current support)",
+    "a4a8e22e3920a0af98bb": "Francesca Gino (BLP; retracted paper list)",
+    "41110e7d6b180e1147c2": "C-Raf (biomedical; RP:CB preprint)",
+    "840f50a2cb83406ee6e9": "Lara Aknin (BLP; publications list)"
+  },
+  "criteria": [
+    "factual_grounding",
+    "article_fit",
+    "actionable_specificity",
+    "source_traceability",
+    "calibrated_uncertainty"
+  ],
+  "scale": "0-2 per criterion, judged by the orchestrator (Claude Opus 5.5) after reading each packet; model review, not human adjudication. The orchestrator shares a model family with the Claude route, which is a potential bias.",
+  "brief": "prototype/drafting_brief.md pilot version (sha256 371e1093474b222fa16989e2a70415b9fba227b0078fd45833116df9385cbaef), identical prompt for all routes",
+  "evidence_supplied": "Identical packet.md/packet.json per card: frozen revision passages (plain + raw), section, lead, outline, categories, Crossref/Europe PMC/OpenAlex metadata, abstracts, cached open-access full text paths, OpenAlex secondary leads. No web access.",
+  "routes": {
+    "claude": {
+      "model": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code Agent sub-agents",
+      "billing": "Claude.ai Max subscription (no API key variables)",
+      "incremental_metered_cost_usd": 0,
+      "seconds_per_card": [
+        53.1,
+        93.7,
+        78.7,
+        36.4,
+        101.4
+      ],
+      "mean_seconds": 72.7,
+      "concurrency": "parallel sub-agents",
+      "first_pass_schema_and_grounding_valid": "5/5 (agents could run the validator themselves; 0 fixes needed)",
+      "failures": 0,
+      "scores": {
+        "d8579e4f64dcd9b4011c": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "No change; flagged adjacent uncited \"lasting hormonal changes... job interviews\" sentence and unverifiable block quote."
+        },
+        "357f5c75368a5fee02cb": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "Contextualise; conditional draft with attributed original + replication sentences; noted that the replication abstract does not name Baird et al. (match inferred)."
+        },
+        "a4a8e22e3920a0af98bb": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "No change; BLP reasoning (failed replication is not evidence of misconduct); flagged unsourced \"unrelated data issue\" wording."
+        },
+        "41110e7d6b180e1147c2": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "No change; read preprint full text, found PLX4720 result similar to original; flagged Structure-section citation that the abstract does not support, and non-encyclopaedic tone."
+        },
+        "840f50a2cb83406ee6e9": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "No change (publications list); optional suggestion to list the co-authored registered replication report."
+        }
+      },
+      "total": 50,
+      "max_total": 50
+    },
+    "codex": {
+      "model": "gpt-6.1-sol, reasoning effort high, codex-cli 0.160.1, --ignore-user-config, read-only sandbox, web search disabled",
+      "billing": "ChatGPT login (auth_mode ChatGPT; OPENAI_API_KEY absent; OPENROUTER_API_KEY stripped from child env)",
+      "incremental_metered_cost_usd": 0,
+      "seconds_per_card": [
+        85.4,
+        142.6,
+        53.3,
+        90.6,
+        108.0
+      ],
+      "mean_seconds": 96.0,
+      "concurrency": "serial CLI process",
+      "first_pass_schema_and_grounding_valid": "4/5 strict; 5/5 after the validator was corrected to accept DOIs already cited in the article at metadata level",
+      "failures": 0,
+      "scores": {
+        "d8579e4f64dcd9b4011c": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "No change; same adjacent-sentence flag; cited the article-cited 2022 meta-analysis correctly as metadata-only."
+        },
+        "357f5c75368a5fee02cb": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 10,
+          "note": "Narrow claim only (more conservative, no replication sentence without secondary source); caught Crossref 2024 vs OpenAlex 2021 year discrepancy."
+        },
+        "a4a8e22e3920a0af98bb": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 1,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 9,
+          "note": "No change; sound but fewer concrete extra checks."
+        },
+        "41110e7d6b180e1147c2": {
+          "factual_grounding": 2,
+          "article_fit": 1,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 9,
+          "note": "Defer pending MEDRS review although the inspected replication largely agrees with the cited claim; over-cautious but well grounded."
+        },
+        "840f50a2cb83406ee6e9": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 1,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 9,
+          "note": "No change; correct, generic checks."
+        }
+      },
+      "total": 47,
+      "max_total": 50
+    },
+    "agy": {
+      "model": "Gemini 3.8 Flash (High) via agy (Antigravity CLI) --sandbox, read-only workspace (Gemini 3.1 Pro not used)",
+      "billing": "Google OAuth login (antigravity-oauth-token; no Gemini/Google API key; OPENROUTER_API_KEY stripped)",
+      "incremental_metered_cost_usd": 0,
+      "seconds_per_card": [
+        236.3,
+        230.5,
+        239.8,
+        203.3,
+        203.1
+      ],
+      "mean_seconds": 222.6,
+      "concurrency": "serial CLI process",
+      "first_pass_schema_and_grounding_valid": "3/5 (one $schema key schema violation; one no-output failure, retried successfully)",
+      "failures": 1,
+      "scores": {
+        "d8579e4f64dcd9b4011c": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 1,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 1,
+          "total": 8,
+          "note": "No change; missed the adjacent unsupported sentence; asserted compliance with NPOV/DUE; added a $schema key (schema violation)."
+        },
+        "357f5c75368a5fee02cb": {
+          "factual_grounding": 1,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 1,
+          "total": 8,
+          "note": "Contextualise; marked specific-study match as \"matched\" although the abstract does not name the original; unconditional draft juxtaposing two primary studies."
+        },
+        "a4a8e22e3920a0af98bb": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 1,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 9,
+          "note": "No change; sound."
+        },
+        "41110e7d6b180e1147c2": {
+          "factual_grounding": 1,
+          "article_fit": 2,
+          "actionable_specificity": 2,
+          "source_traceability": 1,
+          "calibrated_uncertainty": 1,
+          "total": 7,
+          "note": "No change; asserted from memory that paradoxical activation is \"well-established... supported by numerous independent studies and secondary reviews\" (unverified in packet)."
+        },
+        "840f50a2cb83406ee6e9": {
+          "factual_grounding": 2,
+          "article_fit": 2,
+          "actionable_specificity": 1,
+          "source_traceability": 2,
+          "calibrated_uncertainty": 2,
+          "total": 9,
+          "note": "Attempt 1 produced no output (headless tool-permission denial); retry succeeded; correct no change."
+        }
+      },
+      "total": 41,
+      "max_total": 50
+    }
+  },
+  "decision": "Primary drafting route: Claude sub-agents (highest pilot score 50/50, fastest, parallelisable, consistently flags adjacent problems). Second route: Codex gpt-6.1-sol independently drafts every card; disagreements on proposed action are surfaced in the UI and prioritised in orchestrator review. agy (Gemini 3.8 Flash High) not used beyond the pilot: slowest (~3.7 min/card), one headless failure and one schema violation, and two cards asserted unverified facts or matches (41/50). The brief was revised after the pilot (v2: whole-article digest, explicit programme rule on secondary coverage for replication statements, adjacent-problem reporting, no memory assertions).",
+  "full_run": {
+    "cards": 52,
+    "primary": "claude",
+    "second": "codex",
+    "claude_first_pass_valid": "52/52 (2 cards needed one self-correction of an excerpt or target text)",
+    "codex_valid": "52/52",
+    "codex_mean_seconds": 114.9,
+    "codex_processes": 3,
+    "claude_agents": "16 sub-agents in two waves of 8, 2-3 cards each, about 2-3 minutes per agent",
+    "same_action": 32,
+    "same_category_edit_nochange_defer": 36,
+    "codex_action_counts": {
+      "defer": 12,
+      "no_change": 24,
+      "contextualise": 2,
+      "narrow_claim": 14
+    },
+    "note": "Codex deferred far more often (source access), mirroring the pilot; most other disagreements were between contextualise and narrow_claim, i.e. both proposed an edit."
+  }
+}

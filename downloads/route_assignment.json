@@ -1,0 +1,17 @@
+{
+ "default": "claude_v5a",
+ "second_route": null,
+ "cards": {},
+ "models": {
+  "claude": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code sub-agents",
+  "codex": "gpt-6.1-sol (high) via Codex CLI",
+  "agy": "Gemini 3.8 Flash (High) via agy",
+  "claude_ft": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code sub-agents, with full texts from the download-paper skill",
+  "claude_v3": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code sub-agents, page-level brief v3",
+  "claude_v4": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code sub-agents, page-level brief v4 (model verifies every claim against the papers)",
+  "claude_v41": "Claude Opus 5.5 (claude-opus-5-5) via Claude Code sub-agents, brief v4.1 (clear abstracts count as evidence)"
+ },
+ "rule": "Brief v4 (9 October 2026): page-level drafting after a source search for free full texts; the model verifies every factual claim against the papers and records verdicts with verbatim quotes; no checking tasks are left to contributors. Earlier drafts are kept for comparison. Brief v4.1 (10 October 2026): a clear abstract is sufficient for what it plainly states; 28 pages with abstract-only sources were re-drafted after more abstracts and article-cited papers were looked up. Four re-drafts whose action changed without any new evidence (Positive illusions x2, Naive cynicism, Jan Eeckhout) were not adopted.",
+ "review_dir": "review_v5",
+ "second_run": "claude_v5b"
+}
