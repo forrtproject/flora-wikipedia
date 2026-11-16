@@ -27,7 +27,7 @@ create table if not exists reviewers (
 
 -- One record per reviewer and card (page). `record` keeps the site's existing per-page record shape:
 -- page_id, page_title, reviewed_revision_id, items {card_id: decision}, other_fix_done,
--- draft_usefulness, notes, outcome ('done' or 'review', i.e. review requested; absent when no publication has a
+-- draft_usefulness, notes, outcome ('done' or 'review', shown as "second pass"; absent when no publication has a
 -- final decision), reviewer (initials), live_revision_checked, live_checked_at, updated_at.
 -- A card's state is the outcome of its most recent save that has one (computed in the site).
 create table if not exists reviews (
@@ -37,7 +37,7 @@ create table if not exists reviews (
   updated_at  timestamptz not null default now(),
   primary key (page_id, reviewer_id)
 );
--- Retired with the two-person audit (replaced by "done" / "review requested" on each saved review).
+-- Retired with the two-person audit (replaced by "done" / "second pass" on each saved review).
 drop function if exists save_audit(text, text, boolean, text);
 drop table if exists audits;
 alter table reviews drop column if exists decided_at;

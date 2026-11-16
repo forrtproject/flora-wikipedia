@@ -122,7 +122,7 @@ const Store = (() => {
 
 // A pretend backend for ?store=demo. Mirrors the rules in supabase/schema.sql closely enough to try the flow.
 const Demo = (() => {
-  const K = 'flora-demo:db2';  // v2: seeded with outcomes (done / review requested)
+  const K = 'flora-demo:db2';  // v2: seeded with outcomes (done / second pass)
   const load = () => { try { return JSON.parse(localStorage.getItem(K)); } catch { return null; } };
   const save = db => { try { localStorage.setItem(K, JSON.stringify(db)); } catch { /* demo only */ } };
   const now = () => new Date().toISOString();

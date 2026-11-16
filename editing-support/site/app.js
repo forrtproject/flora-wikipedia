@@ -112,12 +112,12 @@ const reviewed = p => { const r = ledgerGet(p.page_id); return !!r && p.items.ev
 const hasDraft = p => !!draftGet(p.page_id);
 
 // ---------- group progress (shared store only) ----------
-// Each save ends with an outcome: "done" or "review" (review requested). A save whose decisions are all
+// Each save ends with an outcome: "done" or "review" (shown as "Second pass": someone else checks or finishes the work). A save whose decisions are all
 // "needs more checking" or "skip" has none. A card's state is the outcome of its most recent save that has one;
 // done cards stay listed and anyone can record a further review on them.
 const SETTLED = ['edit', 'talk', 'no_change'];
-const OUTCOME = {done: 'Done', review: 'Review requested'};
-const GROUP = {open: 'Nobody yet', under_review: 'Under review', review: 'Review requested', done: 'Done'};
+const OUTCOME = {done: 'Done', review: 'Second pass'};
+const GROUP = {open: 'Nobody yet', under_review: 'Under review', review: 'Second pass', done: 'Done'};
 const hasFinal = f => Object.values(f.items || {}).some(d => SETTLED.includes(d));
 const newest = rows => [...rows].sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at));
 function groupState(p) {
@@ -134,7 +134,7 @@ function groupBadges(p) {
   return claim + stateBadge(g);
 }
 const stateBadge = g => g.state === 'done' ? ` <span class="badge settled" title="Marked done by ${esc(g.latest.initials)}">✓ Done</span>`
-  : g.state === 'review' ? ` <span class="badge asked" title="Requested by ${esc(g.latest.initials)}">Review requested</span>` : '';
+  : g.state === 'review' ? ` <span class="badge asked" title="Asked for by ${esc(g.latest.initials)}">Second pass</span>` : '';
 
 // ---------- list and filters ----------
 const SEGMENTS = [
@@ -452,8 +452,7 @@ function decisionBlock(p, rec, draft) {
     ${Store.shared ? `<p class="small">Your review is kept in this browser and shared with the group when you save it${Store.me() ? '' : '. Sign in or get a reviewer ID under “Your reviews” before saving'}.</p>`
     : '<p class="small proto-note">Prototype limitation: reviews are saved only in this browser until shared storage is added. Export them to keep a copy.</p>'}
     <p class="small">Make any edit on Wikipedia itself (<a href="${esc(p.page.live_url)}" target="_blank" rel="noopener">open the article ↗</a>), then record here what you did.
-      What you enter is kept as a draft as you go. When you have finished, save: <strong>mark it done</strong> if the work on this
-      article is finished, or <strong>request a review</strong> if you would like someone else to check or continue it${Store.shared ? ' (the card then appears under “Review requested”)' : ''}.</p>
+      What you enter is kept as a draft as you go.</p>
     ${p.items.map((it, i) => `<fieldset><legend>${p.items.length > 1 ? `Publication ${i + 1}: ` : 'Your decision: '}${esc(studyName(it))} <span class="small">(suggested: ${esc(actionLabel(it))})</span></legend>
       ${Object.entries(DECISIONS).map(([k, v]) => `<label class="radio"><input type="radio" name="dec-${it.card_id}" value="${k}" ${f.items?.[it.card_id] === k ? 'checked' : ''}> ${esc(v)}</label>`).join('')}</fieldset>`).join('')}
     ${p.adjacent.length ? `<label class="radio"><input type="checkbox" id="l-other" ${f.other_fix_done ? 'checked' : ''}> I dealt with the other problem(s) spotted on this page</label>` : ''}
@@ -463,10 +462,11 @@ function decisionBlock(p, rec, draft) {
     <textarea id="l-notes">${esc(f.notes || '')}</textarea>
     <p id="l-hint" class="small warntext" hidden></p>
     <div class="row"><button type="button" id="l-done" class="primary">Save and mark done</button>
-    <button type="button" id="l-review">Save and request review</button>
+    <button type="button" id="l-review">Save for a second pass</button>
     <button type="button" id="l-open" class="primary" hidden>Save review</button>
     <button type="button" id="l-clear" title="${rec.updated_at ? 'Go back to your saved review' : 'Clear the decisions and notes on this card'}">${rec.updated_at ? 'Discard changes' : 'Clear form'}</button>
-    <span id="l-status" class="small" role="status">${statusText(rec, draft)}</span></div></section>`;
+    <span id="l-status" class="small" role="status">${statusText(rec, draft)}</span></div>
+    <p class="small" id="l-explain">Mark it done if the work on this article is finished. A second pass means someone else will check your work or finish it${Store.shared ? ' (the card appears under “Second pass”)' : ''}. Say in the notes what is left.</p></section>`;
 }
 const stamp = t => esc((t || '').slice(0, 16).replace('T', ' '));
 function statusText(rec, draft) {
@@ -588,9 +588,9 @@ function show(id, focus) {
       return d && d !== 'skip' && !expected.includes(d);
     });
     const [why, toNotes] = outcome && missing ? [`Choose a decision for ${missing === 1 ? 'the remaining publication' : `all ${missing} remaining publications`} first.`, false]
-      : outcome === 'done' && Object.values(f.items).includes('later') ? ['A publication is marked “Needs more checking first”: request a review instead, or change that decision.', false]
+      : outcome === 'done' && Object.values(f.items).includes('later') ? ['A publication is marked “Needs more checking first”: save for a second pass instead, or change that decision.', false]
       : disagrees && !notes ? ['You disagreed with a suggestion: please add a short reason in the notes.', true]
-      : outcome === 'review' && !notes ? ['Say in the notes what you would like the next person to check or do.', true] : ['', false];
+      : outcome === 'review' && !notes ? ['What should the second pass check or finish? Say so in the notes.', true] : ['', false];
     const hint = document.getElementById('l-hint');
     hint.textContent = why; hint.hidden = !why;
     if (why) { keepDraft(); if (toNotes) document.getElementById('l-notes').focus(); return; }
@@ -598,7 +598,7 @@ function show(id, focus) {
     if (outcome) r.outcome = outcome; else delete r.outcome;
     ledgerPut(id, r);
     draftPut(id, null);
-    const said = outcome === 'done' ? 'Saved and marked done.' : outcome === 'review' ? 'Saved; review requested.'
+    const said = outcome === 'done' ? 'Saved and marked done.' : outcome === 'review' ? 'Saved for a second pass.'
       : missing ? `Saved. Choose a decision for ${missing === 1 ? 'the remaining publication' : `all ${missing} remaining publications`} to mark the card as reviewed.`
       : 'Saved. No publication has a final decision, so the card stays open for others.';
     const status = document.getElementById('l-status');
@@ -683,10 +683,10 @@ function paintGroup(p) {
   };
   const l = g.latest, byMe = l && l.public_id === g.mine, who = l && (byMe ? 'you' : esc(l.initials));
   const line = g.state === 'done' ? `<strong>Done</strong>: marked by ${who} ${esc(ago(l.updated_at))}. The work on this article counts as finished.
-      If you disagree, record your own review below and request a review.`
-    : g.state === 'review' ? `<strong>Review requested</strong> by ${who} ${esc(ago(l.updated_at))}. ${byMe ? 'Someone else can pick it up; if you settle it yourself, save again and mark it done.'
-      : 'Read their notes, make any further changes on Wikipedia, then record your review below: mark it done, or request another review.'}`
-    : 'Nobody has marked this article done or requested a review yet.';
+      If you disagree, record your own review below and save it for a second pass.`
+    : g.state === 'review' ? `<strong>Second pass</strong> asked for by ${who} ${esc(ago(l.updated_at))}. ${byMe ? 'Someone else can pick it up; if you settle it yourself, save again and mark it done.'
+      : 'Read their notes, check or finish the work on Wikipedia, then record your review below: mark it done, or save it for another second pass.'}`
+    : 'Nobody has marked this article done or saved it for a second pass yet.';
   sec.innerHTML = `<h3 id="group-h">Group progress</h3><p>${line}</p>
     ${g.reviews.length ? `<h4>Saved reviews, newest first</h4><ul class="tight group-reviews">${newest(g.reviews).map(r => `<li><strong>${r.public_id === g.mine ? 'You' : esc(r.initials)}</strong>
       (${esc(ago(r.updated_at))}): ${esc(decisionsText(p, r))}${OUTCOME[r.record.outcome] ? ` · <strong>${OUTCOME[r.record.outcome].toLowerCase()}</strong>` : ''}${r.record.draft_usefulness ? ` · card ${esc(r.record.draft_usefulness)}` : ''}
@@ -966,7 +966,7 @@ async function init() {
   document.getElementById('clear-filters').onclick = clearFilters;
   if (Store.shared) document.getElementById('welcome-storage').innerHTML = '<strong>Your reviews are shared with the group.</strong> ' +
     'Under “Your reviews”, at the top right, get a reviewer ID (your initials and four digits, such as BS#1312) or sign in with the one ' +
-    'you have. What you type is kept as a draft in this browser; when you save, mark the card done or request a review, and it then appears under “Review requested” for someone else to pick up.';
+    'you have. What you type is kept as a draft in this browser; when you save, mark the card done or save it for a second pass, and it then appears under “Second pass” for someone else to check or finish.';
   buildHelp();  // after the line above: the help panel copies the walkthrough
   document.getElementById('open-help').onclick = () => document.getElementById('help-panel').hidden ? openHelp() : closeHelp();
   document.getElementById('help-close').onclick = closeHelp;

@@ -88,9 +88,10 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    enter is kept in your browser as a draft as you go, and cards with an
    unsaved draft are marked "Draft" in the list. Then save in one of two ways:
    **Save and mark done** when the work on the article is finished, or **Save
-   and request review** when you would like someone else to check or continue
-   it; say in the notes what they should look at. A review request is the
-   right choice when you marked a study "Needs more checking first". If no
+   for a second pass** when someone else should check your work or finish it,
+   for example when you ran out of time partway through an edit; say in the
+   notes what is left. A second pass is also the right choice when you marked
+   a study "Needs more checking first". If no
    study has a final decision (only "needs more checking" or "skip"), the
    button reads "Save review" and the card stays open for others. Export your records from
    "Your reviews" at the top right. The record notes which article version you
@@ -99,11 +100,11 @@ The prototype has no edit, submit or copy-to-Wikipedia function by design.
    storage is switched on, sign in under "Your reviews" with your reviewer ID
    (initials and four digits, such as BS#1312) before saving: saved reviews are
    then shared and "I'm reviewing this now" marks a card as under review.
-   Cards whose review was requested appear under "Review requested" in the
-   filters: open one, read the earlier notes, make any further changes on
-   Wikipedia, then record your own review and mark it done or request another
-   review. Done cards stay in the list; if you disagree with one, record your
-   own review and request a review. A card's status is the choice in its
+   Cards saved for a second pass appear under "Second pass" in the filters:
+   open one, read the earlier notes, check or finish the work on Wikipedia,
+   then record your own review and mark it done or save it for another second
+   pass. Done cards stay in the list; if you disagree with one, record your
+   own review and save it for a second pass. A card's status is the choice in its
    latest save.
 
 ## Reading a replication

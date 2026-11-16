@@ -127,7 +127,7 @@ Reviewer decisions are kept in the browser (localStorage), bound to each card's 
 revision, and export to CSV/JSON; imports skip records whose revision differs from the
 card's. Opening a card compares the current revision ID with the reviewed one ("Check now"
 repeats it). With a Supabase project configured, saved reviews are also shared with the group,
-with "under review", "review requested" and "done" status per card (`site/store.js`; setup in
+with "under review", "second pass" and "done" status per card (`site/store.js`; setup in
 [`supabase/README.md`](supabase/README.md)). Without it, the site stays browser-only; `?store=demo`
 tries the shared features against a pretend backend in the browser.
 

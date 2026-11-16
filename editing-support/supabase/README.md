@@ -1,7 +1,7 @@
 # Shared review storage (Supabase)
 
 The review-card site saves reviews in each reviewer's browser. With a Supabase project, saved reviews are also
-shared: the list shows which articles are under review, have a review requested or are done, and a reviewer can sign
+shared: the list shows which articles are under review, are waiting for a second pass or are done, and a reviewer can sign
 in on another device. Without the project the site works as before (browser only). To try the shared features
 without a project, open the site with `?store=demo`: a pretend backend in the browser, with made-up reviewers.
 
@@ -53,11 +53,11 @@ functions that check their input:
 Every function accepts only the cards listed in `pages`. Limits: at most 300 reviewer IDs and 20 kB per review record (`_limits()` in `schema.sql`). Emails are stored only in
 `reviewers.email`, visible to project owners in the dashboard and never returned by the functions.
 
-Rules computed in the site (`groupState` in `site/app.js`): each save ends as "done" or "review requested"
-(`record.outcome`), chosen by the reviewer; a save in which no publication has a final decision ("edited", "talk
+Rules computed in the site (`groupState` in `site/app.js`): each save ends as "done" or "second pass"
+(`record.outcome`: `done` or `review`), chosen by the reviewer; a save in which no publication has a final decision ("edited", "talk
 page" or "no change needed") has no outcome. A card's state is the outcome of its most recent save that has one, so
-anyone, including the person who asked, can follow a review request with a save marked done, and a done card
-returns to "review requested" when someone disagrees. Without such a save the card is "under review" while someone
+anyone, including the person who asked, can follow a second-pass request with a save marked done, and a done card
+returns to "second pass" when someone disagrees. Without such a save the card is "under review" while someone
 has claimed it and otherwise open.
 
 Re-running `schema.sql` on a project set up before outcomes existed removes the retired two-person audit
